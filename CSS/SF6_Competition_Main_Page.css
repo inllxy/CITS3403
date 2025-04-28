@@ -1,0 +1,129 @@
+/* Global font settings: apply 'Bebas Neue' to key content areas */
+body,
+#MainTextContainer,
+#MainTextContainer h1,
+#MainTextContainer p,
+.competition-result-title,
+.competition-result-item h3,
+.competition-result-item .btn,
+.date .month,
+.date .day {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+/* Main text container: positions overlay heading/text above background video */
+#MainTextContainer {
+  margin: 31.5vw 0 0 7.1825vw; /* Adjust top/left based on video dimensions */
+  width: 100%;
+  max-width: 90vw;
+  max-height:50vh;
+  position: relative;
+  z-index: 3; /* Ensure text sits above video and overlay */
+  padding: 1.5vw;
+}
+#MainTextContainer h1 {
+  color: #fff;
+  text-align: left;
+  font-size: 12.5vw;
+  text-transform: uppercase;
+  /* Consider using responsive units (vw) for smaller screens */
+}
+#MainTextContainer p {
+  color: #fff;
+  text-align: left;
+  font-size: 2.5vw;
+  line-height: 1.15;
+}
+
+/* Video background wrapper: containing video and overlay layers */
+.video-bg {
+  position: relative;
+  width: 100%;
+  height: 75vw; /* Adjust height for mobile/responsive design */
+  overflow: hidden;
+}
+.video-bg video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio */
+  z-index: 1;
+}
+.video-bg .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(3, 3, 29, 0.66);
+  z-index: 2; /* Between video and text */
+}
+
+/* Competition result section wrapper: spacing around results */
+.competition-result-section {
+  margin: 2.5vw;
+  padding: 1.25vw;
+}
+.ms-auto img {
+  width: 12.5vw;
+  height: auto;
+  margin-left: 4vw;
+}
+.competition-result-title {
+  font-size: 6vw;
+  width: 8vw;
+  height: auto;
+  color: #010101;
+  letter-spacing: 0.125vw;
+}
+.competition-result-item {
+  width: 65vw;
+  margin: 0 0 3vh 6vw;
+  padding: 1vw;
+  border-top: 1px solid #08e41b;
+  border-bottom: 1px solid #08e41b;
+  /* Consider reducing fixed width for small screens */
+}
+.competition-result-item h3 {
+  font-size: 6vw;
+  height: 15vw;
+  color: #100808;
+}
+.competition-result-item .btn {
+  margin-right: 1.5vw;
+  font-size: 2.5vw;
+  padding: 0.25vw 2.5vw;
+  background-color: gold;
+}
+.competition-info {
+  margin-left: 4vw;
+}
+
+/* Date block styling within competition results */
+.competition-result-item .date {
+  border-right: 1px solid #08e41b;
+  width: 12.5vw;
+  height: 20vw;
+}
+.date .month,
+.date .day {
+  display: inline-block;
+  padding: 0;
+  color: #030cb4;
+}
+.date .month {
+  font-size: 3vw;
+}
+.date .day {
+  font-size: 12.5vw;
+}
+
+/* Offcanvas panel styling: bottom drawer for additional details */
+.offcanvas.offcanvas-bottom {
+  height: 85vh; /* Occupy most of viewport height */
+}
+.offcanvas-bottom .offcanvas-body {
+  text-align: center;
+}
