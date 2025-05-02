@@ -29,7 +29,7 @@ const competitions = [
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. First, fetch the template file
-  fetch('static/Html/CompetitionTemplate.html')
+  fetch('static/Template/CompetitionTemplate.html')
     .then(r => r.text())
     .then(text => {
       document.getElementById('template-container').innerHTML = text;
