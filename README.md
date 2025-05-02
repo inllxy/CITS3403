@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/4c2ffe5a-3863-42e2-a645-b52f156f9610)
 # SF6 Spotlight — Flask Backend Quick-Start Guide
 
 > **Goal**  
