@@ -13,10 +13,17 @@ body,
 
 /* Main text container: positions overlay heading/text above background video */
 #MainTextContainer {
+<<<<<<< Updated upstream
   margin: 16vw 0 0 7.1825vw; /* Adjust top/left based on video dimensions */
   width: 100%;
   max-width: 90vw;
   max-height: 50vh;
+=======
+  margin: 31.5vw 0 0 7.1825vw; /* Adjust top/left based on video dimensions */
+  width: 100%;
+  max-width: 90vw;
+  max-height:50vh;
+>>>>>>> Stashed changes
   position: relative;
   z-index: 3; /* Ensure text sits above video and overlay */
   padding: 1.5vw;
@@ -69,44 +76,73 @@ body,
 .ms-auto img {
   width: 12.5vw;
   height: auto;
+<<<<<<< Updated upstream
   margin-left: 1vw;
 }
 .competition-result-title {
   font-size: 4vw;
+=======
+  margin-left: 4vw;
+}
+.competition-result-title {
+  font-size: 6vw;
+>>>>>>> Stashed changes
   width: 8vw;
   height: auto;
   color: #010101;
   letter-spacing: 0.125vw;
 }
 .competition-result-item {
+<<<<<<< Updated upstream
   width: 70vw;
   margin: 0 0 8vh 2vw;
+=======
+  width: 65vw;
+  margin: 0 0 3vh 6vw;
+>>>>>>> Stashed changes
   padding: 1vw;
   border-top: 1px solid #08e41b;
   border-bottom: 1px solid #08e41b;
   /* Consider reducing fixed width for small screens */
 }
 .competition-result-item h3 {
+<<<<<<< Updated upstream
   font-size: 4.5vw;
   height: 11.5vw;
+=======
+  font-size: 6vw;
+  height: 15vw;
+>>>>>>> Stashed changes
   color: #100808;
 }
 .competition-result-item .btn {
   margin-right: 1.5vw;
+<<<<<<< Updated upstream
   font-size: 2vw;
   padding: 0.05vw 2.5vw;
+=======
+  font-size: 2.5vw;
+  padding: 0.25vw 2.5vw;
+>>>>>>> Stashed changes
   background-color: gold;
 }
 .competition-info {
   margin-left: 4vw;
+<<<<<<< Updated upstream
   margin-left: 4vw;
+=======
+>>>>>>> Stashed changes
 }
 
 /* Date block styling within competition results */
 .competition-result-item .date {
   border-right: 1px solid #08e41b;
   width: 12.5vw;
+<<<<<<< Updated upstream
   height: 15vw;
+=======
+  height: 20vw;
+>>>>>>> Stashed changes
 }
 .date .month,
 .date .day {
@@ -116,10 +152,16 @@ body,
 }
 .date .month {
   font-size: 3vw;
+<<<<<<< Updated upstream
   font-size: 3vw;
 }
 .date .day {
   font-size: 8vw;
+=======
+}
+.date .day {
+  font-size: 12.5vw;
+>>>>>>> Stashed changes
 }
 
 /* Offcanvas panel styling: bottom drawer for additional details */
