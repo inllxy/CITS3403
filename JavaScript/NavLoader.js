@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('../Html/NavBar.html')
+    fetch('static/Html/NavBar.html')
       .then(resp => resp.text())
       .then(html => {
         document
