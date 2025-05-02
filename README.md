@@ -1,29 +1,4 @@
-# SF6 Spotlight — Flask Backend Quick-Start Guide
-
-> **Goal**  
-> Spin the project up locally and open `http://127.0.0.1:5000/` with just a few commands.
-
----
-
-## Steps
-
-```bash
-# 1. Create and activate a virtual environment
-python3 -m venv venv
-source venv/bin/activate        # macOS / Linux
-# .\venv\Scripts\activate       # Windows PowerShell
-
-# 2. Install dependencies
-python -m pip install --upgrade pip
-python -m pip install Flask Flask-SQLAlchemy Flask-Login email-validator
-
-# 3. Initialize the database (run once)
-python -m flask --app app.py init-db
-
-# 4. Start the development server
-python -m flask --app app.py run
-
-SF6 Spotlight Project Summary (Click 'Edit File' to read)
+# SF6 Spotlight Project Summary (Click 'Edit File' to read)
 
 Main Page
 Overview: The main page primarily displays competition results and includes a navigation bar for quick access.
@@ -55,3 +30,28 @@ User Login System (Initial Concept): • Users register and log in through the n
 • Logged-in users can comment, like, and interact normally. • Logged-in users have access to an "Edit Mode" option (similar to the position of the "+Create" button): o Enables editing player info, match scores, names, and other bracket-related elements. o While in Edit Mode, regular interactive features (likes, comments) can be temporarily disabled.
 
 • Additional common login system functionalities to be incorporated progressively.
+# SF6 Spotlight — Flask Backend Quick-Start Guide
+
+> **Goal**  
+> Spin the project up locally and open `http://127.0.0.1:5000/` with just a few commands.
+
+---
+
+## Steps
+
+```bash
+# 1. Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate        # macOS / Linux
+# .\venv\Scripts\activate       # Windows PowerShell
+
+# 2. Install dependencies
+python -m pip install --upgrade pip
+python -m pip install Flask Flask-SQLAlchemy Flask-Login email-validator
+
+# 3. Initialize the database (run once)
+python -m flask --app app.py init-db
+
+# 4. Start the development server
+python -m flask --app app.py run
+
