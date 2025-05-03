@@ -1,0 +1,69 @@
+<!-- CompetitionTemplate.html -->
+<template id="competition-item-template">
+    <div class="competition-result-item">
+      <div class="d-flex align-items-start">
+        <div class="date">
+          <p class="month"></p>
+          <p class="day"></p>
+        </div>
+        <div class="ms-auto">
+          <img class="logo" src="" alt="Match Logo">
+        </div>
+        <div class="competition-info flex-grow-1">
+          <h3 class="mb-1 title"></h3>
+          <div class="competition-btn d-flex gap-2 mt-2">
+            <a class="btn btn-sm btn-light btn-result"
+               role="button"
+               data-bs-toggle="offcanvas"
+               data-bs-target="#OFFCAN_RESULT">
+              Result
+            </a>
+            <a class="btn btn-sm btn-light btn-details"
+               role="button"
+               data-bs-toggle="offcanvas"
+               data-bs-target="#OFFCAN_DETAIL">
+              Details
+            </a>
+            <a class="btn btn-sm btn-light btn-comp"
+               href=""
+               target="_blank"
+               rel="noopener noreferrer">
+              COMP
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Offcanvas for "Details" -->
+      <div class="offcanvas offcanvas-bottom offcanvas-detail" tabindex="-1"
+           id="OFFCAN_DETAIL" aria-labelledby="offcanvasLabelDetail">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasLabelDetail"></h5>
+          <button type="button" class="btn-close text-reset"
+                  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body detail-body">
+            <!-- JS will insert an iframe or other detailed content -->
+        </div>
+      </div>
+  
+      <!-- Offcanvas for "Result" -->
+      <div class="offcanvas offcanvas-bottom offcanvas-result" tabindex="-1"
+           id="OFFCAN_RESULT" aria-labelledby="offcanvasLabelResult">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasLabelResult"></h5>
+          <button type="button" class="btn-close text-reset"
+                  data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body result-body">
+            <!-- JS will insert images or other brief results -->
+        </div>
+      </div>
+    </div>
+
+
+</template>
+
+<template id="competition-player-card-template">
+    
+  
