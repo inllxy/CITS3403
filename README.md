@@ -3,9 +3,10 @@
 > **Attention**  
 > * THE FOLDER STRUCTURE CHANGES FOR BETTER MAINTENANCE.
 > BEFORE SYNCING TO THIS VERSION,  
-> MAKE SURE YOUR CURRENT WORK DOESN'T DEPEND ON IT.  
-> IF SO, BETTER DOWNLOAD THE CODE AND TEST IN A NEW WORKING PROJECT.  
->  
+> MAKE SURE YOUR CURRENT WORK DOESN'T DEPEND ON OLD FOLDER STRUCTURE.  
+> IF SO, BETTER DOWNLOAD THE CODE AND TEST IN A NEW WORKING PROJECT  
+> ( Apologize for the inconvenience it may cause) .  
+> 
 >* Also, feel free to make any adjustment to templates as they’re not flexible for database.
 
 ---
