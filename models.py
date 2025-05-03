@@ -1,5 +1,4 @@
 # models.py
-<<<<<<< Updated upstream
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -21,7 +20,8 @@ class User(UserMixin, db.Model):
 
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
-=======
+
+# models.py
 
 import jwt, datetime
 from flask_login import UserMixin
@@ -81,4 +81,3 @@ class Match(db.Model):
     score_a       = db.Column(db.Integer, nullable=False)
     player_b      = db.Column(db.String(100), nullable=False)
     score_b       = db.Column(db.Integer, nullable=False)
->>>>>>> Stashed changes

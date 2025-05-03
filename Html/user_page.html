@@ -43,7 +43,8 @@
 
     /* === IMAGE SIZES === */
     .game-logo,
-    .result-image img {
+    .result-image img,
+    .profile-photo {
       width: 80px;
       height: 80px;
       object-fit: cover;
@@ -113,6 +114,22 @@
     .comment-form button {
       float: right;
     }
+
+    /* === SOCIAL INPUT === */
+    .social-input { position: relative; margin-bottom:1rem; }
+    .social-input input {
+      width: 100%; padding-right:2rem;
+    }
+    .social-input .icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    /* === PRIVATE VISIBILITY === */
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -123,7 +140,7 @@
       <div class="nav-buttons">
         <button id="openModal" class="btn">+ Add Competition</button>
         <button id="openPlayerModal" class="btn">+ Add Players</button>
-        <button class="btn">Friends</button>
+        <button id="openFriendsModal" class="btn">Friends</button>
         <div class="dropdown">
           <button class="dropdown-btn btn">Username ▼</button>
           <div class="dropdown-content">
@@ -134,7 +151,7 @@
     </div>
   </div>
 
-  <!-- FLASH MESSAGES & CARDS -->
+  <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
@@ -145,7 +162,7 @@
     {% endwith %}
 
     {% for comp in competitions %}
-      <div class="competition-card card">
+      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}">
         <div class="competition-date">
           <div class="competition-month">{{ comp.month }}</div>
           <div class="competition-day">{{ comp.date }}</div>
@@ -171,8 +188,6 @@
               </ul>
             {% endfor %}
           </div>
-
-          <!-- Like & Comment -->
           <div class="card-actions">
             <div class="action like">
               <span class="heart">❤️</span>
@@ -188,8 +203,36 @@
     {% endfor %}
   </div>
 
-  <!-- COMPETITION FORM MODAL -->
+  <!-- PLAYERS SECTION -->
+  <div class="container">
+    <h2>Players</h2>
+    <div class="flex" style="flex-wrap: wrap; gap: 1rem;">
+      {% for pl in players %}
+        <div class="card private-card" data-owner-id="{{ pl.owner_id }}" style="width: 200px; padding:1rem; position:relative;">
+          <img src="{{ pl.photo_url }}" class="profile-photo" alt="{{ pl.name }}">
+          <h3 style="margin:0.5rem 0 0.25rem;">{{ pl.name }}</h3>
+          <p style="margin:0 0 0.5rem;">{{ pl.league }}</p>
+          <div style="display:flex; gap:0.5rem; font-size:1.2rem;">
+            {% if pl.twitter %}
+              <a href="{{ pl.twitter }}" target="_blank">🐦</a>
+            {% endif %}
+            {% if pl.twitch %}
+              <a href="{{ pl.twitch }}" target="_blank">🎮</a>
+            {% endif %}
+          </div>
+          <div style="position:absolute; top:0.5rem; right:0.5rem;">
+            {% if pl.visibility=='private' %}
+              <span style="font-size:0.8rem; color:#888;">🔒</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- MODALS -->
   {% include 'users_template.html' %}
+  {% include 'players_template.html' %}
 
   <!-- COMMENT MODAL -->
   <div id="commentModal" class="modal flex-center">
@@ -204,6 +247,17 @@
     </div>
   </div>
 
+  <!-- FRIENDS MODAL -->
+  <div id="friendsModal" class="modal flex-center">
+    <div class="modal-content">
+      <span class="close-friends">&times;</span>
+      <h2>Your Friends</h2>
+      <div id="friendsList"></div>
+      <h3>All Users</h3>
+      <div id="allUsersList"></div>
+    </div>
+  </div>
+
   <script>
     // NAVBAR dropdown
     document.querySelector('.dropdown-btn').onclick = e => {
@@ -212,20 +266,32 @@
     };
     window.onclick = () => document.querySelector('.dropdown').classList.remove('show');
 
-    // MODAL logic (competition & comment)
+    // COMPETITION modal
     const compModal = document.getElementById('addCompetitionModal');
     document.getElementById('openModal').onclick = () => compModal.style.display = 'flex';
     compModal.querySelector('.close').onclick = () => compModal.style.display = 'none';
 
-    const commentModal = document.getElementById('commentModal');
-    commentModal.querySelector('.close-comment').onclick = () => commentModal.style.display = 'none';
+    // PLAYER modal
+    const playerModal = document.getElementById('addPlayerModal');
+    document.getElementById('openPlayerModal').onclick = () => playerModal.style.display = 'flex';
+    playerModal.querySelector('.close-player').onclick = () => playerModal.style.display = 'none';
+    window.addEventListener('click', e => {
+      if (e.target === playerModal) playerModal.style.display = 'none';
+    });
 
-    // LIKE & COMMENT handlers
+    // FRIENDS modal
+    const friendsModal = document.getElementById('friendsModal');
+    document.getElementById('openFriendsModal').onclick = () => friendsModal.style.display = 'flex';
+    friendsModal.querySelector('.close-friends').onclick = () => friendsModal.style.display = 'none';
+    window.addEventListener('click', e => {
+      if (e.target === friendsModal) friendsModal.style.display = 'none';
+    });
+
+    // LIKE & COMMENT handlers & toggle details/result
     document.querySelectorAll('.competition-card').forEach(card => {
       const likeBtn = card.querySelector('.like');
       const commBtn = card.querySelector('.comment');
       const likeCount = likeBtn.querySelector('.count');
-      const commCount = commBtn.querySelector('.count');
       const poster = card.querySelector('.result-image');
       const bracket = card.querySelector('.bracket-display');
 
@@ -237,32 +303,29 @@
       };
 
       likeBtn.onclick = () => {
-        let n = parseInt(likeCount.textContent);
-        likeCount.textContent = ++n;
+        likeCount.textContent = parseInt(likeCount.textContent) + 1;
       };
       commBtn.onclick = () => {
-        // show comment modal
-        commentModal.style.display = 'flex';
-        // for demo: update comment-list to reflect count
-        const list = commentModal.querySelector('.comment-list');
-        list.innerHTML = `<div class="comment-item">No comments yet.</div>`;
+        document.getElementById('commentModal').style.display = 'flex';
       };
     });
 
-    // POST comment (demo only)
+    // POST comment (demo)
+    const commentModal = document.getElementById('commentModal');
+    commentModal.querySelector('.close-comment').onclick = () => commentModal.style.display = 'none';
     commentModal.querySelector('.comment-form button').onclick = () => {
-      const textarea = commentModal.querySelector('textarea');
+      const txt = commentModal.querySelector('textarea');
       const list = commentModal.querySelector('.comment-list');
-      if (textarea.value.trim()) {
+      if (txt.value.trim()) {
         const div = document.createElement('div');
         div.className = 'comment-item';
-        div.textContent = textarea.value.trim();
+        div.textContent = txt.value.trim();
         list.appendChild(div);
-        textarea.value = '';
+        txt.value = '';
       }
     };
 
-    // BRACKET generator as before...
+    // BRACKET generator
     const bracketContainer = document.getElementById('bracket');
     document.getElementById('numPlayers').addEventListener('change', function() {
       bracketContainer.innerHTML = '';
@@ -287,8 +350,14 @@
       }
     });
   </script>
+
+  <script src="{{ url_for('static', filename='js/friends.js') }}"></script>
 </body>
 </html>
+
+
+
+
 
 
 
