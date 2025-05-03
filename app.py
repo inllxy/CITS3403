@@ -10,7 +10,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 app = Flask(
     __name__,
     template_folder="Html",        # Directly point to the Html directory
-    static_folder=".",             # Treat the current root directory as static
+    static_folder="static",        # default static folder
     static_url_path="/static"      # Use /static/... in the browser to access static files
 )
 
@@ -37,6 +37,10 @@ app.register_blueprint(auth_bp)
 @app.route("/")
 def index():
     return render_template("SF6_Competition_Main_Page.html")
+
+@app.route("/players")
+def player_page():
+    return render_template("SF6_Competition_Player_Page.html")
 
 # CLI: initialize the database
 @app.cli.command("init-db")

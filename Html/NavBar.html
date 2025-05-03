@@ -18,16 +18,16 @@
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#">2023</a></li>
           <li><a class="dropdown-item" href="#">2024</a></li>
-          <li><a class="dropdown-item" href="SF6_Competition_Main_Page.html#Result_2025">2025</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('index') }}#Result_2025">2025</a></li>
         </ul>
       </li>
       <!-- Other nav items -->
-      <li class="navbar-text"><a class="nav-link fs-2" href="SF6_Competition_Player_Page.html">Player</a></li>
+      <li class="navbar-text"><a class="nav-link fs-2" href="{{ url_for('player_page') }}">Player</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="https://www.streetfighter.com/6/news/all/1">News</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="#">Schedule</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="#">Quiz</a></li>
       <li class="navbar-text">
-        <button class="btn btn-outline-light fs-4" data-bs-toggle="modal" data-bs-target="#authModal">Login / Register</button>
+        <button class="btn btn-outline-light fs-2" data-bs-toggle="modal" data-bs-target="#authModal">Login / Register</button>
       </li>
     </ul>
   </div>
