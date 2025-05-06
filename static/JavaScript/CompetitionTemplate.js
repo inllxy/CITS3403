@@ -6,10 +6,10 @@ const competitions = [
       title: 'Capcom Cup 11<br>Top16 Champion',
       // The iframe src to be inserted into the Details Offcanvas
       detailTitle: 'Result Details',
-      detailSrc: 'SF6_Bracket.html',
+      detailSrc: '/bracket/SF6_Bracket',
       // The image to be inserted into the Result Offcanvas
       resultTitle: 'Quick Result',
-      resultImage: 'https://.../results_day4_001.webp',
+      resultImage: 'https://sf.esports.capcom.com/capcomcup/cc11/assets/img/results/results_day4_004.webp',
       compLink: 'https://sf.esports.capcom.com/capcomcup/cc11/en/'
     },
     {
@@ -18,7 +18,7 @@ const competitions = [
       logo: 'https://sf.esports.capcom.com/wp-content/uploads/2025/03/web_CPT2025_Premire_evo-japan.png',
       title: 'EVO Japan 2025',
       detailTitle: 'Result Details',
-      detailSrc: 'Another_Bracket.html',
+      detailSrc: '/bracket/SF6_Bracket',
       resultTitle: 'Podium Photo',
       resultImage: 'https://.../podium.webp',
       compLink: 'https://.../other_tourney'

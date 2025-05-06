@@ -50,6 +50,10 @@ def user_dashboard():
 def player_page():
     return render_template("SF6_Competition_Player_Page.html")
 
+@app.route('/bracket/<name>')
+def bracket(name):
+    return render_template(f'{name}.html')
+
 # CLI: initialize the database
 @app.cli.command("init-db")
 def init_db():
