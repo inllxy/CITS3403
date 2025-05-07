@@ -4,13 +4,14 @@ from flask_login import LoginManager
 from models import db, User        # models.py is shown in the next section
 from auth import auth_bp           # Blueprint
 import os
+import calendar
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(
     __name__,
     template_folder="Html",        # Directly point to the Html directory
-    static_folder=".",             # Treat the current root directory as static
+    static_folder="static",        # default static folder
     static_url_path="/static"      # Use /static/... in the browser to access static files
 )
 
@@ -38,11 +39,26 @@ app.register_blueprint(auth_bp)
 def index():
     return render_template("SF6_Competition_Main_Page.html")
 
+@app.route("/dashboard")
+def user_dashboard():
+    return render_template("user_page.html",
+                           competitions=[],
+                           players=[],
+                           calendar=calendar)
+
+@app.route("/players")
+def player_page():
+    return render_template("SF6_Competition_Player_Page.html")
+
+@app.route('/bracket/<name>')
+def bracket(name):
+    return render_template(f'{name}.html')
+
 # CLI: initialize the database
 @app.cli.command("init-db")
 def init_db():
     db.create_all()
-    print("✔ 数据库已初始化")
+    print("Database initialized")
 
 if __name__ == "__main__":
     app.run(debug=True)

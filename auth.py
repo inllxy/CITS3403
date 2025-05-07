@@ -20,6 +20,7 @@ def register():
         validate_email(e, check_deliverability=False)
     except EmailNotValidError:
         flash("The email format is incorrect", "error")
+        return redirect(url_for("index"))
 
     user = User(username=u, email=e)
     user.set_password(p)
@@ -37,9 +38,10 @@ def login():
     if user and user.check_password(p):
         login_user(user)
         flash("Login successful", "success")
+        return redirect(url_for("user_dashboard"))  # Redirect to a user dashboard or main page
     else:
         flash("Incorrect account or password", "error")
-    return redirect(url_for("index"))
+        return redirect(url_for("index"))
 
 @auth_bp.route("/logout")
 @login_required
