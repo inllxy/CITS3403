@@ -21,14 +21,14 @@ body {
 }
 
 /* Wrapper for the entire bracket, using flex layout */
-.bracklet-wrap {
+.bracket-wrap {
   padding: 30px;
   margin: 30px auto;
   border: 1px solid #000;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;         /* Set width to 100%, adjust as needed */
+  /*width: 100%;*/        /* Set width to 100%, adjust as needed */
   overflow-x: auto;    /* Enable horizontal scrolling when content overflows */
 }
 
@@ -38,12 +38,12 @@ body {
   justify-content: center;
   align-items: flex-start;
   gap: 3vw;  /* Gap between rounds using viewport width units */
+  overflow-x: auto;
 }
 
 /* Individual round container with fixed width */
 .round {
-  width: 15vw;        /* Adjust as needed */
-  min-width: 220px;   /* Ensure minimum width on small screens */
+  width: 200px;        
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,6 +55,12 @@ body {
 .round-4-loser,
 .GrandFinal {
   margin-top: 70px;
+}
+
+.round-2-winner,
+.round-3-winner,
+.GrandFinal{
+  margin-left: 240px;
 }
 
 /* Add bottom margin between matches in specific rounds */
