@@ -7,36 +7,36 @@ from flask_migrate import Migrate
 from config import Config
 import calendar
 
-# 全局对象
+# Global instances
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
-migrate = None  # 供 flask db 使用
+migrate = None  # Used by flask-migrate
 
 def create_app():
     app = Flask(
         __name__,
-        template_folder="templates",   # 确保 templates/ 是你的 HTML 目录
-        static_folder="static"        # static 文件夹
+        template_folder="templates",   # Folder for HTML templates
+        static_folder="static"         # Folder for static files like CSS, JS, images
     )
     app.config.from_object(Config)
 
-    # 初始化扩展
+    # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
 
-    # 初始化迁移工具
+    # Set up migration engine
     global migrate
     migrate = Migrate(app, db)
 
-    # 导入模型（必要，否则无法识别模型）
+    # Import models so they are registered with SQLAlchemy
     from . import models
 
-    # 注册认证蓝图
+    # Register authentication blueprint
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    # ========== 路由区域 ==========
+    # ========== Application Routes ==========
 
     @app.route("/")
     def index():
@@ -53,5 +53,11 @@ def create_app():
     @app.route("/bracket/<name>")
     def bracket(name):
         return render_template(f"{name}.html")
+
+    # Callback to load user for Flask-Login
+    @login_manager.user_loader
+    def load_user(user_id):
+        from .models import User  # Delayed import to avoid circular dependency
+        return User.query.get(int(user_id))
 
     return app
