@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
-  <link rel="stylesheet" href="/static/css/user.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
+
   <style>
     /* === NAVBAR === */
     .navbar .container { display:flex; justify-content:space-between; align-items:center; }
@@ -153,6 +154,7 @@
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
+    <h2>Competitions</h2>
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
         {% for cat, m in msgs %}
@@ -162,7 +164,7 @@
     {% endwith %}
 
     {% for comp in competitions %}
-      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}">
+      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}" data-comp-id="{{ loop.index0 }}"> <!-- {{ loop.index0 }} - for comment posting -->
         <div class="competition-date">
           <div class="competition-month">{{ comp.month }}</div>
           <div class="competition-day">{{ comp.date }}</div>
@@ -229,7 +231,7 @@
       {% endfor %}
     </div>
   </div>
-
+  
   <!-- MODALS -->
   {% include 'users_template.html' %}
   {% include 'players_template.html' %}
@@ -259,18 +261,21 @@
   </div>
 
   <script>
+    let currentCompId = null;
+    let currentCard = null;
+  
     // NAVBAR dropdown
     document.querySelector('.dropdown-btn').onclick = e => {
       e.stopPropagation();
       document.querySelector('.dropdown').classList.toggle('show');
     };
     window.onclick = () => document.querySelector('.dropdown').classList.remove('show');
-
+  
     // COMPETITION modal
     const compModal = document.getElementById('addCompetitionModal');
     document.getElementById('openModal').onclick = () => compModal.style.display = 'flex';
     compModal.querySelector('.close').onclick = () => compModal.style.display = 'none';
-
+  
     // PLAYER modal
     const playerModal = document.getElementById('addPlayerModal');
     document.getElementById('openPlayerModal').onclick = () => playerModal.style.display = 'flex';
@@ -278,7 +283,7 @@
     window.addEventListener('click', e => {
       if (e.target === playerModal) playerModal.style.display = 'none';
     });
-
+  
     // FRIENDS modal
     const friendsModal = document.getElementById('friendsModal');
     document.getElementById('openFriendsModal').onclick = () => friendsModal.style.display = 'flex';
@@ -286,48 +291,64 @@
     window.addEventListener('click', e => {
       if (e.target === friendsModal) friendsModal.style.display = 'none';
     });
-
-    // LIKE & COMMENT handlers & toggle details/result
+  
+    // LIKE & COMMENT handlers
     document.querySelectorAll('.competition-card').forEach(card => {
       const likeBtn = card.querySelector('.like');
       const commBtn = card.querySelector('.comment');
       const likeCount = likeBtn.querySelector('.count');
       const poster = card.querySelector('.result-image');
       const bracket = card.querySelector('.bracket-display');
-
+      const compId = card.dataset.compId;
+  
       card.querySelector('.btn-result').onclick = () => {
-        poster.style.display = poster.style.display==='block'?'none':'block';
+        poster.style.display = poster.style.display === 'block' ? 'none' : 'block';
       };
       card.querySelector('.btn-details').onclick = () => {
-        bracket.style.display = bracket.style.display==='block'?'none':'block';
+        bracket.style.display = bracket.style.display === 'block' ? 'none' : 'block';
       };
-
-      likeBtn.onclick = () => {
-        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+  
+      likeBtn.onclick = async () => {
+        const res = await fetch('/api/like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ comp_id: compId })
+        });
+        const data = await res.json();
+        likeCount.textContent = data.likes;
       };
+  
       commBtn.onclick = () => {
         document.getElementById('commentModal').style.display = 'flex';
+        currentCompId = compId;
+        currentCard = card;
       };
     });
-
-    // POST comment (demo)
-    const commentModal = document.getElementById('commentModal');
-    commentModal.querySelector('.close-comment').onclick = () => commentModal.style.display = 'none';
-    commentModal.querySelector('.comment-form button').onclick = () => {
-      const txt = commentModal.querySelector('textarea');
-      const list = commentModal.querySelector('.comment-list');
-      if (txt.value.trim()) {
-        const div = document.createElement('div');
-        div.className = 'comment-item';
-        div.textContent = txt.value.trim();
-        list.appendChild(div);
-        txt.value = '';
-      }
+  
+    // Submit comment
+    document.querySelector('.comment-form button').onclick = async () => {
+      const txt = document.querySelector('.comment-form textarea');
+      const res = await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comp_id: currentCompId, text: txt.value })
+      });
+      const data = await res.json();
+      const list = document.querySelector('.comment-list');
+      list.innerHTML = data.comments.map(c => `<div class="comment-item">${c}</div>`).join('');
+      currentCard.querySelector('.comment .count').textContent = data.count;
+      txt.value = '';
+      document.getElementById('commentModal').style.display = 'none';
     };
-
+  
+    // Close comment modal
+    document.querySelector('.close-comment').onclick = () => {
+      document.getElementById('commentModal').style.display = 'none';
+    };
+  
     // BRACKET generator
     const bracketContainer = document.getElementById('bracket');
-    document.getElementById('numPlayers').addEventListener('change', function() {
+    document.getElementById('numPlayers').addEventListener('change', function () {
       bracketContainer.innerHTML = '';
       const num = parseInt(this.value, 10);
       if (!num) return;
@@ -350,6 +371,7 @@
       }
     });
   </script>
+  
 
   <script src="{{ url_for('static', filename='js/friends.js') }}"></script>
 </body>
