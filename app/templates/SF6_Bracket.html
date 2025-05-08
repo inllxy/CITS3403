@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>Capcom Cup 11</title>
+  <link rel="icon" href="favicon.jpg" type="image/x-icon" />  
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/SF6_Bracket.css') }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+</head>
+
+<body>
+      <h1 class="headertype">Top 16 Bracket</h1>
+        <div class="bracklet-wrap">
+          <div class="bracket WinnerBracket">
+            <!-- Round 1: Winner Bracket -->
+            <div class="round round-1-winner">
+              <div class="sub-header">
+                <div class="TournaType">Winner QuarterFinal</div>
+              </div>
+              <!-- Match 1 -->
+              <div class="match">
+                <div class="player">
+                  <span class="score">3</span>
+                  <span class="player_name", id="TAKAMURA">BE | TAKAMURA</span>
+                  <img src="https://www.countryflags.com/wp-content/uploads/japan-flag-png-large.png" class="flag" alt="Japan Flag" />
+                </div>
+                <div class="player">
+                  <span class="score">2</span>
+                  <span class="player_name", id="NoahTheProdigy">TWS | NoahTheProdigy</span>
+                  <img src="https://www.countryflags.com/wp-content/uploads/united-states-of-america-flag-png-large.png" class="flag" alt="Japan Flag" />
+                 
+                </div>
+
+              </div>
+              <!-- Match 2 -->
+              <div class="match">
+                <div class="player"><span>JP Bushigin | Kakeru</span></div>
+                <div class="player"><span>GAM | iBlaz</span></div>
+              </div>
+              <!-- Match 3 -->
+              <div class="match">
+                <div class="player"><span>BEAST | Fuudo</span></div>
+                <div class="player"><span>Leshar</span></div>
+              </div>
+              <!-- Match 4 -->
+              <div class="match">
+                <div class="player"><span>JuCoye</span></div>
+                <div class="player"><span>REJECT | AngryBird</span></div>
+              </div>
+            </div>
+            
+            <!-- Round 2: Top 8 -->
+            <div class="round round-2-winner">
+              <div class="sub-header">
+                <div class="Top">Top 8</div>
+              </div>
+              <!-- Match 5 -->
+              <div class="match">
+                <div class="player"><span>Winner of M1</span></div>
+                <div class="player"><span>Winner of M2</span></div>
+              </div>
+              <!-- Match 6 -->
+              <div class="match">
+                <div class="player"><span>Winner of M3</span></div>
+                <div class="player"><span>Winner of M4</span></div>
+              </div>
+            </div>
+
+            <!-- Round 3: Winner Final -->
+            <div class="round round-3-winner">
+              <div class="sub-header">
+                <div class="Top">Winner-Semifinal</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Winner of M1</span></div>
+                <div class="player"><span>Winner of M2</span></div>
+              </div>
+            </div>
+            
+              <!-- Round 5: Grand Final -->
+            <div class="round GrandFinal">
+              <div class="sub-header">
+                <div class="Top">GrandFinal</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Winner of M1</span></div>
+                <div class="player"><span>Winner of M2</span></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="bracket LoserBracket">
+            <!-- Round 1: Loser Bracket -->
+            <div class="round round-1-loser">
+              <div class="sub-header">
+                <div class="TournaType">Loser Bracket</div>
+              </div>
+              <!-- Match 1 -->
+              <div class="match">
+                <div class="player"><span>BE | TAKAMURA</span></div>
+                <div class="player"><span>TWS | NoahTheProdigy</span></div>
+              </div>
+              <!-- Match 2 -->
+              <div class="match">
+                <div class="player"><span>JP Bushigin | Kakeru</span></div>
+                <div class="player"><span>GAM | iBlaz</span></div>
+              </div>
+              <!-- Match 3 -->
+              <div class="match">
+                <div class="player"><span>BEAST | Fuudo</span></div>
+                <div class="player"><span>Leshar</span></div>
+              </div>
+              <!-- Match 4 -->
+              <div class="match">
+                <div class="player"><span>JuCoye</span></div>
+                <div class="player"><span>REJECT | AngryBird</span></div>
+              </div>
+            </div>
+            
+            <!-- Round 2 -->
+            <div class="round round-2-loser">
+              <div class="sub-header">
+                <div class="Top">Round2</div>
+              </div>
+              <!-- Match 5 -->
+              <div class="match">
+                <div class="player"><span>Loser of M1</span></div>
+                <div class="player"><span>Loser of M2</span></div>
+              </div>
+              <!-- Match 6 -->
+              <div class="match">
+                <div class="player"><span>Loser of M3</span></div>
+                <div class="player"><span>Loser of M4</span></div>
+              </div>
+              <!-- Match 7 -->
+              <div class="match">
+                <div class="player"><span>Loser of M3</span></div>
+                <div class="player"><span>Loser of M4</span></div>
+              </div>
+              <!-- Match 8 -->
+              <div class="match">
+                <div class="player"><span>Loser of M3</span></div>
+                <div class="player"><span>Loser of M4</span></div>
+              </div>
+            </div>
+
+            <!-- Round-3 -->
+            <div class="round round-3-loser">
+              <div class="sub-header">
+                <div class="Top">Top 8</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Loser of M1</span></div>
+                <div class="player"><span>Loser of M2</span></div>
+              </div>
+              <!-- Match 10 -->
+              <div class="match">
+                <div class="player"><span>Loser of M3</span></div>
+                <div class="player"><span>Loser of M4</span></div>
+              </div>
+            </div>
+
+            <!-- Round-4 -->  
+            <div class="round round-4-loser">
+              <div class="sub-header">
+                <div class="Top">Loser QuarterFinal</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Loser of M1</span></div>
+                <div class="player"><span>Loser of M2</span></div>
+              </div>
+              <!-- Match 10 -->
+              <div class="match">
+                <div class="player"><span>Loser of M3</span></div>
+                <div class="player"><span>Loser of M4</span></div>
+              </div>
+            </div>
+
+            <div class="round round-5-loser">
+              <div class="sub-header">
+                <div class="Top">Loser Semifinal</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Loser of M1</span></div>
+                <div class="player"><span>Loser of M2</span></div>
+              </div>
+             
+            </div>
+
+            <div class="round round-6-loser">
+              <div class="sub-header">
+                <div class="Top">Loser Final</div>
+              </div>
+              <!-- Match 9 -->
+              <div class="match">
+                <div class="player"><span>Loser of M1</span></div>
+                <div class="player"><span>Loser of M2</span></div>
+              </div>
+              
+            </div>
+
+          </div>
+        </div> 
+</body>
+</html>

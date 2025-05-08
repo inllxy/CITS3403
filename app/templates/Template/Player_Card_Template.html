@@ -1,0 +1,26 @@
+<template id="playerCardTemplate">
+  <div class="col">
+    <div class="card player-card"
+         data-player-id=""
+         data-bs-toggle="modal"
+         data-bs-target="#playerModal"
+         style="cursor:pointer">
+      <div class="card-header">
+        <img class="card-img-top player-img"
+             src=""
+             alt="">
+      </div>
+      <div class="card-body text-center">
+        <span class="badge bg-secondary mb-2 player-badge"></span>
+        <h5 class="card-title fw-bold player-name"></h5>
+        <p class="card-text">
+          <span class="event-line1"></span><br>
+          <span class="event-line2"></span>
+        </p>
+      </div>
+      <div class="card-footer d-flex justify-content-evenly text-center social-links">
+        <!-- JavaScript will dynamically append <a> elements here -->
+      </div>
+    </div>
+  </div>
+</template>
