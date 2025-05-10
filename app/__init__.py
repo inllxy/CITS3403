@@ -35,6 +35,10 @@ def create_app():
     # Register authentication blueprint
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
+    # Register user blueprint
+    from .user.route import user_bp
+    app.register_blueprint(user_bp)
+
 
     # ========== Application Routes ==========
 
@@ -43,6 +47,7 @@ def create_app():
         return render_template("SF6_Competition_Main_Page.html")
 
     @app.route("/dashboard")
+    
     def user_dashboard():
         return render_template("user_page.html", competitions=[], players=[], calendar=calendar)
 
