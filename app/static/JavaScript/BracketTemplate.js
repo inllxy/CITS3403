@@ -1,230 +1,96 @@
-const brackets =[
-    {
-        winner: {
-            round1: {
-                match1: {
-                    player1: 'Player A',
-                    player2: 'Player B',
-                    team1: 'Team A',
-                    team2: 'Team B',
-                    score1: 3,
-                    score2: 2,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player A' : 'Player B'; },
-                },
-                match2: {
-                    player1: 'Player C',
-                    player2: 'Player D',
-                    team1: 'Team C',
-                    team2: 'Team D',
-                    score1: 1,
-                    score2: 4,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player C' : 'Player D'; },
-                },
-                match3: {
-                    player1: 'Player E',
-                    player2: 'Player F',
-                    team1: 'Team E',
-                    team2: 'Team F',
-                    score1: 5,
-                    score2: 0,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player E' : 'Player F'; },
-                },
-                match4: {
-                    player1: 'Player G',
-                    player2: 'Player H',
-                    team1: 'Team G',
-                    team2: 'Team H',
-                    score1: 2,
-                    score2: 3,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player G' : 'Player H'; },
-                },
-            },
-            round2: {
-                match1: {
-                    player1: 'Player A',
-                    player2: 'Player C',
-                    team1: 'Team A',
-                    team2: 'Team C',
-                    score1: 3,
-                    score2: 2,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player A' : 'Player C'; },
-                },
-                match2: {
-                    player1: 'Player E',
-                    player2: 'Player G',
-                    team1: 'Team E',
-                    team2: 'Team G',
-                    score1: 1,
-                    score2: 4,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player E' : 'Player G'; },
-                },
-            },
-            round3: {
-                match1: {
-                    player1: 'Player A',
-                    player2: 'Player E',
-                    team1: 'Team A',
-                    team2: 'Team E',
-                    score1: 1,
-                    score2: 4,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player A' : 'Player E'; },
-                },
-            },
-            round4: {
-                match1: {
-                    player1: 'Player A',
-                    player2: 'Player I',
-                    team1: 'Team A',
-                    team2: 'Team I',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player A' : 'Player I'; },
-                },
-            },
-        },
-        loser: {
-            round1: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player J',
-                    team1: 'Team I',
-                    team2: 'Team J',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player J'; },
-                },
-                match2: {
-                    player1: 'Player K',
-                    player2: 'Player L',
-                    team1: 'Team K',
-                    team2: 'Team L',
-                    score1: 0,
-                    score2: 5,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player K' : 'Player L'; },
-                },
-                match3: {
-                    player1: 'Player M',
-                    player2: 'Player N',
-                    team1: 'Team M',
-                    team2: 'Team N',
-                    score1: 3,
-                    score2: 3,
-                    winner: function() { return (this.score1 < this.score2) ? 'Player M' : 'Player N'; },
-                },
-                match4: {
-                    player1: 'Player O',
-                    player2: 'Player P',
-                    team1: 'Team O',
-                    team2: 'Team P',
-                    score1: 2,
-                    score2: 4,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player O' : 'Player P'; },
-                },
-            },
-            round2: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player B',
-                    team1: 'Team I',
-                    team2: 'Team B',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player B'; },
-                },
-                match2:{
-                    player1: 'Player K',
-                    player2: 'Player D',
-                    team1: 'Team K',
-                    team2: 'Team D',
-                    score1: 0,
-                    score2: 5,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player K' : 'Player D'; },
-                },
-                match3: {
-                    player1: 'Player M',
-                    player2: 'Player F',
-                    team1: 'Team M',
-                    team2: 'Team F',
-                    score1: 3,
-                    score2: 3,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player M' : 'Player F'; },
-                },
-                match4: {
-                    player1: 'Player O',
-                    player2: 'Player H',
-                    team1: 'Team O',
-                    team2: 'Team H',
-                    score1: 2,
-                    score2: 4,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player O' : 'Player H'; },
-                },
-            },
-            round3: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player K',
-                    team1: 'Team I',
-                    team2: 'Team K',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player K'; },
-                },
-                match2: {
-                    player1: 'Player M',
-                    player2: 'Player O',
-                    team1: 'Team M',
-                    team2: 'Team O',
-                    score1: 0,
-                    score2: 5,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player M' : 'Player O'; },
-                },
-            },
-            round4: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player C',
-                    team1: 'Team I',
-                    team2: 'Team C',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player C'; },
-                },
-                match2: {
-                    player1: 'Player M',
-                    player2: 'Player E',
-                    team1: 'Team M',
-                    team2: 'Team E',
-                    score1: 0,
-                    score2: 5,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player M' : 'Player E'; },
-                },
-            },
-            round5: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player M',
-                    team1: 'Team I',
-                    team2: 'Team M',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player M'; },
-                },
-            },
-            round6: {
-                match1: {
-                    player1: 'Player I',
-                    player2: 'Player E',
-                    team1: 'Team I',
-                    team2: 'Team E',
-                    score1: 4,
-                    score2: 1,
-                    winner: function() { return (this.score1 > this.score2) ? 'Player I' : 'Player E'; },
-                },
-            },
-        },
+// 1. Define player matchups for each side and each round
+const players = {
+    winner: {
+      round1: [['A','B'], ['C','D'], ['E','F'], ['G','H']],
+      round2: [['A','C'], ['E','G']],
+      round3: [['A','E']],
+      round4: [['A','I']],
+      // Add more rounds here if needed, e.g. round5: [['X','Y'], ['Z','W']],
     },
-    // ...more records...
-];
+    loser: {
+      round1: [['I','J'], ['K','L'], ['M','N'], ['O','P']],
+      round2: [['I','B'], ['K','D'], ['M','F'], ['O','H']],
+      round3: [['I','K'], ['M','O']],
+      round4: [['I','C'], ['M','E']],
+      round5: [['I','M']],
+      round6: [['I','E']],
+      // Add more rounds for the loser bracket as desired
+    },
+};
+  
+// 2. Define the corresponding scores for each matchup
+const scores = {
+    winner: {
+      round1: [[3,2], [1,4], [5,0], [2,3]],
+      round2: [[3,2], [1,4]],
+      round3: [[1,4]],
+      round4: [[4,1]],
+      // round5: [[2,3], [5,1]],
+    },
+    loser: {
+      round1: [[4,1], [0,5], [3,3], [2,4]],
+      round2: [[4,1], [0,5], [3,3], [2,4]],
+      round3: [[4,1], [0,5]],
+      round4: [[4,1], [0,5]],
+      round5: [[4,1]],
+      round6: [[4,1]],
+      // Add more score arrays matching any extra rounds
+    },
+};
+  
+// 3. Optional: control the order of rounds explicitly
+const rounds = {
+    winner: ['round1','round2','round3','round4' /*,'round5'*/],
+    loser:  ['round1','round2','round3','round4','round5','round6']
+};
+  
+// 4. Build the brackets array dynamically
+const brackets = [];
+  
+// Create a single bracket object (you can push multiple if needed)
+const bracket = { winner: {}, loser: {} };
+  
+for (const level of ['winner', 'loser']) {
+    // Reference to either bracket.winner or bracket.loser
+    const sideObj = bracket[level];
+  
+    // Iterate through each defined round
+    for (const roundKey of rounds[level]) {
+      // Initialize this round as an empty object
+      sideObj[roundKey] = {};
+  
+      // Retrieve matchup pairs and scores (or empty arrays if undefined)
+      const matchPairs = players[level][roundKey] || [];
+      const matchScores = scores[level][roundKey] || [];
+  
+      // Loop over each match in the round
+      for (let i = 0; i < matchPairs.length; i++) {
+        const [p1, p2] = matchPairs[i];          // player IDs
+        const [s1, s2] = matchScores[i] || [];   // scores
+  
+        // Dynamically assign match1, match2, … objects
+        sideObj[roundKey][`match${i+1}`] = {
+          player1: `${p1}`,               // format player name
+          player2: `${p2}`,
+          team1:   `Team ${p1}`,                 // corresponding team name
+          team2:   `Team ${p2}`,
+          score1:  s1,
+          score2:  s2,
+          winner: function() {
+            // Determine winner based on scores
+            if (this.score1 === this.score2) {
+              // In case of tie, default to player2
+              return this.player2;
+            }
+            return this.score1 > this.score2 ? this.player1 : this.player2;
+          },
+        };
+      };
+    };
+};
+  
+// Push the constructed bracket into the array
+brackets.push(bracket);
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Directly retrieve the <template> element from the DOM
@@ -234,12 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Fill main content
     Object.keys(brackets).forEach((competition) => {
         Object.keys(brackets[competition]).forEach((level) => {
-            const l = brackets[competition][level];
             Object.keys(brackets[competition][level]).forEach((round, rNum) => {
-                const r = l[round];
                 Object.keys(brackets[competition][level][round]).forEach((matchKey, i) => {
-                    const match = r[matchKey];
+                    const match = brackets[competition][level][round][matchKey];
 
+                    // Hides optional extra match of the grand final if the winner of the first match is from the winner bracket
                     if (level === 'winner' && round === 'round4' && matchKey === 'match1' && match.winner() === match.player1) {
                         clone.querySelector(`.GrandFinal .optional`).style.display = 'none';
                         clone.querySelector(`.GrandFinal`).style.marginTop = '170px';
