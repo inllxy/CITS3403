@@ -6,142 +6,17 @@
   <title>User Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
 
-  <style>
-    /* === NAVBAR === */
-    .navbar .container { display:flex; justify-content:space-between; align-items:center; }
-    .nav-buttons { display:flex; gap:1rem; align-items:center; }
-    .nav-buttons button,
-    .nav-buttons .dropdown-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-light);
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .dropdown { position: relative; }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background: var(--bg-mid);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      margin-top: 0.5rem;
-      min-width: 8rem;
-      z-index: 2000;
-    }
-    .dropdown-content a {
-      display: block;
-      padding: 0.5rem 1rem;
-      color: var(--text-light);
-      text-decoration: none;
-    }
-    .dropdown-content a:hover {
-      background: var(--bg-dark);
-    }
-    .dropdown.show .dropdown-content { display: block; }
-
-    /* === IMAGE SIZES === */
-    .game-logo,
-    .result-image img,
-    .profile-photo {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 0.5rem;
-    }
-
-    /* === BUTTON GROUP === */
-    .competition-info .button-group,
-    .competition-info .button-group a {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .competition-info .button-group .btn,
-    .competition-info .button-group button,
-    .competition-info .button-group a {
-      flex: 1;
-      text-align: center;
-    }
-
-    /* === CARD ACTIONS (LIKE & COMMENT) === */
-    .card-actions {
-      margin-top: 1rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-    .card-actions .action {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-      color: var(--text-mid);
-      font-size: 0.9rem;
-    }
-    .card-actions .action:hover {
-      color: var(--accent);
-    }
-
-    /* === COMMENT MODAL === */
-    #commentModal .modal-content {
-      max-width: 500px;
-    }
-    .comment-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      background: var(--bg-mid);
-      padding: 0.5rem;
-    }
-    .comment-item {
-      padding: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .comment-item:last-child { border-bottom: none; }
-    .comment-form textarea {
-      width: 100%;
-      height: 60px;
-      margin-bottom: 0.5rem;
-      background: #2a2a42;
-      border: 1px solid var(--border);
-      color: var(--text-light);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-    }
-    .comment-form button {
-      float: right;
-    }
-
-    /* === SOCIAL INPUT === */
-    .social-input { position: relative; margin-bottom:1rem; }
-    .social-input input {
-      width: 100%; padding-right:2rem;
-    }
-    .social-input .icon {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-
-    /* === PRIVATE VISIBILITY === */
-    .hidden { display: none !important; }
-  </style>
+  
 </head>
 <body>
   <!-- NAVBAR -->
   <div class="navbar">
     <div class="container">
-      <h1>Competition Results</h1>
+      <h1>HOME</h1>
       <div class="nav-buttons">
         <button id="openModal" class="btn">+ Add Competition</button>
         <button id="openPlayerModal" class="btn">+ Add Players</button>
-        <button id="openFriendsModal" class="btn">Friends</button>
+        
         <div class="dropdown">
           <button class="dropdown-btn btn">Username ▼</button>
           <div class="dropdown-content">
@@ -154,7 +29,7 @@
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
-    <h2>Competitions</h2>
+    <a href="{{ url_for('index') }}"><h1>HOME</h1></a>
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
         {% for cat, m in msgs %}
@@ -237,7 +112,7 @@
   {% include 'players_template.html' %}
 
   <!-- COMMENT MODAL -->
-  <div id="commentModal" class="modal flex-center">
+  <div id="commentModal" class="modal flex-center" style="display: none;">
     <div class="modal-content">
       <span class="close-comment">&times;</span>
       <h3>Comments</h3>
@@ -249,137 +124,10 @@
     </div>
   </div>
 
-  <!-- FRIENDS MODAL -->
-  <div id="friendsModal" class="modal flex-center">
-    <div class="modal-content">
-      <span class="close-friends">&times;</span>
-      <h2>Your Friends</h2>
-      <div id="friendsList"></div>
-      <h3>All Users</h3>
-      <div id="allUsersList"></div>
-    </div>
-  </div>
-
-  <script>
-    let currentCompId = null;
-    let currentCard = null;
-  
-    // NAVBAR dropdown
-    document.querySelector('.dropdown-btn').onclick = e => {
-      e.stopPropagation();
-      document.querySelector('.dropdown').classList.toggle('show');
-    };
-    window.onclick = () => document.querySelector('.dropdown').classList.remove('show');
-  
-    // COMPETITION modal
-    const compModal = document.getElementById('addCompetitionModal');
-    document.getElementById('openModal').onclick = () => compModal.style.display = 'flex';
-    compModal.querySelector('.close').onclick = () => compModal.style.display = 'none';
-  
-    // PLAYER modal
-    const playerModal = document.getElementById('addPlayerModal');
-    document.getElementById('openPlayerModal').onclick = () => playerModal.style.display = 'flex';
-    playerModal.querySelector('.close-player').onclick = () => playerModal.style.display = 'none';
-    window.addEventListener('click', e => {
-      if (e.target === playerModal) playerModal.style.display = 'none';
-    });
-  
-    // FRIENDS modal
-    const friendsModal = document.getElementById('friendsModal');
-    document.getElementById('openFriendsModal').onclick = () => friendsModal.style.display = 'flex';
-    friendsModal.querySelector('.close-friends').onclick = () => friendsModal.style.display = 'none';
-    window.addEventListener('click', e => {
-      if (e.target === friendsModal) friendsModal.style.display = 'none';
-    });
-  
-    // LIKE & COMMENT handlers
-    document.querySelectorAll('.competition-card').forEach(card => {
-      const likeBtn = card.querySelector('.like');
-      const commBtn = card.querySelector('.comment');
-      const likeCount = likeBtn.querySelector('.count');
-      const poster = card.querySelector('.result-image');
-      const bracket = card.querySelector('.bracket-display');
-      const compId = card.dataset.compId;
-  
-      card.querySelector('.btn-result').onclick = () => {
-        poster.style.display = poster.style.display === 'block' ? 'none' : 'block';
-      };
-      card.querySelector('.btn-details').onclick = () => {
-        bracket.style.display = bracket.style.display === 'block' ? 'none' : 'block';
-      };
-  
-      likeBtn.onclick = async () => {
-        const res = await fetch('/api/like', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ comp_id: compId })
-        });
-        const data = await res.json();
-        likeCount.textContent = data.likes;
-      };
-  
-      commBtn.onclick = () => {
-        document.getElementById('commentModal').style.display = 'flex';
-        currentCompId = compId;
-        currentCard = card;
-      };
-    });
-  
-    // Submit comment
-    document.querySelector('.comment-form button').onclick = async () => {
-      const txt = document.querySelector('.comment-form textarea');
-      const res = await fetch('/api/comment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ comp_id: currentCompId, text: txt.value })
-      });
-      const data = await res.json();
-      const list = document.querySelector('.comment-list');
-      list.innerHTML = data.comments.map(c => `<div class="comment-item">${c}</div>`).join('');
-      currentCard.querySelector('.comment .count').textContent = data.count;
-      txt.value = '';
-      document.getElementById('commentModal').style.display = 'none';
-    };
-  
-    // Close comment modal
-    document.querySelector('.close-comment').onclick = () => {
-      document.getElementById('commentModal').style.display = 'none';
-    };
-  
-    // BRACKET generator
-    const bracketContainer = document.getElementById('bracket');
-    document.getElementById('numPlayers').addEventListener('change', function () {
-      bracketContainer.innerHTML = '';
-      const num = parseInt(this.value, 10);
-      if (!num) return;
-      const rounds = Math.log2(num);
-      for (let r = 1; r <= rounds; r++) {
-        const rd = document.createElement('div');
-        rd.className = 'round';
-        rd.innerHTML = `<h3>Round ${r}</h3>`;
-        const matches = num / Math.pow(2, r);
-        for (let m = 1; m <= matches; m++) {
-          const md = document.createElement('div');
-          md.className = 'match';
-          md.innerHTML = `
-            <input name="round${r}_match${m}_player1" placeholder="P1" required>
-            <input name="round${r}_match${m}_player2" placeholder="P2" required>
-          `;
-          rd.appendChild(md);
-        }
-        bracketContainer.appendChild(rd);
-      }
-    });
-  </script>
   
 
-  <script src="{{ url_for('static', filename='js/friends.js') }}"></script>
+  <!-- SCRIPTS -->
+  <script src="{{ url_for('static', filename='JavaScript/user.js') }}"></script>
+  <script src="{{ url_for('static', filename='JavaScript/player.js') }}"></script>
 </body>
 </html>
-
-
-
-
-
-
-
