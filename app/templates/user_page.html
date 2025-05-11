@@ -4,155 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
-  <link rel="stylesheet" href="/static/css/user.css">
-  <style>
-    /* === NAVBAR === */
-    .navbar .container { display:flex; justify-content:space-between; align-items:center; }
-    .nav-buttons { display:flex; gap:1rem; align-items:center; }
-    .nav-buttons button,
-    .nav-buttons .dropdown-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-light);
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .dropdown { position: relative; }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background: var(--bg-mid);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      margin-top: 0.5rem;
-      min-width: 8rem;
-      z-index: 2000;
-    }
-    .dropdown-content a {
-      display: block;
-      padding: 0.5rem 1rem;
-      color: var(--text-light);
-      text-decoration: none;
-    }
-    .dropdown-content a:hover {
-      background: var(--bg-dark);
-    }
-    .dropdown.show .dropdown-content { display: block; }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='JavaScript/player.js') }}"> defer</script>
 
-    /* === IMAGE SIZES === */
-    .game-logo,
-    .result-image img,
-    .profile-photo {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 0.5rem;
-    }
-
-    /* === BUTTON GROUP === */
-    .competition-info .button-group,
-    .competition-info .button-group a {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .competition-info .button-group .btn,
-    .competition-info .button-group button,
-    .competition-info .button-group a {
-      flex: 1;
-      text-align: center;
-    }
-
-    /* === CARD ACTIONS (LIKE & COMMENT) === */
-    .card-actions {
-      margin-top: 1rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-    .card-actions .action {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-      color: var(--text-mid);
-      font-size: 0.9rem;
-    }
-    .card-actions .action:hover {
-      color: var(--accent);
-    }
-
-    /* === COMMENT MODAL === */
-    #commentModal .modal-content {
-      max-width: 500px;
-    }
-    .comment-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      background: var(--bg-mid);
-      padding: 0.5rem;
-    }
-    .comment-item {
-      padding: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .comment-item:last-child { border-bottom: none; }
-    .comment-form textarea {
-      width: 100%;
-      height: 60px;
-      margin-bottom: 0.5rem;
-      background: #2a2a42;
-      border: 1px solid var(--border);
-      color: var(--text-light);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-    }
-    .comment-form button {
-      float: right;
-    }
-
-    /* === SOCIAL INPUT === */
-    .social-input { position: relative; margin-bottom:1rem; }
-    .social-input input {
-      width: 100%; padding-right:2rem;
-    }
-    .social-input .icon {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-
-    /* === PRIVATE VISIBILITY === */
-    .hidden { display: none !important; }
-  </style>
+  
 </head>
 <body>
   <!-- NAVBAR -->
-  <div class="navbar">
-    <div class="container">
-      <h1>Competition Results</h1>
-      <div class="nav-buttons">
-        <button id="openModal" class="btn">+ Add Competition</button>
-        <button id="openPlayerModal" class="btn">+ Add Players</button>
-        <button id="openFriendsModal" class="btn">Friends</button>
-        <div class="dropdown">
-          <button class="dropdown-btn btn">Username ▼</button>
-          <div class="dropdown-content">
-            <a href="/logout">Log Out</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  {%include 'UserNavbar.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
+
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
         {% for cat, m in msgs %}
@@ -162,7 +30,7 @@
     {% endwith %}
 
     {% for comp in competitions %}
-      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}">
+      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}" data-comp-id="{{ loop.index0 }}"> <!-- {{ loop.index0 }} - for comment posting -->
         <div class="competition-date">
           <div class="competition-month">{{ comp.month }}</div>
           <div class="competition-day">{{ comp.date }}</div>
@@ -229,13 +97,13 @@
       {% endfor %}
     </div>
   </div>
-
+  
   <!-- MODALS -->
   {% include 'users_template.html' %}
   {% include 'players_template.html' %}
 
   <!-- COMMENT MODAL -->
-  <div id="commentModal" class="modal flex-center">
+  <div id="commentModal" class="modal flex-center" style="display: none;">
     <div class="modal-content">
       <span class="close-comment">&times;</span>
       <h3>Comments</h3>
@@ -247,117 +115,8 @@
     </div>
   </div>
 
-  <!-- FRIENDS MODAL -->
-  <div id="friendsModal" class="modal flex-center">
-    <div class="modal-content">
-      <span class="close-friends">&times;</span>
-      <h2>Your Friends</h2>
-      <div id="friendsList"></div>
-      <h3>All Users</h3>
-      <div id="allUsersList"></div>
-    </div>
-  </div>
+  
 
-  <script>
-    // NAVBAR dropdown
-    document.querySelector('.dropdown-btn').onclick = e => {
-      e.stopPropagation();
-      document.querySelector('.dropdown').classList.toggle('show');
-    };
-    window.onclick = () => document.querySelector('.dropdown').classList.remove('show');
-
-    // COMPETITION modal
-    const compModal = document.getElementById('addCompetitionModal');
-    document.getElementById('openModal').onclick = () => compModal.style.display = 'flex';
-    compModal.querySelector('.close').onclick = () => compModal.style.display = 'none';
-
-    // PLAYER modal
-    const playerModal = document.getElementById('addPlayerModal');
-    document.getElementById('openPlayerModal').onclick = () => playerModal.style.display = 'flex';
-    playerModal.querySelector('.close-player').onclick = () => playerModal.style.display = 'none';
-    window.addEventListener('click', e => {
-      if (e.target === playerModal) playerModal.style.display = 'none';
-    });
-
-    // FRIENDS modal
-    const friendsModal = document.getElementById('friendsModal');
-    document.getElementById('openFriendsModal').onclick = () => friendsModal.style.display = 'flex';
-    friendsModal.querySelector('.close-friends').onclick = () => friendsModal.style.display = 'none';
-    window.addEventListener('click', e => {
-      if (e.target === friendsModal) friendsModal.style.display = 'none';
-    });
-
-    // LIKE & COMMENT handlers & toggle details/result
-    document.querySelectorAll('.competition-card').forEach(card => {
-      const likeBtn = card.querySelector('.like');
-      const commBtn = card.querySelector('.comment');
-      const likeCount = likeBtn.querySelector('.count');
-      const poster = card.querySelector('.result-image');
-      const bracket = card.querySelector('.bracket-display');
-
-      card.querySelector('.btn-result').onclick = () => {
-        poster.style.display = poster.style.display==='block'?'none':'block';
-      };
-      card.querySelector('.btn-details').onclick = () => {
-        bracket.style.display = bracket.style.display==='block'?'none':'block';
-      };
-
-      likeBtn.onclick = () => {
-        likeCount.textContent = parseInt(likeCount.textContent) + 1;
-      };
-      commBtn.onclick = () => {
-        document.getElementById('commentModal').style.display = 'flex';
-      };
-    });
-
-    // POST comment (demo)
-    const commentModal = document.getElementById('commentModal');
-    commentModal.querySelector('.close-comment').onclick = () => commentModal.style.display = 'none';
-    commentModal.querySelector('.comment-form button').onclick = () => {
-      const txt = commentModal.querySelector('textarea');
-      const list = commentModal.querySelector('.comment-list');
-      if (txt.value.trim()) {
-        const div = document.createElement('div');
-        div.className = 'comment-item';
-        div.textContent = txt.value.trim();
-        list.appendChild(div);
-        txt.value = '';
-      }
-    };
-
-    // BRACKET generator
-    const bracketContainer = document.getElementById('bracket');
-    document.getElementById('numPlayers').addEventListener('change', function() {
-      bracketContainer.innerHTML = '';
-      const num = parseInt(this.value, 10);
-      if (!num) return;
-      const rounds = Math.log2(num);
-      for (let r = 1; r <= rounds; r++) {
-        const rd = document.createElement('div');
-        rd.className = 'round';
-        rd.innerHTML = `<h3>Round ${r}</h3>`;
-        const matches = num / Math.pow(2, r);
-        for (let m = 1; m <= matches; m++) {
-          const md = document.createElement('div');
-          md.className = 'match';
-          md.innerHTML = `
-            <input name="round${r}_match${m}_player1" placeholder="P1" required>
-            <input name="round${r}_match${m}_player2" placeholder="P2" required>
-          `;
-          rd.appendChild(md);
-        }
-        bracketContainer.appendChild(rd);
-      }
-    });
-  </script>
-
-  <script src="{{ url_for('static', filename='js/friends.js') }}"></script>
+ 
 </body>
 </html>
-
-
-
-
-
-
-

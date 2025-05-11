@@ -1,6 +1,6 @@
 # app/__init__.py
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -24,7 +24,7 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
-
+    Migrate(app, db)
     # Set up migration engine
     global migrate
     migrate = Migrate(app, db)
@@ -35,6 +35,10 @@ def create_app():
     # Register authentication blueprint
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
+    # Register user blueprint
+    from .user.route import user_bp
+    app.register_blueprint(user_bp, url_prefix='/dashboard')
+
 
     # ========== Application Routes ==========
 
@@ -42,9 +46,6 @@ def create_app():
     def index():
         return render_template("SF6_Competition_Main_Page.html")
 
-    @app.route("/dashboard")
-    def user_dashboard():
-        return render_template("user_page.html", competitions=[], players=[], calendar=calendar)
 
     @app.route("/players")
     def player_page():
@@ -53,6 +54,12 @@ def create_app():
     @app.route("/bracket/<name>")
     def bracket(name):
         return render_template(f"{name}.html")
+    
+    # --- ALIAS for auth.py’s redirect(url_for("user_dashboard")) ---
+    @app.route("/dashboard", endpoint="user_dashboard")
+    def _dashboard_alias():
+        # redirect to the real dashboard view at /dashboard/
+        return redirect(url_for("user.user_page"))
 
     # Callback to load user for Flask-Login
     @login_manager.user_loader

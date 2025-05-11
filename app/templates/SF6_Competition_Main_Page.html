@@ -43,22 +43,41 @@
 
   <!-- Competition results section -->
   <div class="container py-5 competition-result-section">
-    <div class="row">
-      <!-- Main Competition Results heading -->
-      <div class="col-md-3 d-flex">
-          <h2 class="competition-result-title text-uppercase" id="Result_2025">
-            Competition Result<br>2025
-          </h2>
-      </div>
-
-      <div id="template-container" style="display:none;">
-        {% include 'Template/CompetitionTemplate.html' %}
-      </div>
-      <div class="col-md-9" id="competition-list"></div>
-      
+    <div id="template-container" style="display:none">
+      {% include 'Template/CompetitionTemplate.html' %}
     </div>
-  </div>
 
+    <div class="row">
+      <div class="col-md-3 d-flex">
+        <h2 class="competition-result-title text-uppercase" id="Result_2025">
+          Competition Result<br>2025
+        </h2>
+      </div>
+
+      <div class="col-md-9" id="competition-list-2025">
+      </div>
+
+
+      <div class="col-md-3 d-flex">
+        <h2 class="competition-result-title text-uppercase" id="Result_2024">
+          Competition Result<br>2024
+        </h2>
+      </div>
+
+      <div class="col-md-9" id="competition-list-2024">
+      </div>
+
+
+      <div class="col-md-3 d-flex">
+        <h2 class="competition-result-title text-uppercase" id="Result_2023">
+          Competition Result<br>2023
+        </h2>
+      </div>
+
+      <div class="col-md-9" id="competition-list-2024">
+      </div>
+
+   </div>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}

@@ -21,11 +21,6 @@
   .flex { display:flex; gap:1rem; }
   .flex-center { display:flex; align-items:center; justify-content:center; }
   
-  .navbar {
-    background: var(--bg-mid); padding:1rem 2rem;
-    border-bottom:1px solid var(--border);
-  }
-  .navbar h1 { color: var(--accent-alt); }
   .btn, button {
     background: var(--accent); border:2px solid var(--accent-alt);
     color:#fff; padding:.6rem 1.2rem; border-radius:.5rem;
@@ -128,32 +123,7 @@ form textarea {
   color: var(--text-mid); /* or whichever text-mid you prefer */
   margin-bottom: 0.5rem;
 }
-/* ─ NAVBAR ───────────────────────────────────────────────────── */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-mid);
-  padding: 0.75rem 2rem;
-}
-.nav-left .nav-title { color: var(--accent-alt); font-size: 1.5rem; }
-.nav-right { gap: 1rem; }
-.dropdown { position: relative; }
-.dropdown-menu {
-  display: none;
-  position: absolute; right:0; top:100%;
-  background: var(--bg-mid);
-  border:1px solid var(--border);
-  border-radius:.5rem;
-  margin-top:.5rem;
-  overflow:hidden;
-}
-.dropdown:hover .dropdown-menu { display: block; }
-.dropdown-menu a {
-  display:block; padding:.5rem 1rem;
-  color:var(--text-light); text-decoration:none;
-}
-.dropdown-menu a:hover { background: var(--accent); }
+
 
 /* ─ UNIVERSAL IMAGE SIZING ─────────────────────────────────── */
 .game-logo, .poster {
