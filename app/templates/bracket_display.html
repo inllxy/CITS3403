@@ -1,0 +1,37 @@
+{# templates/bracket_display.html #}
+<div class="bracket-wrap">
+  {# Loop over each round in this competition’s bracket #}
+  {% for round_idx, matches in comp.bracket.items() %}
+    <div class="round round-{{ round_idx }}">
+      <div class="sub-header">
+        <div class="TournaType">Round {{ round_idx }}</div>
+      </div>
+
+      {# Loop over each match dict in that round #}
+      {% for match in matches %}
+      <div class="match">
+        <div class="player match{{ loop.index }}-player1">
+          <span class="score">{{ match.score1 }}</span>
+          <span class="player_team">{{ match.team1 }}</span>
+          <span>|</span>
+          <span class="player_name">{{ match.player1 }}</span>
+          {% if match.flag1_url %}
+            <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
+          {% endif %}
+        </div>
+        <div class="player match{{ loop.index }}-player2">
+          <span class="score">{{ match.score2 }}</span>
+          <span class="player_team">{{ match.team2 }}</span>
+          <span>|</span>
+          <span class="player_name">{{ match.player2 }}</span>
+          {% if match.flag2_url %}
+            <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  {% endfor %}
+</div>
+
