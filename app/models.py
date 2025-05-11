@@ -21,17 +21,20 @@ class User(UserMixin, db.Model):
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
 class Competition(db.Model):
-    __tablename__ = "competitions"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    month = db.Column(db.String(20), nullable=False)
-    day = db.Column(db.String(10), nullable=False)
-    logo_url = db.Column(db.String(255))
-    result_url = db.Column(db.String(255))
-    detail_url = db.Column(db.String(255))
-    comp_url = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    __tablename__ = 'competitions'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)               # 比赛名称
+    year = db.Column(db.Integer, nullable=False)                   # 年份
+    month = db.Column(db.String(10), nullable=False)               # 月份缩写
+    day = db.Column(db.Integer, nullable=False)                    # 日期（几号）
+    poster_url = db.Column(db.String(255))                         # 结果图或链接
+    logo_url = db.Column(db.String(255))                           # 比赛 logo
+    comp_link = db.Column(db.String(255))                          # 比赛外链
+    visibility = db.Column(db.String(20), default='public')        # private/public
+    bracket = db.Column(db.JSON)                                   # 对战表结构
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
 class Player(db.Model):
     __tablename__ = "players"
 
