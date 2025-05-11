@@ -2,18 +2,27 @@ import os
 import calendar
 from flask import Flask, request, redirect, send_from_directory, url_for, flash, render_template
 from werkzeug.utils import secure_filename
-
+from flask import jsonify
 
 app = Flask(__name__,
-            template_folder='html',
-            static_folder='static')
+            template_folder='app/templates',
+            static_folder='app/static')
 app.secret_key = 'replace-with-a-secure-secret'
 
+comments_by_competition = {}  # key: competition index or name, value: list of comments
+
+
 # serve anything under the css/ folder via /css/<filename>
-@app.route('/css/<path:filename>')
+@app.route('/static/css/user.css')
 def css(filename):
     css_dir = os.path.join(app.root_path, 'css')
     return send_from_directory(css_dir, filename)
+
+# serve anything under the js/ folder via /js/<filename>
+@app.route('/static/js/<path:filename>')
+def static_js(filename):
+    return send_from_directory(os.path.join(app.root_path, 'static', 'JavaScript'), filename)
+
 
 # make Python calendar module available in Jinja
 app.jinja_env.globals['calendar'] = calendar
@@ -23,6 +32,7 @@ UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# allowed file types for uploads
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(fn):
     return '.' in fn and fn.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -37,7 +47,7 @@ def user_page():
     return render_template('user_page.html',
                            competitions=competitions,
                            players=players)
-
+#The form sends the player's data (name, league, image, social links, visibility) to the server.
 @app.route('/submit-player', methods=['POST'])
 def submit_player():
     # Photo (file vs link)
@@ -123,9 +133,38 @@ def submit_competition():
       'visibility': visibility,
       'bracket': bracket_data
     })
+    return redirect(url_for('user_page'))
+
+
+@app.route('/api/comment', methods=['POST'])
+def add_comment():
+    data = request.json
+    comp_id = data.get('comp_id')
+    text = data.get('text')
+
+    if not comp_id or not text:
+        return jsonify({'error': 'Missing comp_id or text'}), 400
+
+    comments_by_competition.setdefault(comp_id, []).append(text)
+    return jsonify({
+        'count': len(comments_by_competition[comp_id]),
+        'comments': comments_by_competition[comp_id]
+    })
 
     flash(f'“{name}” saved ({visibility}).', 'success')
     return redirect(url_for('user_page'))
+likes_by_competition = {}
+
+@app.route('/api/like', methods=['POST'])
+def like():
+    data = request.json
+    comp_id = data.get('comp_id')
+    if not comp_id:
+        return jsonify({'error': 'Missing comp_id'}), 400
+
+    likes_by_competition[comp_id] = likes_by_competition.get(comp_id, 0) + 1
+    return jsonify({'likes': likes_by_competition[comp_id]})
+
 
 if __name__ == '__main__':
     app.run(debug=True)

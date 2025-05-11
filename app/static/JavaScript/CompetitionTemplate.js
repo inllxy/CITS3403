@@ -16,14 +16,14 @@ const competitions = [
     {
       year: 2025,
       month: 'Apr.',
-      day: '19',
+      day: '9',
       logo: 'https://sf.esports.capcom.com/wp-content/uploads/2025/03/web_CPT2025_Premire_evo-japan.png',
       title: 'EVO Japan 2025',
       detailTitle: 'Result Details',
       detailSrc: '/bracket/Bracket',
       resultTitle: 'Podium Photo',
       resultImage: 'https://.../podium.webp',
-      compLink: 'https://.../other_tourney'
+      compLink: 'https://www.evojapan.gg/en/'
     },
    {
       year: 2024,
