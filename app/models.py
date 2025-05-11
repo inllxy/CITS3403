@@ -40,9 +40,9 @@ class Player(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    badge = db.Column(db.String(50))                   # 对应 player-badge 的内容
-    img_url = db.Column(db.String(255))                # 对应 player-img 的 src
-    event_line1 = db.Column(db.String(255))            # 对应 event-line1
-    event_line2 = db.Column(db.String(255))            # 对应 event-line2
-    social_links = db.Column(db.Text)                  # 存 JSON 字符串或 HTML 片段都行
+    league = db.Column(db.String(100))                      # 加回来
+    twitter = db.Column(db.String(255))                     # 单独字段存链接
+    twitch = db.Column(db.String(255))                      # 同上
+    visibility = db.Column(db.String(20), default="public") # 存储选手可见性
+    photo_url = db.Column(db.String(255))                   # 上传或链接图片路径
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
