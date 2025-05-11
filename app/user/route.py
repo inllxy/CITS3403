@@ -7,6 +7,7 @@ from flask import (
     redirect, url_for, flash,
     render_template, jsonify
 )
+from flask_login import current_user
 from werkzeug.utils import secure_filename
 
 user_bp = Blueprint(
@@ -21,6 +22,7 @@ competitions = []
 players = []
 comments_by_competition = {}
 likes_by_competition = {}
+shared_players = {}
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -49,13 +51,15 @@ def inject_calendar():
 
 @user_bp.route('/')
 def user_page():
-    # Pass the real lists (not empty!) into the template
+    me = current_user.username
+    mine = players[:]                          # your own
+    mine.extend(shared_players.get(me, []))    # plus any shared with me
     return render_template(
         'user_page.html',
-        competitions=competitions,
-        players=players
+         competitions=competitions,
+         players=mine
     )
-
+    
 @user_bp.route('/submit-player', methods=['POST'])
 def submit_player():
     # Handle photo upload or link
@@ -65,59 +69,100 @@ def submit_player():
     else:
         photo_url = request.form.get('photo_link', '')
 
-    players.append({
+    # Build the player dictionary
+    player = {
         'photo_url':  photo_url,
         'name':       request.form.get('player_name', '').strip(),
         'league':     request.form.get('league', '').strip(),
         'twitter':    request.form.get('twitter_link', '').strip(),
         'twitch':     request.form.get('twitch_link', '').strip(),
-        'visibility': request.form.get('visibility', 'public')
-    })
-    flash('Player added successfully.', 'success')
+        'visibility': request.form.get('visibility', 'public'),
+        'owner':      current_user.username,
+        'shared_with': []  # Will be populated if shared
+    }
+
+    # Check if the action is "share"
+    action = request.form.get('action', 'public')
+    if action == 'share':
+        # Get the list of recipients
+        raw = request.form.get('share_with', '')
+        recipients = [u.strip() for u in raw.split(',') if u.strip()]
+        player['shared_with'] = recipients
+        # still save to my own dashboard
+        players.append(player)
+        # Save the player to each recipient's dashboard
+        for u in recipients:
+            shared_players.setdefault(u, []).append(player.copy())
+
+        flash(f"Player shared with: {', '.join(recipients)}", 'success')
+    else:
+        # Save the player to the current user's dashboard
+        players.append(player)
+        flash('Player added successfully.', 'success')
+
     return redirect(url_for('user.user_page'))
+
+# new global for tracking shared-to lists
+shared_competitions = {}  # key: username, value: list of competition dicts
 
 @user_bp.route('/submit-competition', methods=['POST'])
 def submit_competition():
-    # Basic form fields
+    # 1) Read the form
     name       = request.form.get('name', '').strip()
     year       = request.form.get('year', '').strip()
     month_idx  = int(request.form.get('month', 0))
     date       = request.form.get('date', '').strip()
     comp_link  = request.form.get('comp_link', '').strip()
-    visibility = request.form.get('visibility', 'public')
-
-    # Poster upload or link
+    action     = request.form.get('action', 'public')  
+    #    ↑ this replaces your old 'visibility'
+    action    = request.form['action']  # "public", "private", or "share"
+    # 2) Handle files as before
     poster = request.files.get('poster_file')
     if poster and allowed_file(poster.filename):
         poster_url = save_file(poster)
     else:
         poster_url = request.form.get('poster_link', '')
 
-    # Logo upload or link
     logo = request.files.get('logo_file')
     if logo and allowed_file(logo.filename):
         logo_url = save_file(logo)
     else:
         logo_url = request.form.get('logo_link', '')
 
-    # Parse the bracket inputs
+    # 3) Parse **all** bracket inputs
     raw = {k: v for k, v in request.form.items() if k.startswith('round')}
     bracket = {}
     for key, val in raw.items():
-        # key = "round{r}_match{m}_player{p}"
-        r, m, p = map(int, [
-            key.replace('round','').split('_')[0],
-            key.split('_')[1].replace('match',''),
-            key.split('_')[2].replace('player',''),
-        ])
-        bracket.setdefault(r, {}).setdefault(m, {})[p] = val
+        # key looks like "round{r}_match{m}_{field}{i}"
+        # e.g. "round1_match3_team2", "round2_match5_score1", etc.
+        parts = key.split('_')            # => ["round1","match3","team2"]
+        r     = int(parts[0].replace('round',''))
+        m     = int(parts[1].replace('match',''))
+        field = parts[2]                  # e.g. "team2", "player1", "score1"
+        bracket.setdefault(r, {})\
+            .setdefault(m, {})[field] = val
 
+    # 4) Turn that nested dict into a list-of-dicts per round
     bracket_data = {
-        r: [(pair[1], pair[2]) for m, pair in sorted(matches.items())]
+        r: [
+            {
+            'team1':   info.get('team1', ''),
+            'player1': info.get('player1', ''),
+            'score1':  info.get('score1', ''),
+            'team2':   info.get('team2', ''),
+            'player2': info.get('player2', ''),
+            'score2':  info.get('score2', ''),
+            # optionally flags if you collected them:
+            'flag1_url': info.get('flag1_url',''),
+            'flag2_url': info.get('flag2_url',''),
+            }
+            for m, info in sorted(matches.items())
+        ]
         for r, matches in bracket.items()
     }
 
-    competitions.append({
+    # 4) Build our competition dict
+    comp = {
         'name':       name,
         'year':       year,
         'month':      calendar.month_abbr[month_idx].upper() + '.',
@@ -125,11 +170,31 @@ def submit_competition():
         'poster_url': poster_url,
         'logo_url':   logo_url,
         'comp_link':  comp_link,
-        'visibility': visibility,
-        'bracket':    bracket_data
-    })
-    flash('Competition added successfully.', 'success')
+        'visibility': action,
+        'bracket':    bracket_data,
+        'owner':      current_user.username,
+        'shared_with': []   # will fill below if needed
+    }
+
+    # 5) Branch on action
+    if action == 'share':
+    # get the text, split by commas, strip whitespace
+        raw = request.form.get('share_with', '')
+        recipients = [u.strip() for u in raw.split(',') if u.strip()]
+        comp['shared_with'] = recipients
+
+        for u in recipients:
+            shared_competitions.setdefault(u, []).append(comp)
+            # still save to my own dashboard
+            competitions.append(comp)
+        flash(f"Competition shared with: {', '.join(recipients)}", 'success')
+    else:
+        competitions.append(comp)
+        flash('Competition added successfully.', 'success')
+
+
     return redirect(url_for('user.user_page'))
+
 
 @user_bp.route('/api/comment', methods=['POST'])
 def add_comment():
