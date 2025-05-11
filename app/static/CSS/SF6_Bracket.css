@@ -67,15 +67,15 @@ body {
 .round-2-winner .match, 
 .round-3-winner .match,
 .round-3-loser .match, 
-.round-4-loser .match {
+.round-4-loser .match,
+.GrandFinal .match {
   margin-bottom: 130px;
 }
 
 /* Additional top margin for specified rounds */
 .round-3-winner,
 .round-5-loser,
-.round-6-loser,
-.GrandFinal {
+.round-6-loser {
   margin-top: 170px;
 }
 
@@ -164,4 +164,9 @@ body {
   background: linear-gradient(to bottom, #cccccc, #999999);
   border: 1px solid #888;
   border-radius: 4px;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
 }
