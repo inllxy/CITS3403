@@ -55,15 +55,8 @@
           <div class="result-image" style="display:none; margin-top:1rem;">
             <img src="{{ comp.poster_url }}" alt="Poster">
           </div>
-          <div class="bracket-display" style="display:none; margin-top:1rem;">
-            {% for round, matches in comp.bracket.items() %}
-              <h4>Round {{round}}</h4>
-              <ul>
-                {% for p1, p2 in matches %}
-                  <li>{{p1}} vs {{p2}}</li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
+          <div class="bracket-data" style="display:none;">
+            {% include 'bracket_display.html' %}
           </div>
           <div class="card-actions">
             <div class="action like">
@@ -124,6 +117,14 @@
     </div>
   </div>
 
+  <!-- BRACKET MODAL -->
+  <div id="bracketModal" class="modal flex-center" style="display:none;">
+    <div class="modal-content">
+      <span class="close-bracket">&times;</span>
+      <div class="bracket-content"></div>
+    </div>
+  </div>
+ 
   
 
   <!-- SCRIPTS -->
