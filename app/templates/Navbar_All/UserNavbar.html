@@ -12,7 +12,11 @@
       <!-- Competition dropdown -->
       <li class="navbar-text dropdown">
         <a class="nav-link dropdown-toggle fs-2" href="#" role="button" data-bs-toggle="dropdown">
-          {{ current_user.username }}
+          {% if current_user.is_authenticated %}
+            {{ current_user.username }}
+          {% else %}
+            Guest
+          {% endif %}
         </a>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" >{{ current_user.username }}</a></li>

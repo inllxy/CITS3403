@@ -1,166 +1,210 @@
-:root {
-    --bg-dark:    #1a1a28;
-    --bg-mid:     #252538;
-    --text-light: #e0e0ff;
-    --text-mid:   #a0a0c0;
-    --accent:     #7f5af0;
-    --accent-alt: #d0afff;
-    --border:     #3a3a5a;
-  }
-  
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg-dark); color: var(--text-light);
-    font-family: 'Segoe UI', Roboto, sans-serif;
-  }
-  
-  .container {
-    width: 90%; max-width: 1200px;
-    margin: 2rem auto;
-  }
-  .flex { display:flex; gap:1rem; }
-  .flex-center { display:flex; align-items:center; justify-content:center; }
-  
-  .btn, button {
-    background: var(--accent); border:2px solid var(--accent-alt);
-    color:#fff; padding:.6rem 1.2rem; border-radius:.5rem;
-    cursor:pointer; transition: .2s;
-  }
-  .btn:hover, button:hover { background: var(--accent-alt); transform: translateY(-2px); }
-  .btn:active, button:active { transform: translateY(0); }
-  
-  .card {
-    background: var(--bg-mid);
-    border:1px solid var(--border);
-    border-radius:.75rem;
-    padding:1.5rem;
-    margin-bottom:2rem;
-  }
-  
-  label { color: var(--text-mid); margin-top:1rem; }
-  input[type="text"],
-  input[type="number"],
-  input[type="url"],
-  select,
-  textarea {
-    background:#2a2a42;
-    border:1px solid var(--border);
-    color:var(--text-light);
-    border-radius:.5rem;
-    padding:.6rem; margin-top:.25rem;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline:none;
-    border-color: var(--accent);
-    box-shadow:0 0 8px rgba(127,90,240,0.6);
-  }
-  
-  .modal {
-    display:none; position:fixed; top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.7);
-    align-items:center; justify-content:center;
-    z-index:1000;
-  }
-  .modal-content {
-    background:var(--bg-mid);
-    padding:2rem;
-    border-radius:.75rem;
-    width:90%; max-width:800px;
-    max-height:90%; overflow-y:auto;
-    position:relative;
-  }
-  .modal-content .close {
-    position:absolute; top:1rem; right:1rem;
-    font-size:1.5rem; color:var(--text-mid);
-    cursor:pointer;
-  }
-  
-  #bracket {
-    display:flex; gap:2rem; overflow-x:auto;
-    margin-top:1rem;
-  }
-  .round {
-    background:#2a2a42;
-    border:1px solid var(--border);
-    border-radius:.5rem;
-    padding:1rem;
-  }
-  .match input { width:140px; display:block; margin:.25rem auto; }
-  
-  .flash {
-    padding:.75rem 1rem; border-radius:.5rem;
-    margin-bottom:1rem;
-  }
-  .flash.success {
-    background:#2a332a; border:1px solid #4f8f4f;
-    color:#b8fbb8;
-  }
-  .flash.error {
-    background:#3a2424; border:1px solid #bf4f4f;
-    color:#ffb8b8;
-  }
+/* ─────────────────────────────────────────────────────────
+  templates.css — Styles override users_template.html & players_template.html
+───────────────────────────────────────────────────────── */
 
-form label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.25rem;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  General Modal Styles
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;                         /* top/right/bottom/left = 0 */
+  background: rgba(0,0,0,0.5);      /* Semi-transparent overlay */
+  justify-content: center;         
+  align-items: start;               /* Align to top, allow internal scrolling */
+  padding-top: 2rem;                
+  overflow-y: auto;                 
+  z-index: 1050;                    
+}
+.modal.open {
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.2);
+}
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+}
+.modal-content .close,
+.modal-content .close-player {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
 }
 
-
-form input,
-form select,
-form textarea {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Common Form Controls
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal-content label {
   display: block;
-  width: 100%;
-  margin-bottom: 1rem;   /* space before next label */
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #444;
 }
-
-
-.note {
-  font-size: 0.85rem;
-  font-weight: normal;
-  color: var(--text-mid); /* or whichever text-mid you prefer */
+.modal-content .note {
+  font-size: 0.875rem;
+  color: #777;
   margin-bottom: 0.5rem;
 }
+.modal-content input[type="text"],
+.modal-content input[type="url"],
+.modal-content input[type="number"],
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  color: #333;
+  background: #f9f9f9;
+}
+.modal-content input[type="file"] {
+  margin-top: 0.25rem;
+}
+.modal-content textarea {
+  resize: vertical;
+  min-height: 4rem;
+}
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #66afe9;
+  box-shadow: 0 0 0.25rem rgba(102,175,233,0.6);
+}
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Button Group & Share Section
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal-content .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.modal-content .button-group .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.modal-content .button-group .btn[value="public"] {
+  background: #28a745;
+  color: #fff;
+}
+.modal-content .button-group .btn[value="private"] {
+  background: #6c757d;
+  color: #fff;
+}
+.modal-content .button-group .btn#openShare,
+.modal-content .button-group .btn#openSharePlayer {
+  background: #17a2b8;
+  color: #fff;
+}
 
-/* ─ UNIVERSAL IMAGE SIZING ─────────────────────────────────── */
-.game-logo, .poster {
-  width: 80px;
-  height: 80px;
+#share-section,
+#share-section-player {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+}
+#share-section label,
+#share-section-player label {
+  font-weight: 600;
+}
+#share-section input,
+#share-section-player input {
+  margin-top: 0.5rem;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bracket Table Styles (users_template.html #bracket .round)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.bracket-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+.bracket-wrap .round {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+.bracket-wrap .round .sub-header {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+.bracket-wrap .round .match {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.bracket-wrap .round .player {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.bracket-wrap .round .player input {
+  font-size: 0. nine rem;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Social Input Block (players_template.html .social-input)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.social-input {
+  position: relative;
+  margin-top: 1rem;
+}
+.social-input .icon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 1.25rem;
+}
+.social-input input {
+  padding-right: 2.5rem; /* Space for the icon */
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Preview Image & Player Form (players_template.html)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#previewImage {
+  display: block;
+  margin-top: 0.75rem;
+  width: 6rem;
+  height: 6rem;
   object-fit: cover;
-  border-radius: .5rem;
+  border-radius: 50%;
 }
 
-/* ─ BUTTON GROUP UNIFORM SIZING ───────────────────────────── */
-.button-group .btn {
-  min-width: 100px;
-  text-align: center;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Utility Classes & Hidden
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.hidden {
+  display: none !important;
 }
-
-/* ─ COMPETITION CARD ACTIONS ──────────────────────────────── */
-.competition-card { position: relative; display:flex; gap:1rem; }
-.competition-actions {
-  position: absolute; bottom: 1rem; right: 1rem;
-  display:flex; gap:1rem;
-}
-.btn-like, .btn-comment {
-  background: transparent; border: none;
-  color: var(--text-light); font-size: 1.2rem;
-  display:flex; align-items:center; gap:.25rem;
-  cursor:pointer;
-}
-.btn-like:hover, .btn-comment:hover { color: var(--accent-alt); }
-
-/* ─ COMMENT MODAL ──────────────────────────────────────────── */
-.comments-list {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-.comment-item {
-  padding:.5rem .75rem;
-  border-bottom:1px solid var(--border);
-}
-  
