@@ -38,11 +38,7 @@ def create_app():
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
     # Register user blueprint
-<<<<<<< HEAD
-    from .user.route import user_bp
-=======
     from .user.views import user_bp
->>>>>>> origin/main
     app.register_blueprint(user_bp, url_prefix='/dashboard')
 
 
