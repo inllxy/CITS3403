@@ -21,25 +21,28 @@ class User(UserMixin, db.Model):
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
 class Competition(db.Model):
-    __tablename__ = "competitions"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    month = db.Column(db.String(20), nullable=False)
-    day = db.Column(db.String(10), nullable=False)
-    logo_url = db.Column(db.String(255))
-    result_url = db.Column(db.String(255))
-    detail_url = db.Column(db.String(255))
-    comp_url = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    __tablename__ = 'competitions'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)               # Competition name
+    year = db.Column(db.Integer, nullable=False)                   # Year
+    month = db.Column(db.String(10), nullable=False)               # Month abbreviation
+    day = db.Column(db.Integer, nullable=False)                    # Day of the month
+    poster_url = db.Column(db.String(255))                         # Poster image or link
+    logo_url = db.Column(db.String(255))                           # Competition logo
+    comp_link = db.Column(db.String(255))                          # External competition link
+    visibility = db.Column(db.String(20), default='public')        # private/public visibility
+    bracket = db.Column(db.JSON)                                   # Bracket structure
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
 class Player(db.Model):
     __tablename__ = "players"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    badge = db.Column(db.String(50))                   # 对应 player-badge 的内容
-    img_url = db.Column(db.String(255))                # 对应 player-img 的 src
-    event_line1 = db.Column(db.String(255))            # 对应 event-line1
-    event_line2 = db.Column(db.String(255))            # 对应 event-line2
-    social_links = db.Column(db.Text)                  # 存 JSON 字符串或 HTML 片段都行
+    league = db.Column(db.String(100))                      # League name
+    twitter = db.Column(db.String(255))                     # Twitter profile link
+    twitch = db.Column(db.String(255))                      # Twitch profile link
+    visibility = db.Column(db.String(20), default="public") # Player visibility (public/private)
+    photo_url = db.Column(db.String(255))                   # Path or link to player photo
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

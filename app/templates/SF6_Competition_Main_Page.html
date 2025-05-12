@@ -22,7 +22,13 @@
 
 <body>
   <!-- NavBar -->
-  {% include 'NavBar.html' %}
+    {% if current_user.is_authenticated %}
+      {% include 'Navbar_All/NavBar_Login.html' %}
+    {% else %}
+      {% include 'Navbar_All/NavBar.html' %}
+    {% endif %}
+
+  
 
 
   <!-- Video background with text overlay -->

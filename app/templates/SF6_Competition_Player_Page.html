@@ -37,7 +37,11 @@
 
 <body>
   <!-- NavBar -->
-  {% include 'NavBar.html' %}
+    {% if current_user.is_authenticated %}
+      {% include 'Navbar_All/NavBar_Login.html' %}
+    {% else %}
+      {% include 'Navbar_All/NavBar.html' %}
+    {% endif %}
 
   <div class="container py-4">
     <!-- Page header: centered title -->

@@ -12,11 +12,12 @@
       <!-- Competition dropdown -->
       <li class="navbar-text dropdown">
         <a class="nav-link dropdown-toggle fs-2" href="#" role="button" data-bs-toggle="dropdown">
-          User
+          {{ current_user.username }}
         </a>
         <ul class="dropdown-menu">
+          <li><a class="dropdown-item" >{{ current_user.username }}</a></li>
+          <li><a class="dropdown-item" >{{ current_user.email }}</a></li>
           <li><a class="dropdown-item" href="/logout">log out</a></li>
-
         </ul>
       </li>
       <!-- Other nav items -->
