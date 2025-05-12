@@ -1,7 +1,7 @@
 <template id="bracket-template">
     <div class="bracket-wrap">
 
-        <div class="bracket WinnerBracket">
+        <div class="bracket winnerBracket">
             <!-- Round 1: Winner Bracket -->
             <div class="round round-1-winner">
                 <div class="sub-header">
@@ -12,16 +12,16 @@
                 <div class="match">
                     <div class="player match{{match}}-player1">
                         <span class="score">SCORE</span>
-                        <span class="player_team" id="">TEAM</span>
+                        <span class="player_team">TEAM</span>
                         <span>|</span>
-                        <span class="player_name" id="">PLAYER</span>
+                        <span class="player_name">PLAYER</span>
                         <img  class="flag">
                     </div>
                     <div class="player match{{match}}-player2">
                         <span class="score">SCORE</span>
-                        <span class="player_team" id="">TEAM</span>
+                        <span class="player_team">TEAM</span>
                         <span>|</span>
-                        <span class="player_name" id="">PLAYER</span>
+                        <span class="player_name">PLAYER</span>
                         <img class="flag">
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 <div class="sub-header">
                     <div class="Top">Top 8</div>
                 </div>
-                {% for match in range(13, 15) %}  <!-- Updated range to include more matches -->
+                {% for match in range(1, 3) %}  <!-- Updated range to include more matches -->
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -60,7 +60,7 @@
                 <div class="sub-header">
                     <div class="Top">Winner-Semifinal</div>
                 </div>
-                {% for match in range(19, 20) %}
+                {% for match in range(1, 2) %}
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -82,11 +82,11 @@
             </div>
         
             <!-- Round 5: Grand Final -->
-            <div class="round GrandFinal">
+            <div class="round round-4-winner GrandFinal">
                 <div class="sub-header">
                     <div class="Top">GrandFinal</div>
                 </div>
-                {% for match in range(23, 24) %}
+                {% for match in range(1, 2) %}
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -105,17 +105,33 @@
                     </div>
                 </div>
                 {% endfor %}
+                <div class="match optional">
+                    <div class="player match{{match}}-player1">
+                        <span class="score">SCORE</span>
+                        <span class="player_team" id="">TEAM</span>
+                        <span>|</span>
+                        <span class="player_name" id="">PLAYER</span>
+                        <img  class="flag">
+                    </div>
+                    <div class="player match{{match}}-player2">
+                        <span class="score">SCORE</span>
+                        <span class="player_team" id="">TEAM</span>
+                        <span>|</span>
+                        <span class="player_name" id="">PLAYER</span>
+                        <img class="flag">
+                    </div>
+                </div>
             </div>
 
         </div>
 
-        <div class="bracket LoserBracket">
+        <div class="bracket loserBracket">
             <!-- Round 1: Loser Bracket -->
             <div class="round round-1-loser">
                 <div class="sub-header">
                     <div class="TournaType">Loser Bracket</div>
                 </div>
-                {% for match in range(5, 9) %}
+                {% for match in range(1, 5) %}
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -141,7 +157,7 @@
                 <div class="sub-header">
                     <div class="Top">Round2</div>
                 </div>
-                {% for match in range(9, 13) %}  <!-- Updated range to include more matches -->
+                {% for match in range(1, 5) %}  <!-- Updated range to include more matches -->
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -167,7 +183,7 @@
                 <div class="sub-header">
                     <div class="Top">Top 8</div>
                 </div>
-                {% for match in range(15, 17) %}  <!-- Updated range to include more matches -->
+                {% for match in range(1, 3) %}  <!-- Updated range to include more matches -->
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -193,7 +209,7 @@
                 <div class="sub-header">
                     <div class="Top">Loser QuarterFinal</div>
                 </div>
-                {% for match in range(17, 19) %}  <!-- Updated range to include more matches -->
+                {% for match in range(1, 3) %}  <!-- Updated range to include more matches -->
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -218,7 +234,7 @@
                 <div class="sub-header">
                     <div class="Top">Loser Semifinal</div>
                 </div>
-                {% for match in range(20, 21) %}
+                {% for match in range(1, 2) %}
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">
@@ -243,7 +259,7 @@
                 <div class="sub-header">
                     <div class="Top">Loser Final</div>
                 </div>
-                {% for match in range(21, 22) %}
+                {% for match in range(1, 2) %}
                 <!-- Match {{ match }} -->
                 <div class="match">
                     <div class="player match{{match}}-player1">

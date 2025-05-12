@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Activate the virtual environment
+python3 -m venv venv     
 source venv/bin/activate
-./venv/bin/python3 -m pip install flask flask-sqlalchemy flask-login flask-migrate email-validator
+./venv/bin/python3 -m pip install flask flask-sqlalchemy flask-login flask-migrate email-validator flask-wtf
 # Set Flask app
 export FLASK_APP=run.py
 

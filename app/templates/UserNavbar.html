@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <a class="navbar-brand" href="{{ url_for('index') }}">
+    <img src="https://www.streetfighter.com/6/assets/images/common/logo.png" alt="SF6Logo" class="SF6Logo" title="Cilck back to home page" />
+  </a>
+  <!-- Collapse button for mobile -->
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <!-- Competition dropdown -->
+      <li class="navbar-text dropdown">
+        <a class="nav-link dropdown-toggle fs-2" href="#" role="button" data-bs-toggle="dropdown">
+          User
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/logout">log out</a></li>
+          {{ current_user.username }}<br>
+          {{ current_user.email }}
+        </ul>
+      </li>
+      <!-- Other nav items -->
+
+      <li class="navbar-text">
+        <button type="button" id="openModal" class="nav-link fs-3 btn btn-link" >
+          + Add Competition
+        </button>
+      </li>
+
+      <li class="navbar-text">
+        <button type="button" id="openPlayerModal" class="nav-link fs-3 btn btn-link" >
+          + Add Player
+        </button>
+      </li>
+    
+    
+    </ul>
+  </div>
+</nav>
+

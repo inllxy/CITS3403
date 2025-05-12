@@ -4,33 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/bracket_display.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='JavaScript/player.js') }}" defer></script>
 
   
 </head>
 <body>
   <!-- NAVBAR -->
-  <div class="navbar">
-    <div class="container">
-      <h1>HOME</h1>
-      <div class="nav-buttons">
-        <button id="openModal" class="btn">+ Add Competition</button>
-        <button id="openPlayerModal" class="btn">+ Add Players</button>
-        
-        <div class="dropdown">
-          <button class="dropdown-btn btn">Username ▼</button>
-          <div class="dropdown-content">
-            <a href="/logout">Log Out</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  {%include 'UserNavbar.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
-    <a href="{{ url_for('index') }}"><h1>HOME</h1></a>
+
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
         {% for cat, m in msgs %}
@@ -131,5 +122,8 @@
   <!-- SCRIPTS -->
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}"></script>
   <script src="{{ url_for('static', filename='JavaScript/player.js') }}"></script>
+  
+
+ 
 </body>
 </html>
