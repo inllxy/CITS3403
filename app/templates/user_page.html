@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="icon"
+      href="{{ url_for('static', filename='Used_Source/favicon.jpg') }}"
+      type="image/jpg">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/navbar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
@@ -12,15 +16,13 @@
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
   <script src="{{ url_for('static', filename='JavaScript/player.js') }}"> defer</script>
 
-  
 </head>
 <body>
   <!-- NAVBAR -->
-  {%include 'UserNavbar.html' %}
+  {%include 'Navbar_All/UserNavbar.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
   <div class="container">
-
     {% with msgs = get_flashed_messages(with_categories=true) %}
       {% if msgs %}
         {% for cat, m in msgs %}
@@ -46,15 +48,8 @@
           <div class="result-image" style="display:none; margin-top:1rem;">
             <img src="{{ comp.poster_url }}" alt="Poster">
           </div>
-          <div class="bracket-display" style="display:none; margin-top:1rem;">
-            {% for round, matches in comp.bracket.items() %}
-              <h4>Round {{round}}</h4>
-              <ul>
-                {% for p1, p2 in matches %}
-                  <li>{{p1}} vs {{p2}}</li>
-                {% endfor %}
-              </ul>
-            {% endfor %}
+          <div class="bracket-data" style="display:none;">
+            {% include 'bracket_display.html' %}
           </div>
           <div class="card-actions">
             <div class="action like">
@@ -82,10 +77,10 @@
           <p style="margin:0 0 0.5rem;">{{ pl.league }}</p>
           <div style="display:flex; gap:0.5rem; font-size:1.2rem;">
             {% if pl.twitter %}
-              <a href="{{ pl.twitter }}" target="_blank">🐦</a>
+              <a href="{{ pl.twitter }}" target="_blank"><span class="bi bi-twitter"></span></a>
             {% endif %}
             {% if pl.twitch %}
-              <a href="{{ pl.twitch }}" target="_blank">🎮</a>
+              <a href="{{ pl.twitch }}" target="_blank"><span class="bi bi-twitch"></span></a>
             {% endif %}
           </div>
           <div style="position:absolute; top:0.5rem; right:0.5rem;">
@@ -115,8 +110,14 @@
     </div>
   </div>
 
-  
-
+  <!-- BRACKET MODAL -->
+  <div id="bracketModal" class="modal flex-center" style="display:none;">
+    <div class="modal-content">
+      <span class="close-bracket">&times;</span>
+      <div class="bracket-content"></div>
+    </div>
+  </div>
  
+
 </body>
 </html>

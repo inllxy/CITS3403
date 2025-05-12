@@ -1,6 +1,6 @@
  const players = [
     {
-      id: 'punk',
+      id: 'Punk',
       name: 'Punk',
       imageSrc: 'https://sf.esports.capcom.com/wp-content/uploads/2024/08/rere.CPT2024_Winners_EVO_Punk_square.jpg',
       badgeText: 'PREMIER',

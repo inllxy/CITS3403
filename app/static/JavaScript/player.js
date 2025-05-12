@@ -15,5 +15,12 @@ function previewImage(event) {
   document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.querySelector('#addPlayerModal input[type="file"]');
     if (fileInput) fileInput.addEventListener('change', previewImage);
+
+    // share-toggle for player form
+    const openSharePlayer    = document.getElementById('openSharePlayer');
+    const shareSectionPlayer = document.getElementById('share-section-player');
+    openSharePlayer.addEventListener('click', () => {
+      shareSectionPlayer.style.display =
+        shareSectionPlayer.style.display === 'none' ? 'block' : 'none';
+    });
   });
-  

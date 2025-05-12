@@ -32,22 +32,243 @@
         <input type="file" id="logo_file" name="logo_file" accept="image/*" />
         <input type="url" id="logo_link" name="logo_link" placeholder="Or enter logo URL" />
   
-        <label for="numPlayers">Bracket Size</label>
-        <select id="numPlayers" name="numPlayers" required>
-          <option value="">– # Players –</option>
-          <option value="8">8</option>
-          <option value="16">16</option>
-          <option value="32">32</option>
-        </select>
-  
-        <div id="bracket"></div>
+      
+
+        <div id="bracket" class="bracket-wrap">
+
+          <!-- ===== Winner Bracket ===== -->
+          <div class="bracket WinnerBracket">
+            <!-- Round 1: Winner QuarterFinal -->
+            <div class="round round-1-winner">
+              <div class="sub-header">
+                <div class="TournaType">Winner QuarterFinal</div>
+              </div>
+              {% for match in range(1,5) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                    <input type="text"   name="round1_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round1_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round1_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round1_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round1_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round1_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 2: Top 8 -->
+            <div class="round round-2-winner">
+              <div class="sub-header">
+                <div class="Top">Top 8</div>
+              </div>
+              {% for match in range(13,15) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round2_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round2_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round2_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round2_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round2_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round2_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 3: Winner Semifinal -->
+            <div class="round round-3-winner">
+              <div class="sub-header">
+                <div class="Top">Winner Semifinal</div>
+              </div>
+              {% for match in range(19,20) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round3_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round3_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round3_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round3_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round3_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round3_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Grand Final -->
+            <div class="round GrandFinal">
+              <div class="sub-header">
+                <div class="Top">GrandFinal</div>
+              </div>
+              {% for match in range(23,24) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round4_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round4_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round4_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round4_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round4_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round4_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- ===== Loser Bracket ===== -->
+          <div class="bracket LoserBracket">
+            <!-- Round 1: Loser Bracket -->
+            <div class="round round-1-loser">
+              <div class="sub-header">
+                <div class="TournaType">Loser Bracket</div>
+              </div>
+              {% for match in range(5,9) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round5_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round5_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round5_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round5_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round5_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round5_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 2 -->
+            <div class="round round-2-loser">
+              <div class="sub-header">
+                <div class="Top">Round 2</div>
+              </div>
+              {% for match in range(9,13) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round6_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round6_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round6_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round6_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round6_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round6_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 3 -->
+            <div class="round round-3-loser">
+              <div class="sub-header">
+                <div class="Top">Top 8</div>
+              </div>
+              {% for match in range(15,17) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round7_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round7_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round7_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round7_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round7_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round7_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 4 -->
+            <div class="round round-4-loser">
+              <div class="sub-header">
+                <div class="Top">Loser QuarterFinal</div>
+              </div>
+              {% for match in range(17,19) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round8_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round8_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round8_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round8_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round8_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round8_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 5: Loser Semifinal -->
+            <div class="round round-5-loser">
+              <div class="sub-header">
+                <div class="Top">Loser Semifinal</div>
+              </div>
+              {% for match in range(20,21) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round9_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round9_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round9_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round9_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round9_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round9_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- Round 6: Loser Final -->
+            <div class="round round-6-loser">
+              <div class="sub-header">
+                <div class="Top">Loser Final</div>
+              </div>
+              {% for match in range(21,22) %}
+              <div class="match">
+                <div class="player match{{match}}-player1">
+                  <input type="text"   name="round10_match{{match}}_team1"   placeholder="TEAM"   required>
+                  <input type="text"   name="round10_match{{match}}_player1" placeholder="PLAYER" required>
+                  <input type="number" name="round10_match{{match}}_score1"  placeholder="SCORE"  min="0" required>
+                </div>
+                <div class="player match{{match}}-player2">
+                  <input type="text"   name="round10_match{{match}}_team2"   placeholder="TEAM"   required>
+                  <input type="text"   name="round10_match{{match}}_player2" placeholder="PLAYER" required>
+                  <input type="number" name="round10_match{{match}}_score2"  placeholder="SCORE"  min="0" required>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
   
         <label for="comp">Competition Link</label>
         <input type="url" id="comp" name="comp_link" placeholder="https://..." required />
   
         <div class="button-group">
-          <button type="submit" name="visibility" value="public">Publish Publicly</button>
-          <button type="submit" name="visibility" value="private">Save Privately</button>
+          <button type="submit" name="action" value="public">Publish Publicly</button>
+          <button type="submit" name="action" value="private">Save Privately</button>
+          <button type="button" id="openShare" class="btn">Share</button>
+        </div>
+        <div id="share-section" style="display:none; margin-top:1rem;">
+          <label for="share_with">Share with (comma-separated usernames):</label>
+          <input type="text" id="share_with" name="share_with" …>
+          <button type="submit" name="action" value="share" class="btn">
+            Send Share
+          </button>
         </div>
       </form>
     </div>

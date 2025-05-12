@@ -23,26 +23,29 @@ class User(UserMixin, db.Model):
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
+    __tablename__ = 'competitions'
+
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)               # 比赛名称
-    year = db.Column(db.Integer, nullable=False)                   # 年份
-    month = db.Column(db.String(10), nullable=False)               # 月份缩写
-    day = db.Column(db.Integer, nullable=False)                    # 日期（几号）
-    poster_url = db.Column(db.String(255))                         # 结果图或链接
-    logo_url = db.Column(db.String(255))                           # 比赛 logo
-    comp_link = db.Column(db.String(255))                          # 比赛外链
-    visibility = db.Column(db.String(20), default='public')        # private/public
-    bracket = db.Column(db.JSON)                                   # 对战表结构
+    name = db.Column(db.String(100), nullable=False)               # Competition name
+    year = db.Column(db.Integer, nullable=False)                   # Year
+    month = db.Column(db.String(10), nullable=False)               # Month abbreviation
+    day = db.Column(db.Integer, nullable=False)                    # Day of the month
+    poster_url = db.Column(db.String(255))                         # Poster image or link
+    logo_url = db.Column(db.String(255))                           # Competition logo
+    comp_link = db.Column(db.String(255))                          # External competition link
+    visibility = db.Column(db.String(20), default='public')        # private/public visibility
+    bracket = db.Column(db.JSON)                                   # Bracket structure
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
     
 class Player(db.Model):
     __tablename__ = "players"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    league = db.Column(db.String(100))                      # 加回来
-    twitter = db.Column(db.String(255))                     # 单独字段存链接
-    twitch = db.Column(db.String(255))                      # 同上
-    visibility = db.Column(db.String(20), default="public") # 存储选手可见性
-    photo_url = db.Column(db.String(255))                   # 上传或链接图片路径
+    league = db.Column(db.String(100))                      # League name
+    twitter = db.Column(db.String(255))                     # Twitter profile link
+    twitch = db.Column(db.String(255))                      # Twitch profile link
+    visibility = db.Column(db.String(20), default="public") # Player visibility (public/private)
+    photo_url = db.Column(db.String(255))                   # Path or link to player photo
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

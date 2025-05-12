@@ -26,29 +26,46 @@
       <label>Twitter</label>
       <div class="social-input">
         <input type="url" name="twitter_link" placeholder="https://twitter.com/username" />
-        <span class="icon">🐦</span>
+        <span class="bi bi-twitter"></span>
       </div>
 
       <label>Twitch</label>
       <div class="social-input">
         <input type="url" name="twitch_link" placeholder="https://twitch.tv/username" />
-        <span class="icon">🎮</span>
+        <span class="bi bi-twitch"></span>
       </div>
 
       <!-- Visibility Buttons -->
       <div class="button-group" style="justify-content:flex-end;">
-        <button type="submit" name="visibility" value="public" class="btn">
+        <button type="submit" name="action" value="public" class="btn">
           Publish Publicly
         </button>
-        <button type="submit" name="visibility" value="private" class="btn">
+        <button type="submit" name="action" value="private" class="btn">
           Save Privately
+        </button>
+        <button type="button" id="openSharePlayer" value="share" class="btn">
+          Share
+        </button>
+      </div>
+      <!-- Share section (hidden until “Share” clicked) -->
+      <div id="share-section-player" style="display:none; margin-top:1rem;">
+        <label for="share_with_player">Share with (comma-separated usernames):</label>
+        <input
+          type="text"
+          id="share_with_player"
+          name="share_with"
+          placeholder="e.g. alice, bob, charlie"
+          style="width:100%; padding:0.5rem; margin-top:0.5rem;"
+        />
+        <button type="submit" name="action" value="share" class="btn" style="margin-top:0.5rem;">
+          Send Share
         </button>
       </div>
     </form>
   </div>
 </div>
 
-<script src="{{ url_for('static', filename='JavaScript/player.js') }}"></script>
+
 
 
   
