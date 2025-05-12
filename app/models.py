@@ -23,6 +23,8 @@ class User(UserMixin, db.Model):
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
+    __tablename__ = 'competitions'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)               # Competition name
     year = db.Column(db.Integer, nullable=False)                   # Year
@@ -34,6 +36,7 @@ class Competition(db.Model):
     visibility = db.Column(db.String(20), default='public')        # private/public visibility
     bracket = db.Column(db.JSON)                                   # Bracket structure
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
     
 class Player(db.Model):
     __tablename__ = "players"
