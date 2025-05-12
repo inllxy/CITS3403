@@ -21,25 +21,28 @@ class User(UserMixin, db.Model):
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
 class Competition(db.Model):
-    __tablename__ = "competitions"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    month = db.Column(db.String(20), nullable=False)
-    day = db.Column(db.String(10), nullable=False)
-    logo_url = db.Column(db.String(255))
-    result_url = db.Column(db.String(255))
-    detail_url = db.Column(db.String(255))
-    comp_url = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    __tablename__ = 'competitions'
 
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)               # 比赛名称
+    year = db.Column(db.Integer, nullable=False)                   # 年份
+    month = db.Column(db.String(10), nullable=False)               # 月份缩写
+    day = db.Column(db.Integer, nullable=False)                    # 日期（几号）
+    poster_url = db.Column(db.String(255))                         # 结果图或链接
+    logo_url = db.Column(db.String(255))                           # 比赛 logo
+    comp_link = db.Column(db.String(255))                          # 比赛外链
+    visibility = db.Column(db.String(20), default='public')        # private/public
+    bracket = db.Column(db.JSON)                                   # 对战表结构
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
 class Player(db.Model):
     __tablename__ = "players"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    badge = db.Column(db.String(50))                   # 对应 player-badge 的内容
-    img_url = db.Column(db.String(255))                # 对应 player-img 的 src
-    event_line1 = db.Column(db.String(255))            # 对应 event-line1
-    event_line2 = db.Column(db.String(255))            # 对应 event-line2
-    social_links = db.Column(db.Text)                  # 存 JSON 字符串或 HTML 片段都行
+    league = db.Column(db.String(100))                      # 加回来
+    twitter = db.Column(db.String(255))                     # 单独字段存链接
+    twitch = db.Column(db.String(255))                      # 同上
+    visibility = db.Column(db.String(20), default="public") # 存储选手可见性
+    photo_url = db.Column(db.String(255))                   # 上传或链接图片路径
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
