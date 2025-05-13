@@ -22,6 +22,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
+    
+shared_competitions = db.Table(
+    'shared_competitions',
+    db.Column('competition_id', db.Integer, db.ForeignKey('competitions.id'), primary_key=True),
+    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
@@ -40,8 +46,17 @@ class Competition(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_competitions_users'), nullable=False)
     user = relationship('User', backref='competitions')
+    shared_with = db.relationship(
+        'User',
+        secondary=shared_competitions,
+        backref='shared_competitions'
+    )
     
-    
+shared_players = db.Table(
+    'shared_players',
+    db.Column('player_id', db.Integer, db.ForeignKey('players.id'), primary_key=True),
+    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)    
 class Player(db.Model):
     __tablename__ = "players"
 
@@ -55,3 +70,13 @@ class Player(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_players_users'), nullable=False)
     user = relationship('User', backref='players')
+    shared_with = db.relationship(
+    'User',
+    secondary=shared_players,
+    backref='shared_players'
+)
+
+
+# models.py
+
+
