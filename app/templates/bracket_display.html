@@ -14,7 +14,7 @@
           <span class="score">{{ match.score1 }}</span>
           <span class="player_team">{{ match.team1 }}</span>
           <span>|</span>
-          <span class="player_name">{{ match.player1 }}</span>
+          <span class="player_name"><a href="../players" target="_parent">{{ match.player1 }}</a></span>
           {% if match.flag1_url %}
             <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
           {% endif %}
@@ -23,7 +23,7 @@
           <span class="score">{{ match.score2 }}</span>
           <span class="player_team">{{ match.team2 }}</span>
           <span>|</span>
-          <span class="player_name">{{ match.player2 }}</span>
+          <span class="player_name"><a href="../players" target="_parent">{{ match.player2 }}</a></span>
           {% if match.flag2_url %}
             <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
           {% endif %}
