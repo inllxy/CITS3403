@@ -111,7 +111,7 @@
   color: #c0c0c0;            
 }
 
-.card .card-footer a {
+.card .card-footer a,.card-footer span {
   color: #4dabf7;            
   transition: color 0.2s;
 }

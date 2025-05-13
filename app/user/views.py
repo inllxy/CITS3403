@@ -199,6 +199,15 @@ def delete_competition(comp_id):
     return redirect(url_for('user_dashboard'))
 @user_bp.route('/api/comment', methods=['POST'])
 
+@user_bp.route('/player/delete/<int:player_id>', methods=['POST'])
+@login_required
+def delete_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    db.session.delete(player)
+    db.session.commit()
+    flash(f'Player "{player.name}" deleted', 'success')
+    return redirect(url_for('user.user_page'))
+
 def add_comment():
     data = request.get_json() or {}
     try:
