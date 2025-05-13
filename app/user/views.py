@@ -10,7 +10,7 @@ from flask import (
     abort
 )
 from werkzeug.utils import secure_filename
-from app.models import db, Competition, Player, User
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
 
 user_bp = Blueprint(
@@ -40,13 +40,28 @@ def save_file(file_storage):
 @user_bp.route('/')
 @login_required
 def user_page():
-    competitions = Competition.query.filter_by(user_id=current_user.id) \
-        .order_by(Competition.created_at.desc()).all()
-    
-    players = Player.query.filter_by(user_id=current_user.id) \
-        .order_by(Player.created_at.desc()).all()
-    
+    own_comps = Competition.query.filter_by(user_id=current_user.id)
+
+    shared_comps = Competition.query \
+        .join(shared_competitions) \
+        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+
+    competitions = own_comps.union(shared_comps) \
+        .order_by(Competition.created_at.desc()) \
+        .all()
+
+    own_players = Player.query.filter_by(user_id=current_user.id)
+
+    shared_players_query = Player.query \
+        .join(shared_players) \
+        .filter(shared_players.c.shared_with_user_id == current_user.id)
+
+    players = own_players.union(shared_players_query) \
+        .order_by(Player.created_at.desc()) \
+        .all()
+
     return render_template('user_page.html', competitions=competitions, players=players)
+
 
 
 @user_bp.route('/submit-player', methods=['POST'])
