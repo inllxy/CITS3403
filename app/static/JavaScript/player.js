@@ -15,7 +15,6 @@ function previewImage(event) {
   document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.querySelector('#addPlayerModal input[type="file"]');
     if (fileInput) fileInput.addEventListener('change', previewImage);
-<<<<<<< HEAD
 
     // share-toggle for player form
     const openSharePlayer    = document.getElementById('openSharePlayer');
@@ -25,7 +24,3 @@ function previewImage(event) {
         shareSectionPlayer.style.display === 'none' ? 'block' : 'none';
     });
   });
-=======
-  });
-  
->>>>>>> origin/main

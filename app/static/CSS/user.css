@@ -1,474 +1,213 @@
-:root {
-    --bg-dark:    #1a1a28;
-    --bg-mid:     #252538;
-    --text-light: #e0e0ff;
-    --text-mid:   #a0a0c0;
-    --accent:     #7f5af0;
-    --accent-alt: #d0afff;
-    --border:     #3a3a5a;
-  }
-  
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg-dark); color: var(--text-light);
-    font-family: 'Segoe UI', Roboto, sans-serif;
-  }
-  
-  .container {
-    width: 90%; max-width: 1200px;
-    margin: 2rem auto;
-  }
-  .flex { display:flex; gap:1rem; }
-  .flex-center { display:flex; align-items:center; justify-content:center; }
-  
-  .btn, button {
-    background: var(--accent); border:2px solid var(--accent-alt);
-    color:#fff; padding:.6rem 1.2rem; border-radius:.5rem;
-    cursor:pointer; transition: .2s;
-  }
-  .btn:hover, button:hover { background: var(--accent-alt); transform: translateY(-2px); }
-  .btn:active, button:active { transform: translateY(0); }
-  
-  .card {
-    background: var(--bg-mid);
-    border:1px solid var(--border);
-    border-radius:.75rem;
-    padding:1.5rem;
-    margin-bottom:2rem;
-  }
-  
-  label { color: var(--text-mid); margin-top:1rem; }
-  input[type="text"],
-  input[type="number"],
-  input[type="url"],
-  select,
-  textarea {
-    background:#2a2a42;
-    border:1px solid var(--border);
-    color:var(--text-light);
-    border-radius:.5rem;
-    padding:.6rem; margin-top:.25rem;
-  }
-  input:focus, select:focus, textarea:focus {
-    outline:none;
-    border-color: var(--accent);
-    box-shadow:0 0 8px rgba(127,90,240,0.6);
-  }
-  
-  .modal {
-    display:none; position:fixed; top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(0,0,0,0.7);
-    align-items:center; justify-content:center;
-    z-index:1000;
-  }
-  .modal-content {
-    background:var(--bg-mid);
-    padding:2rem;
-    border-radius:.75rem;
-    width:90%; max-width:800px;
-    max-height:90%; overflow-y:auto;
-    position:relative;
-  }
-  .modal-content .close {
-    position:absolute; top:1rem; right:1rem;
-    font-size:1.5rem; color:var(--text-mid);
-    cursor:pointer;
-  }
-  
-  #bracket {
-    display:flex; gap:2rem; overflow-x:auto;
-    margin-top:1rem;
-  }
-  .round {
-    background:#2a2a42;
-    border:1px solid var(--border);
-    border-radius:.5rem;
-    padding:1rem;
-  }
-  .match input { width:140px; display:block; margin:.25rem auto; }
-  
-  .flash {
-    padding:.75rem 1rem; border-radius:.5rem;
-    margin-bottom:1rem;
-  }
-  .flash.success {
-    background:#2a332a; border:1px solid #4f8f4f;
-    color:#b8fbb8;
-  }
-  .flash.error {
-    background:#3a2424; border:1px solid #bf4f4f;
-    color:#ffb8b8;
-  }
+/* ─────────────────────────────────────────────────────────
+  templates.css — Styles override users_template.html & players_template.html
+───────────────────────────────────────────────────────── */
 
-form label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 0.25rem;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  General Modal Styles
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;                         /* top/right/bottom/left = 0 */
+  background: rgba(0,0,0,0.5);      /* Semi-transparent overlay */
+  justify-content: center;         
+  align-items: start;               /* Align to top, allow internal scrolling */
+  padding-top: 2rem;                
+  overflow-y: auto;                 
+  z-index: 1050;                    
+}
+.modal.open {
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.2);
+}
+.modal-content h2 {
+  margin-bottom: 1rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+}
+.modal-content .close,
+.modal-content .close-player {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
 }
 
-
-form input,
-form select,
-form textarea {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Common Form Controls
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal-content label {
   display: block;
-  width: 100%;
-  margin-bottom: 1rem;   /* space before next label */
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #444;
 }
-
-
-.note {
-  font-size: 0.85rem;
-  font-weight: normal;
-  color: var(--text-mid); /* or whichever text-mid you prefer */
+.modal-content .note {
+  font-size: 0.875rem;
+  color: #777;
   margin-bottom: 0.5rem;
 }
-
-
-/* ensure your nav-buttons flex & spacing */
-.nav-buttons {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-.nav-buttons button,
-.nav-buttons .dropdown-btn {
-  background: transparent;
-  border: none;
-  color: #000;
-  padding: 0.5rem 1rem;
+.modal-content input[type="text"],
+.modal-content input[type="url"],
+.modal-content input[type="number"],
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
   font-size: 1rem;
-  cursor: pointer;
+  color: #333;
+  background: #f9f9f9;
 }
-.nav-buttons .btn:hover,
-.nav-buttons .btn:focus {
-  color: #007bff;
-  text-decoration: underline;
+.modal-content input[type="file"] {
+  margin-top: 0.25rem;
+}
+.modal-content textarea {
+  resize: vertical;
+  min-height: 4rem;
+}
+.modal-content input:focus,
+.modal-content select:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #66afe9;
+  box-shadow: 0 0 0.25rem rgba(102,175,233,0.6);
 }
 
-/* dropdown styling */
-.dropdown {
-  position: relative;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Button Group & Share Section
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.modal-content .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
 }
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  margin-top: 0.5rem;
-  min-width: 8rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 10;
-}
-.dropdown.show .dropdown-content {
-  display: block;
-}
-.dropdown-content a {
-  display: block;
+.modal-content .button-group .btn {
   padding: 0.5rem 1rem;
-  color: #000;
-  text-decoration: none;
-}
-.dropdown-content a:hover,
-.dropdown-content a:focus {
-  background-color: #f8f9fa;
-  color: #007bff;
-}
-
-/* -----------------------------------
-   COMPETITION CARDS
------------------------------------ */
-.competition-card {
-  display: flex;
-  width: 70vw;
-  margin: 0 0 8vh 2vw;
-  padding: 1vw;
-  border-top: 1px solid #08e41b;
-  border-bottom: 1px solid #08e41b;
-  border-radius: 0;
-}
-.competition-date {
-  border-right: 1px solid #08e41b;
-  width: 12.5vw;
-  height: 15vw;
-  text-align: center;
-  padding-top: 1vw;
-}
-.competition-date .competition-month {
-  color: #030cb4;
-  font-size: 3vw;
-}
-.competition-date .competition-day {
-  color: #030cb4;
-  font-size: 8vw;
-}
-
-/* override small images */
-.result-image img,
-.profile-photo {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
-
-.game-logo {
-  width: 12.5vw;
-  height: auto;
-  margin: auto 1vw;
-}
-
-.competition-info {
-  flex: 1;
-  margin-left: 4vw;
-}
-.competition-info h2 {
-  font-size: 4.5vw;
-  color: #100808;
-  margin: 0;
-  line-height: 1.2;
-}
-
-/* button‐group container & items */
-.competition-info .button-group,
-.competition-info .button-group a {
-  display: flex;
-  gap: 0.5rem;
-}
-.competition-info .button-group .btn,
-.competition-info .button-group button,
-.competition-info .button-group a {
-  flex: 1;
-  text-align: center;
-}
-
-/* action buttons (Result, Details, Comp) */
-.button-group .btn {
-  margin-right: 1.5vw;
-  font-size: 2vw;
-  padding: 0.05vw 2.5vw;
-  background-color: gold;
+  border-radius: 0.25rem;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
+}
+.modal-content .button-group .btn[value="public"] {
+  background: #28a745;
+  color: #fff;
+}
+.modal-content .button-group .btn[value="private"] {
+  background: #6c757d;
+  color: #fff;
+}
+.modal-content .button-group .btn#openShare,
+.modal-content .button-group .btn#openSharePlayer {
+  background: #17a2b8;
+  color: #fff;
 }
 
-/* hide by default; show when JS adds .visible */
-.result-image,
-.bracket-display {
+#share-section,
+#share-section-player {
   display: none;
   margin-top: 1rem;
+  padding: 1rem;
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
 }
-.result-image.visible,
-.bracket-display.visible {
-  display: block;
+#share-section label,
+#share-section-player label {
+  font-weight: 600;
+}
+#share-section input,
+#share-section-player input {
+  margin-top: 0.5rem;
 }
 
-/* -----------------------------------
-   PLAYERS GRID
------------------------------------ */
-.players-grid {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Bracket Table Styles (users_template.html #bracket .round)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.bracket-wrap {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
 }
-.player-card {
-  width: 200px;
+.bracket-wrap .round {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
   padding: 1rem;
-  position: relative;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  text-align: center;
+}
+.bracket-wrap .round .sub-header {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+.bracket-wrap .round .match {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.bracket-wrap .round .player {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.bracket-wrap .round .player input {
+  font-size: 0. nine rem;
 }
 .player-card h3 {
   margin: 0.5rem 0 0.25rem;
 }
 
-/* SOCIAL LINKS */
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
-}
-/* PRIVATE LOCK ICON */
-.private-lock {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  font-size: 0.8rem;
-  color: #888;
-}
-
-/* -----------------------------------
-   CARD ACTIONS (LIKE & COMMENT)
------------------------------------ */
-.card-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-}
-.card-actions .action {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  cursor: pointer;
-  color: #555;
-  font-size: 0.9rem;
-}
-.card-actions .action:hover {
-  color: #007bff;
-}
-
-/* -----------------------------------
-   MODALS
------------------------------------ */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-content {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  overflow-y: auto;
-}
-.modal-content .close,
-.modal-content .close-player,
-.modal-content .close-comment,
-.modal-content .close-friends {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.75rem;
-  cursor: pointer;
-  font-size: 1.5rem;
-}
-.close-bracket {
-  position: absolute;
-  top: .5rem;
-  right: .75rem;
-  cursor: pointer;
-}
-
-/* -----------------------------------
-   COMMENT MODAL DETAILS
------------------------------------ */
-#commentModal .modal-content {
-  max-width: 500px;  /* reinforce width */
-}
-.comment-list {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  background: #f8f9fa;
-  padding: 0.5rem;
-}
-.comment-item {
-  padding: 0.5rem;
-  border-bottom: 1px solid #ddd;
-}
-.comment-item:last-child {
-  border-bottom: none;
-}
-.comment-form textarea {
-  width: 100%;
-  height: 60px;
-  margin-bottom: 0.5rem;
-  background: #2a2a42;
-  border: 1px solid #ddd;
-  color: #fff;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-}
-.comment-form button {
-  float: right;
-}
-
-/* -----------------------------------
-   SOCIAL INPUT FIELDS
------------------------------------ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Social Input Block (players_template.html .social-input)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .social-input {
   position: relative;
-  margin-bottom: 1rem;
-}
-.social-input input {
-  width: 100%;
-  padding-right: 2rem;
+  margin-top: 1rem;
 }
 .social-input .icon {
   position: absolute;
-  right: 0.75rem;
   top: 50%;
+  right: 0.75rem;
   transform: translateY(-50%);
   pointer-events: none;
+  font-size: 1.25rem;
+}
+.social-input input {
+  padding-right: 2.5rem; /* Space for the icon */
 }
 
-/* -----------------------------------
-   GENERIC BUTTON
------------------------------------ */
-.btn {
-  background: #007bff;
-  border: none;
-  color: #fff;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-}
-.btn:hover {
-  background: #0056b3;
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Preview Image & Player Form (players_template.html)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#previewImage {
+  display: block;
+  margin-top: 0.75rem;
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
-/* 1) Let the modal itself scroll if its content is too tall */
-.modal.flex-center {
-  display: none;               /* stays hidden until JS opens it */
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  
-  /* instead of centering vertically, pin to the top and allow scroll */
-  justify-content: center;
-  align-items: flex-start;     /* push content to top */
-  padding-top: 2rem;           /* give it some breathing room */
-  overflow-y: auto;            /* scroll the whole modal if needed */
-  z-index: 1000;
-}
-
-/* 2) Constrain the white “window” inside it */
-.modal-content {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem;
-  width: 90%;                  /* or a fixed width like 600px */
-  max-width: 600px;
-  
-  /* cap the height so it never exceeds the viewport */
-  max-height: calc(100vh - 4rem);
-  overflow-y: auto;            /* scroll *inside* the white box */
-}
-
-/* -----------------------------------
-   HIDDEN HELPER
------------------------------------ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Utility Classes & Hidden
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .hidden {
   display: none !important;
 }

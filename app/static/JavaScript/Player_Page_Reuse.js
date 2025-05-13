@@ -1,15 +1,20 @@
 // Mapping of player IDs to modal content (title and body text)
 const playerInfo = {
-  punk: {
+  Punk: {
     title: 'Punk',  // Display name for Punk
     matchesPlayed: 0,  // Placeholder for matches played
     matchesWon: 0  // Placeholder for matches won
   },
-  menard: {
-    title: 'MenaRD',  // Display name for MenaRD
-    matchesPlayed: 0,  // Placeholder for matches played
-    matchesWon: 0  // Placeholder for matches won
-  }
+  MenaRD: {
+    title: 'MenaRD', 
+    matchesPlayed: 0,  
+    matchesWon: 0  
+  },
+  Kusanagi: {
+    title: 'Kusanagi',  
+    matchesPlayed: 0,  
+    matchesWon: 0  
+  },
 };
 
 // Select the reusable player modal element
