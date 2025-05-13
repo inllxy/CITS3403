@@ -7,6 +7,10 @@
   font-family: 'Bebas Neue', sans-serif;
 }
 
+.h1 {
+  text-align: center;
+}
+
 .competition-result-section {
   margin: 2.5vw;
   padding: 1.25vw;
@@ -81,4 +85,53 @@
   width: 60%;             
   height: auto;           
   object-fit: contain;   
+}
+
+
+/* Player Card Section */
+#playerContainer {
+  max-width: 80vw;
+  margin: 2vw auto;        
+}
+
+.card {
+  background-color: #34374c;  
+  border: none;              
+  border-radius: 0.5vw;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  color: #e0e0e0;           
+}
+
+.card .card-title {
+  color: #ffffff;             
+  font-weight: 600;
+}
+
+.card .card-text {
+  color: #c0c0c0;            
+}
+
+.card .card-footer a {
+  color: #4dabf7;            
+  transition: color 0.2s;
+}
+.card .card-footer a:hover {
+  color: #1e88e5;
+}
+
+/* Lift card slightly on hover and enhance shadow */
+.player-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+/* Allow the card body to expand and fill available space */
+.player-card .card-body {
+  flex-grow: 1;
+}
+
+/* Apply uniform adjustments to card images if needed */
+.card-img-top {
+  height: 12rem;
+  object-fit: cover;
 }

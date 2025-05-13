@@ -23,8 +23,8 @@
   {%include 'Navbar_All/UserNavbar.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
-      <div class="Create_Class">
-        <h1>The Competitions You Created</h1>
+
+    <h1>The Competitions You Created</h1>
 
     {% for comp in competitions %}
       <div class="competition-result-item">
@@ -113,31 +113,64 @@
 
 
   <!-- PLAYERS SECTION -->
-  <div class="container">
+
     <h1>The Player Card You Created</h1>
-    <div class="flex" style="flex-wrap: wrap; gap: 1rem;">
-      {% for pl in players %}
-        <div class="card private-card" data-owner-id="{{ pl.owner_id }}" style="width: 200px; padding:1rem; position:relative;">
-          <img src="{{ pl.photo_url }}" class="profile-photo" alt="{{ pl.name }}">
-          <h3 style="margin:0.5rem 0 0.25rem;">{{ pl.name }}</h3>
-          <p style="margin:0 0 0.5rem;">{{ pl.league }}</p>
-          <div style="display:flex; gap:0.5rem; font-size:1.2rem;">
-            {% if pl.twitter %}
-              <a href="{{ pl.twitter }}" target="_blank"><span class="bi bi-twitter"></span></a>
-            {% endif %}
-            {% if pl.twitch %}
-              <a href="{{ pl.twitch }}" target="_blank"><span class="bi bi-twitch"></span></a>
-            {% endif %}
+
+    {% for pl in players %}
+    <div id="playerContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+      <div class="col" data-owner-id="{{ pl.owner_id }}">
+        <div class="card player-card"
+            data-player-id=""
+            data-bs-toggle="modal"
+            data-bs-target="#playerModal"
+            style="cursor:pointer">
+
+          <div class="card-header">
+            <img class="card-img-top player-img"
+                src="{{ pl.photo_url }}"
+                alt="{{ pl.name }}">
           </div>
-          <div style="position:absolute; top:0.5rem; right:0.5rem;">
-            {% if pl.visibility=='private' %}
-              <span style="font-size:0.8rem; color:#888;">🔒</span>
-            {% endif %}
+
+          <div class="card-body text-center">
+            <span class="badge bg-secondary mb-2 player-badge">{{ pl.league }}</span>
+            <h5 class="card-title fw-bold player-name">{{ pl.name }}</h5>
+            <p class="card-text">
+              <span class="event-line1"></span><br>
+              <span class="event-line2"></span>
+            </p>
+          </div>
+
+          <div class="card-footer d-flex justify-content-evenly text-center social-links">
+            {% if pl.twitter %}
+                <a href="{{ pl.twitter }}" target="_blank"><span class="bi bi-twitter"></span></a>
+              {% endif %}
+              {% if pl.twitch %}
+                <a href="{{ pl.twitch }}" target="_blank"><span class="bi bi-twitch"></span></a>
+              {% endif %}
+              {% if pl.visibility=='shared' %}
+                <span style="font-size:0.8rem; color:#fffbfb;">👥</span>
+              {% endif %}
           </div>
         </div>
-      {% endfor %}
+      </div>
     </div>
-  </div>
+     
+    <div class="modal fade" id="playerModal_{{ loop.index0 }}"
+      tabindex="-1" aria-labelledby="playerLabel_{{ loop.index0 }}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="playerLabel_{{ loop.index0 }}">{{ pl.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body text-center">
+            
+          </div>
+        </div>
+      </div>
+   </div>
+    {% endfor %}
+
   
   <!-- MODALS -->
   {% include 'users_template.html' %}
