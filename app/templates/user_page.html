@@ -72,6 +72,10 @@
           </div>
 
           <div class="card-actions">
+            {% if pl.visibility=='shared' %}
+                <span>🤝</span>
+            {% endif %}
+
             <div class="action like">
               <span class="heart">❤️</span>
               <span class="count">0</span>
@@ -81,6 +85,10 @@
               <span class="bubble">💬</span>
               <span class="count">0</span>
             </div>
+
+            {% if pl.visibility=='shared' %}
+              <span style="font-size:0.8rem; color:#fffbfb;">👥</span>
+            {% endif %}
           </div>
         </div>
 
@@ -116,60 +124,78 @@
 
     <h1>The Player Card You Created</h1>
 
-    {% for pl in players %}
+   
     <div id="playerContainer" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
-      <div class="col" data-owner-id="{{ pl.owner_id }}">
-        <div class="card player-card"
-            data-player-id=""
-            data-bs-toggle="modal"
-            data-bs-target="#playerModal"
-            style="cursor:pointer">
+    {% for pl in players %}
+        <div class="col" data-owner-id="{{ pl.owner_id }}">
+          <div class="card player-card"
+              data-player-id=""
+              data-bs-toggle="modal"
+              data-bs-target="playerModal_{{ loop.index0 }}"
+              style="cursor:pointer">
 
-          <div class="card-header">
-            <img class="card-img-top player-img"
-                src="{{ pl.photo_url }}"
-                alt="{{ pl.name }}">
-          </div>
+            <div class="card-header">
+              <img class="card-img-top player-img"
+                  src="{{ pl.photo_url }}"
+                  alt="{{ pl.name }}">
+            </div>
 
-          <div class="card-body text-center">
-            <span class="badge bg-secondary mb-2 player-badge">{{ pl.league }}</span>
-            <h5 class="card-title fw-bold player-name">{{ pl.name }}</h5>
-            <p class="card-text">
-              <span class="event-line1"></span><br>
-              <span class="event-line2"></span>
-            </p>
-          </div>
+            <div class="card-body text-center">
+              <span class="badge bg-secondary mb-2 player-badge">{{ pl.league }}</span>
+              <h5 class="card-title fw-bold player-name">{{ pl.name }}</h5>
+              <p class="card-text">
+                <span class="event-line1"></span><br>
+                <span class="event-line2"></span>
+              </p>
+            </div>
 
-          <div class="card-footer d-flex justify-content-evenly text-center social-links">
-            {% if pl.twitter %}
+            <div class="card-footer d-flex justify-content-evenly text-center social-links">
+              
+              {% if pl.twitter %}
                 <a href="{{ pl.twitter }}" target="_blank"><span class="bi bi-twitter"></span></a>
               {% endif %}
+
+              {% if pl.visibility=='shared' %}
+                <span>🤝</span>
+              {% endif %}
+
               {% if pl.twitch %}
                 <a href="{{ pl.twitch }}" target="_blank"><span class="bi bi-twitch"></span></a>
               {% endif %}
-              {% if pl.visibility=='shared' %}
-                <span style="font-size:0.8rem; color:#fffbfb;">👥</span>
-              {% endif %}
+            </div>
+
+            <form
+              action="{{ url_for('user.delete_player', player_id=pl.id) }}"
+              method="post"
+              style="display:inline"
+              onsubmit="return confirm('Do you really want to delete “{{ pl.name }}” ?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                Delete
+              </button>
+            </form>
+          
           </div>
         </div>
       </div>
-    </div>
      
-    <div class="modal fade" id="playerModal_{{ loop.index0 }}"
-      tabindex="-1" aria-labelledby="playerLabel_{{ loop.index0 }}" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="playerLabel_{{ loop.index0 }}">{{ pl.name }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body text-center">
-            
+      <div class="modal fade" id="playerModal_{{ loop.index0 }}"
+        tabindex="-1" aria-labelledby="playerLabel_{{ loop.index0 }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="playerLabel_{{ loop.index0 }}">{{ pl.name }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+              
+            </div>
           </div>
         </div>
       </div>
-   </div>
+
     {% endfor %}
+    </div> 
+    
 
   
   <!-- MODALS -->
