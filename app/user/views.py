@@ -11,6 +11,7 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 from app.models import db, Competition, Player, User, shared_players, shared_competitions
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
 
 user_bp = Blueprint(
@@ -60,7 +61,28 @@ def user_page():
         .order_by(Player.created_at.desc()) \
         .all()
 
+    own_comps = Competition.query.filter_by(user_id=current_user.id)
+
+    shared_comps = Competition.query \
+        .join(shared_competitions) \
+        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+
+    competitions = own_comps.union(shared_comps) \
+        .order_by(Competition.created_at.desc()) \
+        .all()
+
+    own_players = Player.query.filter_by(user_id=current_user.id)
+
+    shared_players_query = Player.query \
+        .join(shared_players) \
+        .filter(shared_players.c.shared_with_user_id == current_user.id)
+
+    players = own_players.union(shared_players_query) \
+        .order_by(Player.created_at.desc()) \
+        .all()
+
     return render_template('user_page.html', competitions=competitions, players=players)
+
 
 
 
@@ -81,15 +103,32 @@ def submit_player():
     else:
         visibility = 'public'
 
+    action = request.form.get('action', 'public')  
+    if action == 'private':
+        visibility = 'private'
+    elif action == 'share':
+        visibility = 'shared'
+    else:
+        visibility = 'public'
+
     player = Player(
         name=request.form.get('player_name', '').strip(),
         league=request.form.get('league', '').strip(),
         twitter=request.form.get('twitter_link', '').strip(),
         twitch=request.form.get('twitch_link', '').strip(),
         visibility=visibility,
+        visibility=visibility,
         photo_url=photo_url,
         user_id=current_user.id
     )
+    if action == 'share':
+        usernames = request.form.get('share_with', '')
+        username_list = [u.strip() for u in usernames.split(',') if u.strip()]
+        for uname in username_list:
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                player.shared_with.append(user)
+
     if action == 'share':
         usernames = request.form.get('share_with', '')
         username_list = [u.strip() for u in usernames.split(',') if u.strip()]
@@ -104,6 +143,7 @@ def submit_player():
     return redirect(url_for('user.user_page'))
 
 
+
 @user_bp.route('/submit-competition', methods=['POST'])
 @login_required
 def submit_competition():
@@ -113,7 +153,14 @@ def submit_competition():
     date = int(request.form.get('date', 1))
     comp_link = request.form.get('comp_link', '').strip()
     action = request.form.get('action', 'public')
+    action = request.form.get('action', 'public')
 
+    if action == 'private':
+        visibility = 'private'
+    elif action == 'share':
+        visibility = 'shared'
+    else:
+        visibility = 'public'
     if action == 'private':
         visibility = 'private'
     elif action == 'share':
@@ -191,6 +238,15 @@ def submit_competition():
         user_id=current_user.id
     )
     db.session.add(new_comp)
+
+    if action == 'share':
+        usernames = request.form.get("share_with", "")
+        username_list = [u.strip() for u in usernames.split(",") if u.strip()]
+        for uname in username_list:
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                new_comp.shared_with.append(user)
+
 
     if action == 'share':
         usernames = request.form.get("share_with", "")
