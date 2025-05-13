@@ -2,13 +2,16 @@
 import os
 import uuid
 import calendar
+import re
 from flask import (
     Blueprint, current_app, request,
     redirect, url_for, flash,
-    render_template, jsonify
+    render_template, jsonify,
+    abort
 )
 from werkzeug.utils import secure_filename
 from app.models import db, Competition, Player
+from flask_login import login_required, current_user
 
 user_bp = Blueprint(
     'user', __name__,
@@ -81,20 +84,50 @@ def submit_competition():
     else:
         logo_url = request.form.get('logo_link', '')
 
-    raw = {k: v for k, v in request.form.items() if k.startswith('round')}
-    bracket = {}
-    for key, val in raw.items():
-        r, m, p = map(int, [
-            key.replace('round','').split('_')[0],
-            key.split('_')[1].replace('match',''),
-            key.split('_')[2].replace('player',''),
-        ])
-        bracket.setdefault(r, {}).setdefault(m, {})[p] = val
+    # 1) Collect all input fields related to Rounds/Matches from request.form
+    raw = {
+        k: v
+        for k, v in request.form.items()
+        if re.match(r'^round\d+_match\d+_(team|player|score)\d+$', k)
+}
 
-    bracket_data = {
-        r: [(pair[1], pair[2]) for m, pair in sorted(matches.items())]
-        for r, matches in bracket.items()
-    }
+
+    # 2) Temporary storage: bracket_tmp['winner'/'loser'][round_num][match_num][field+idx] = value
+    bracket_tmp = {'winner': {}, 'loser': {}}
+    for key, val in raw.items():
+        # Example key: round1_match3_team2
+        m = re.match(
+            r'^round(\d+)_match(\d+)_(team|player|score)(\d+)$',
+            key
+        )
+        r, match_no, field, idx = m.groups()
+        r, match_no, idx = map(int, (r, match_no, idx))
+
+        # Determine if it belongs to 'winner' or 'loser' based on round number
+        # Assume rounds 1~4 are Winner, rounds 5~10 are Loser (based on your HTML)
+        bracket_type = 'winner' if r in (1, 2, 3, 4) else 'loser'
+
+        wb = bracket_tmp[bracket_type]
+        wb.setdefault(r, {}).setdefault(match_no, {})[f"{field}{idx}"] = val
+
+    # 3) Convert each sub-dictionary into a "list of match dicts", sorted by round and match number
+    bracket_data = {}
+    for bracket_type, rounds in bracket_tmp.items():
+        bracket_data[bracket_type] = {}
+        for r_num, matches in sorted(rounds.items()):
+            # matches: { match_no: {'team1':..,'player1':..,'score1':.., …}, … }
+            bracket_data[bracket_type][r_num] = []
+            for m_no, info in sorted(matches.items()):
+                # Ensure score strings are converted to integers
+                bracket_data[bracket_type][r_num].append({
+                    'match': m_no,
+                    'team1':   info.get('team1'),
+                    'player1': info.get('player1'),
+                    'score1':  int(info.get('score1') or 0),
+                    'team2':   info.get('team2'),
+                    'player2': info.get('player2'),
+                    'score2':  int(info.get('score2') or 0),
+                })
 
     new_comp = Competition(
         name=name,
@@ -112,7 +145,16 @@ def submit_competition():
     flash('Competition added successfully.', 'success')
     return redirect(url_for('user.user_page'))
 
+@user_bp.route('/competition/delete/<int:comp_id>', methods=['POST'])
+@login_required
+def delete_competition(comp_id):
+    comp = Competition.query.get_or_404(comp_id)
+    db.session.delete(comp)
+    db.session.commit()
+    flash('The competition has been successfully delected', 'success')
+    return redirect(url_for('user_dashboard'))
 @user_bp.route('/api/comment', methods=['POST'])
+
 def add_comment():
     data = request.get_json() or {}
     try:

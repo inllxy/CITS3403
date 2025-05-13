@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/CompetitionTemplate.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
@@ -22,53 +23,98 @@
   {%include 'Navbar_All/UserNavbar.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
-  <div class="container">
-    {% with msgs = get_flashed_messages(with_categories=true) %}
-      {% if msgs %}
-        {% for cat, m in msgs %}
-          <div class="flash {{cat}}">{{m}}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+      <div class="Create_Class">
+        <h1>The Competitions You Created</h1>
 
     {% for comp in competitions %}
-      <div class="competition-card card private-card" data-owner-id="{{ comp.owner_id }}" data-comp-id="{{ loop.index0 }}"> <!-- {{ loop.index0 }} - for comment posting -->
-        <div class="competition-date">
-          <div class="competition-month">{{ comp.month }}</div>
-          <div class="competition-day">{{ comp.date }}</div>
-        </div>
-        <img src="{{ comp.logo_url }}" class="game-logo" alt="Logo">
-        <div class="competition-info">
-          <h2>{{ comp.name }}</h2>
-          <div class="button-group">
-            <button class="btn-result btn">Result</button>
-            <button class="btn-details btn">Details</button>
-            <a href="{{ comp.comp_link }}" target="_blank" class="btn">Comp</a>
+      <div class="competition-result-item">
+        <div class="d-flex align-items-start">
+          <div class="date">
+            <p class="month">{{ comp.month[:3] }}.</p>
+            <p class="day">{{ comp.day }}</p>
           </div>
-          <div class="result-image" style="display:none; margin-top:1rem;">
-            <img src="{{ comp.poster_url }}" alt="Poster">
+
+          <div class="ms-auto">
+            <img class="logo" src="{{ comp.logo_url }}" alt="Match Logo">
           </div>
-          <div class="bracket-data" style="display:none;">
-            {% include 'bracket_display.html' %}
+
+          <div class="competition-info flex-grow-1">
+            <h3 class="mb-1 title">{{ comp.name }}</h3>
+
+            <div class="competition-btn d-flex gap-2 mt-2">
+              <a class="btn btn-sm btn-light btn-result"
+                role="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcan_result_{{ loop.index0 }}">
+                Result
+              </a>
+              <a class="btn btn-sm btn-light btn-details"
+                role="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcan_detail_{{ loop.index0 }}">
+                Details
+              </a>
+              <a class="btn btn-sm btn-light btn-comp"
+                href="{{ comp.comp_link }}"
+                target="_blank"
+                rel="noopener noreferrer">
+                COMP
+              </a>
+
+              <form action="{{ url_for('user.delete_competition', comp_id= comp.id) }}" method="post"
+                    style="display:inline" onsubmit="return confirm('Are you sure you want to delete this competition?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">
+                Delete
+              </button>
+              </form>
+            </div>
+
           </div>
+
           <div class="card-actions">
             <div class="action like">
               <span class="heart">❤️</span>
               <span class="count">0</span>
             </div>
+
             <div class="action comment">
               <span class="bubble">💬</span>
               <span class="count">0</span>
             </div>
           </div>
         </div>
+
+        <!-- Offcanvas for "Details" -->
+        <div class="offcanvas offcanvas-bottom offcanvas-detail" tabindex="-1"
+            id="#offcan_detail_{{ loop.index0 }}" aria-labelledby="offcanvasLabelDetail">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabelDetail"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body detail-body">
+            {% include 'bracket_display.html' %}
+          </div>
+        </div>
+
+        <!-- Offcanvas for "Result" -->
+        <div class="offcanvas offcanvas-bottom offcanvas-result" tabindex="-1"
+            id="offcan_result_{{ loop.index0 }}" aria-labelledby="offcanvasLabelResult">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabelResult"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body result-body">
+            <img src="{{ comp.poster_url }}" class="img-fluid rounded" alt="{{ comp.name }} Poster">
+          </div>
+        </div>
+
       </div>
     {% endfor %}
-  </div>
+
 
   <!-- PLAYERS SECTION -->
   <div class="container">
-    <h2>Players</h2>
+    <h1>The Player Card You Created</h1>
     <div class="flex" style="flex-wrap: wrap; gap: 1rem;">
       {% for pl in players %}
         <div class="card private-card" data-owner-id="{{ pl.owner_id }}" style="width: 200px; padding:1rem; position:relative;">
