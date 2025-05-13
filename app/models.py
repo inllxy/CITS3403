@@ -2,7 +2,9 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import relationship
 from . import db
 
 
@@ -36,6 +38,8 @@ class Competition(db.Model):
     visibility = db.Column(db.String(20), default='public')        # private/public visibility
     bracket = db.Column(db.JSON)                                   # Bracket structure
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_competitions_users'), nullable=False)
+    user = relationship('User', backref='competitions')
     
     
 class Player(db.Model):
@@ -49,3 +53,5 @@ class Player(db.Model):
     visibility = db.Column(db.String(20), default="public") # Player visibility (public/private)
     photo_url = db.Column(db.String(255))                   # Path or link to player photo
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_players_users'), nullable=False)
+    user = relationship('User', backref='players')

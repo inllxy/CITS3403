@@ -36,13 +36,21 @@ def save_file(file_storage):
     file_storage.save(dest)
     return url_for('static', filename=f'uploads/{unique_name}')
 
+
 @user_bp.route('/')
+@login_required
 def user_page():
-    competitions = Competition.query.order_by(Competition.created_at.desc()).all()
-    players = Player.query.order_by(Player.created_at.desc()).all()
+    competitions = Competition.query.filter_by(user_id=current_user.id) \
+        .order_by(Competition.created_at.desc()).all()
+    
+    players = Player.query.filter_by(user_id=current_user.id) \
+        .order_by(Player.created_at.desc()).all()
+    
     return render_template('user_page.html', competitions=competitions, players=players)
 
+
 @user_bp.route('/submit-player', methods=['POST'])
+@login_required
 def submit_player():
     photo = request.files.get('photo_file')
     if photo and allowed_file(photo.filename):
@@ -56,7 +64,8 @@ def submit_player():
         twitter=request.form.get('twitter_link', '').strip(),
         twitch=request.form.get('twitch_link', '').strip(),
         visibility=request.form.get('visibility', 'public'),
-        photo_url=photo_url
+        photo_url=photo_url,
+        user_id=current_user.id
     )
     db.session.add(player)
     db.session.commit()
@@ -64,6 +73,7 @@ def submit_player():
     return redirect(url_for('user.user_page'))
 
 @user_bp.route('/submit-competition', methods=['POST'])
+@login_required
 def submit_competition():
     name = request.form.get('name', '').strip()
     year = int(request.form.get('year', 0))
@@ -71,6 +81,7 @@ def submit_competition():
     date = int(request.form.get('date', 1))
     comp_link = request.form.get('comp_link', '').strip()
     visibility = request.form.get('visibility', 'public')
+
 
     poster = request.files.get('poster_file')
     if poster and allowed_file(poster.filename):
@@ -138,7 +149,8 @@ def submit_competition():
         logo_url=logo_url,
         comp_link=comp_link,
         visibility=visibility,
-        bracket=bracket_data
+        bracket=bracket_data,
+        user_id=current_user.id
     )
     db.session.add(new_comp)
     db.session.commit()
