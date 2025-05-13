@@ -1,6 +1,6 @@
 # app/__init__.py
 
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -53,9 +53,10 @@ def create_app():
     def player_page():
         return render_template("SF6_Competition_Player_Page.html")
 
-    @app.route("/bracket/<name>")
-    def bracket(name):
-        return render_template(f"{name}.html")
+    @app.route("/bracket/Bracket")
+    def bracket():
+        competition_id = request.args.get('competition')
+        return render_template('Bracket.html', competition_id = competition_id)
     
     # --- ALIAS for auth.py’s redirect(url_for("user_dashboard")) ---
     @app.route("/dashboard", endpoint="user_dashboard")
