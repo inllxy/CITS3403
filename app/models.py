@@ -2,7 +2,9 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
+from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import relationship
 from . import db
 
 
@@ -20,10 +22,16 @@ class User(UserMixin, db.Model):
 
     def check_password(self, pwd):
         return check_password_hash(self.password_hash, pwd)
+    
+shared_competitions = db.Table(
+    'shared_competitions',
+    db.Column('competition_id', db.Integer, db.ForeignKey('competitions.id'), primary_key=True),
+    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
+    
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
-    __tablename__ = 'competitions'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)               # Competition name
@@ -36,7 +44,19 @@ class Competition(db.Model):
     visibility = db.Column(db.String(20), default='public')        # private/public visibility
     bracket = db.Column(db.JSON)                                   # Bracket structure
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_competitions_users'), nullable=False)
+    user = relationship('User', backref='competitions')
+    shared_with = db.relationship(
+        'User',
+        secondary=shared_competitions,
+        backref='shared_competitions'
+    )
     
+shared_players = db.Table(
+    'shared_players',
+    db.Column('player_id', db.Integer, db.ForeignKey('players.id'), primary_key=True),
+    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)    
     
 class Player(db.Model):
     __tablename__ = "players"
@@ -49,3 +69,29 @@ class Player(db.Model):
     visibility = db.Column(db.String(20), default="public") # Player visibility (public/private)
     photo_url = db.Column(db.String(255))                   # Path or link to player photo
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, ForeignKey('users.id', name='fk_players_users'), nullable=False)
+    user = relationship('User', backref='players')
+    shared_with = db.relationship(
+    'User',
+    secondary=shared_players,
+    backref='shared_players'
+)
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'), nullable=False)
+
+    # Relationships
+    user = db.relationship('User', backref='comments')
+    competition = db.relationship('Competition', backref='comments')
+
+
+# models.py
+

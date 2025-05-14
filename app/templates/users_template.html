@@ -1,37 +1,35 @@
 <div id="addCompetitionModal" class="modal flex-center" style="display: none;">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add a New Competition</h2>
-  
-      <form action="{{ url_for('user.submit_competition') }}" method="post" enctype="multipart/form-data">
-        
-        <label for="name">Competition Name</label>
-        <input type="text" id="name" name="name" required />
-  
-        <label for="year">Year</label>
-        <input type="number" id="year" name="year" min="2000" max="2100" placeholder="2025" required />
-  
-        <label for="month">Month</label>
-        <select id="month" name="month" required>
-          <option value="">– Select Month –</option>
-          {% for i in range(1,13) %}
-            <option value="{{ i }}">{{ calendar.month_name[i] }}</option>
-          {% endfor %}
-        </select>
-  
-        <label for="date">Date</label>
-        <input type="number" id="date" name="date" min="1" max="31" placeholder="15" required />
-  
-        <label>Result</label>
-        <div class="note">Upload an image or paste a link (one only).</div>
-        <input type="file" id="poster_file" name="poster_file" accept="image/*" />
-        <input type="url" id="poster_link" name="poster_link" placeholder="Or enter poster URL" />
-  
-        <label>Game Logo</label>
-        <div class="note">Upload an image or paste a link (one only).</div>
-        <input type="file" id="logo_file" name="logo_file" accept="image/*" />
-        <input type="url" id="logo_link" name="logo_link" placeholder="Or enter logo URL" />
-  
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Add a New Competition</h2>
+
+    <form method="POST" action="{{ url_for('user.submit_competition') }}" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+
+      {{ form.name.label }}  
+      {{ form.name(class_="form-control", placeholder="Competition Name") }}
+
+      {{ form.year.label }}  
+      {{ form.year(class_="form-control", placeholder="2025") }}
+
+      {{ form.month.label }}  
+      {{ form.month(class_="form-select") }}
+
+      {{ form.day.label }}  
+      {{ form.day(class_="form-control", placeholder="Day") }}
+
+      {{ form.poster_file.label }}  
+      {{ form.poster_file(class_="form-control") }}
+
+      {{ form.poster_link.label }}  
+      {{ form.poster_link(class_="form-control", placeholder="Or enter poster URL") }}
+
+      {{ form.logo_file.label }}  
+      {{ form.logo_file(class_="form-control") }}
+
+      {{ form.logo_link.label }}  
+      {{ form.logo_link(class_="form-control", placeholder="Or enter logo URL") }}
+
       
 
         <div id="bracket" class="bracket-wrap">
@@ -261,15 +259,8 @@
         <div class="button-group">
           <button type="submit" name="action" value="public">Publish Publicly</button>
           <button type="submit" name="action" value="private">Save Privately</button>
-          <button type="button" id="openShare" class="btn">Share</button>
         </div>
-        <div id="share-section" style="display:none; margin-top:1rem;">
-          <label for="share_with">Share with (comma-separated usernames):</label>
-          <input type="text" id="share_with" name="share_with" …>
-          <button type="submit" name="action" value="share" class="btn">
-            Send Share
-          </button>
-        </div>
+        
       </form>
     </div>
   </div>

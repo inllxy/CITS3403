@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  
   // COMPETITION modal
   const compModal = document.getElementById('addCompetitionModal');
   document.getElementById('openModal').addEventListener('click', () => {
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('commentModal').style.display = 'none';
   });
 
-  // Share toggle (if still used)
+  
   const openShare = document.getElementById('openShare');
   const shareSection = document.getElementById('share-section');
   if (openShare) {
@@ -103,4 +104,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 

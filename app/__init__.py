@@ -1,10 +1,10 @@
 # app/__init__.py
-
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from config import Config
+from .forms import LoginForm, RegisterForm
 import calendar
 
 
@@ -41,22 +41,44 @@ def create_app():
     from .user.views import user_bp
     app.register_blueprint(user_bp, url_prefix='/dashboard')
 
+    from .main.views import main_bp 
+    app.register_blueprint(main_bp)
 
+    from .playercard.views import player_bp
+    app.register_blueprint(player_bp)
     # ========== Application Routes ==========
 
     @app.route("/")
     def index():
-        return render_template("SF6_Competition_Main_Page.html")
+        from app.models import Competition
+        competitions = Competition.query.all()
+        login_form = LoginForm()
+        register_form = RegisterForm()
+        return render_template(
+            "SF6_Competition_Main_Page.html",
+            login_form=login_form,
+            register_form=register_form,
+            competitions=competitions,
+            
+        )
 
 
     @app.route("/players")
     def player_page():
-        return render_template("SF6_Competition_Player_Page.html")
+        from app.models import Player
+        players = Player.query.all()
+        login_form = LoginForm()
+        register_form = RegisterForm()
+        return render_template("SF6_Competition_Player_Page.html", players=players, login_form=login_form,
+        register_form=register_form)
 
     @app.route("/bracket/Bracket")
     def bracket():
-        competition_id = request.args.get('competition')
-        return render_template('Bracket.html', competition_id = competition_id)
+        from app.models import Competition
+        comp = Competition.query.first() 
+
+        return render_template("Bracket.html", comp=comp)
+
     
     # --- ALIAS for auth.py’s redirect(url_for("user_dashboard")) ---
     @app.route("/dashboard", endpoint="user_dashboard")
