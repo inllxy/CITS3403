@@ -13,6 +13,7 @@ from werkzeug.utils import secure_filename
 from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
+from app.forms import CompetitionForm
 
 user_bp = Blueprint(
     'user', __name__,
@@ -80,8 +81,8 @@ def user_page():
     players = own_players.union(shared_players_query) \
         .order_by(Player.created_at.desc()) \
         .all()
-
-    return render_template('user_page.html', competitions=competitions, players=players)
+    form = CompetitionForm()
+    return render_template('user_page.html', competitions=competitions, players=players, form=form)
 
 
 

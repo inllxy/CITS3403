@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from config import Config
+from .forms import LoginForm, RegisterForm
 import calendar
 
 
@@ -46,8 +47,13 @@ def create_app():
 
     @app.route("/")
     def index():
-        return render_template("SF6_Competition_Main_Page.html")
-
+        login_form = LoginForm()
+        register_form = RegisterForm()
+        return render_template(
+            "SF6_Competition_Main_Page.html",
+            login_form=login_form,
+            register_form=register_form
+        )
 
     @app.route("/players")
     def player_page():
