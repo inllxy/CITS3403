@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  
   // COMPETITION modal
   const compModal = document.getElementById('addCompetitionModal');
   document.getElementById('openModal').addEventListener('click', () => {
@@ -103,4 +104,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
 

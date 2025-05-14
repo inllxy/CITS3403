@@ -24,7 +24,7 @@
   background: #fff;
   border-radius: 0.5rem;
   width: 90%;
-  max-width: 600px;
+  max-width: 80vw;
   margin: 0 auto 2rem;
   padding: 1.5rem;
   position: relative;
@@ -135,41 +135,6 @@
 #share-section input,
 #share-section-player input {
   margin-top: 0.5rem;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Bracket Table Styles (users_template.html #bracket .round)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.bracket-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 1rem;
-}
-.bracket-wrap .round {
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  padding: 1rem;
-}
-.bracket-wrap .round .sub-header {
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #007bff;
-}
-.bracket-wrap .round .match {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-.bracket-wrap .round .player {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-.bracket-wrap .round .player input {
-  font-size: 0. nine rem;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

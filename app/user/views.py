@@ -247,14 +247,6 @@ def submit_competition():
                 new_comp.shared_with.append(user)
 
 
-    if action == 'share':
-        usernames = request.form.get("share_with", "")
-        username_list = [u.strip() for u in usernames.split(",") if u.strip()]
-        for uname in username_list:
-            user = User.query.filter_by(username=uname).first()
-            if user:
-                new_comp.shared_with.append(user)
-
     db.session.commit()
     flash('Competition added successfully.', 'success')
     return redirect(url_for('user.user_page'))
@@ -323,3 +315,27 @@ def share_player(player_id):
     db.session.commit()
     flash("Player shared successfully.", "success")
     return redirect(url_for("user.user_page"))
+
+@user_bp.route('/competition/<int:comp_id>/share', methods=['POST'])
+@login_required
+def share_competition(comp_id):
+    # 1) 拿到用户名列表
+    raw = request.form.get('share_with','')
+    names = [n.strip() for n in raw.split(',') if n.strip()]
+    if not names:
+        flash('请输入至少一个用户名','warning')
+        return redirect(url_for('user.user_dashboard'))
+
+    # 2) 循环查用户，插入 shared_competitions
+    for name in names:
+        user = User.query.filter_by(username=name).first()
+
+        share = shared_competitions(
+            competition_id=comp_id,
+            shared_with_user_id=user.id
+        )
+        db.session.add(share)
+
+    db.session.commit()
+    flash('分享邀请已发送！','success')
+    return redirect(url_for('user.user_dashboard'))
