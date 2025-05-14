@@ -117,7 +117,6 @@ def submit_player():
         twitter=request.form.get('twitter_link', '').strip(),
         twitch=request.form.get('twitch_link', '').strip(),
         visibility=visibility,
-        visibility=visibility,
         photo_url=photo_url,
         user_id=current_user.id
     )

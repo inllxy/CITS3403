@@ -29,11 +29,6 @@ shared_competitions = db.Table(
     db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
 )
     
-shared_competitions = db.Table(
-    'shared_competitions',
-    db.Column('competition_id', db.Integer, db.ForeignKey('competitions.id'), primary_key=True),
-    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
-)
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
@@ -63,17 +58,12 @@ shared_players = db.Table(
     db.Column('player_id', db.Integer, db.ForeignKey('players.id'), primary_key=True),
     db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
 )    
-    shared_with = db.relationship(
-        'User',
-        secondary=shared_competitions,
-        backref='shared_competitions'
-    )
+shared_with = db.relationship(
+    'User',
+    secondary=shared_competitions,
+    backref='shared_competitions'
+)
     
-shared_players = db.Table(
-    'shared_players',
-    db.Column('player_id', db.Integer, db.ForeignKey('players.id'), primary_key=True),
-    db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
-)    
 class Player(db.Model):
     __tablename__ = "players"
 
