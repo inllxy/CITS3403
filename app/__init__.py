@@ -1,5 +1,4 @@
 # app/__init__.py
-
 from flask import Flask, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -15,6 +14,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 migrate = None  # Used by flask-migrate
+
 
 def create_app():
     app = Flask(
@@ -42,17 +42,23 @@ def create_app():
     from .user.views import user_bp
     app.register_blueprint(user_bp, url_prefix='/dashboard')
 
+    from .main.views import main_bp   # 🔁 移动到这里
+    app.register_blueprint(main_bp)
 
     # ========== Application Routes ==========
 
     @app.route("/")
     def index():
+        from app.models import Competition
+        competitions = Competition.query.all()
         login_form = LoginForm()
         register_form = RegisterForm()
         return render_template(
             "SF6_Competition_Main_Page.html",
             login_form=login_form,
-            register_form=register_form
+            register_form=register_form,
+            competitions=competitions,
+            
         )
 
     @app.route("/players")

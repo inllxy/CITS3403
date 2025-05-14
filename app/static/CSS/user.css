@@ -5,20 +5,7 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   General Modal Styles
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;                         /* top/right/bottom/left = 0 */
-  background: rgba(0,0,0,0.5);      /* Semi-transparent overlay */
-  justify-content: center;         
-  align-items: start;               /* Align to top, allow internal scrolling */
-  padding-top: 2rem;                
-  overflow-y: auto;                 
-  z-index: 1050;                    
-}
-.modal.show {
-  display: flex !important;
-}
+
 
 .modal-content {
   background: #fff;

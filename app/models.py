@@ -32,7 +32,6 @@ shared_competitions = db.Table(
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
-    __tablename__ = 'competitions'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)               # Competition name
@@ -58,11 +57,6 @@ shared_players = db.Table(
     db.Column('player_id', db.Integer, db.ForeignKey('players.id'), primary_key=True),
     db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
 )    
-shared_with = db.relationship(
-    'User',
-    secondary=shared_competitions,
-    backref='shared_competitions'
-)
     
 class Player(db.Model):
     __tablename__ = "players"
@@ -82,6 +76,21 @@ class Player(db.Model):
     secondary=shared_players,
     backref='shared_players'
 )
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Foreign keys
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'), nullable=False)
+
+    # Relationships
+    user = db.relationship('User', backref='comments')
+    competition = db.relationship('Competition', backref='comments')
 
 
 # models.py

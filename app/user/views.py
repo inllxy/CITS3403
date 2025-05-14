@@ -96,13 +96,7 @@ def submit_player():
     else:
         photo_url = request.form.get('photo_link', '')
 
-    action = request.form.get('action', 'public')  
-    if action == 'private':
-        visibility = 'private'
-    elif action == 'share':
-        visibility = 'shared'
-    else:
-        visibility = 'public'
+    
 
     action = request.form.get('action', 'public')  
     if action == 'private':
@@ -129,13 +123,7 @@ def submit_player():
             if user:
                 player.shared_with.append(user)
 
-    if action == 'share':
-        usernames = request.form.get('share_with', '')
-        username_list = [u.strip() for u in usernames.split(',') if u.strip()]
-        for uname in username_list:
-            user = User.query.filter_by(username=uname).first()
-            if user:
-                player.shared_with.append(user)
+    
 
     db.session.add(player)
     db.session.commit()
@@ -155,12 +143,7 @@ def submit_competition():
     action = request.form.get('action', 'public')
     action = request.form.get('action', 'public')
 
-    if action == 'private':
-        visibility = 'private'
-    elif action == 'share':
-        visibility = 'shared'
-    else:
-        visibility = 'public'
+    
     if action == 'private':
         visibility = 'private'
     elif action == 'share':
@@ -219,10 +202,12 @@ def submit_competition():
                     'match': m_no,
                     'team1':   info.get('team1'),
                     'player1': info.get('player1'),
+                    'flag1_url': info.get('flag1_url', ''),
                     'score1':  int(info.get('score1') or 0),
                     'team2':   info.get('team2'),
                     'player2': info.get('player2'),
                     'score2':  int(info.get('score2') or 0),
+                    'flag2_url': info.get('flag2_url', '')
                 })
 
     new_comp = Competition(
@@ -340,3 +325,4 @@ def share_competition(comp_id):
     db.session.commit()
     flash('分享邀请已发送！','success')
     return redirect(url_for('user.user_dashboard'))
+
