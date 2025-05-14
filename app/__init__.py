@@ -44,6 +44,8 @@ def create_app():
     from .main.views import main_bp   # 🔁 移动到这里
     app.register_blueprint(main_bp)
 
+    from .playercard.views import player_bp
+    app.register_blueprint(player_bp)
     # ========== Application Routes ==========
 
     @app.route("/")
@@ -60,9 +62,15 @@ def create_app():
             
         )
 
+
     @app.route("/players")
     def player_page():
-        return render_template("SF6_Competition_Player_Page.html")
+        from app.models import Player
+        players = Player.query.all()
+        login_form = LoginForm()
+        register_form = RegisterForm()
+        return render_template("SF6_Competition_Player_Page.html", players=players, login_form=login_form,
+        register_form=register_form)
 
     @app.route("/bracket/Bracket")
     def bracket():
