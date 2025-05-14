@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/navbar.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/CompetitionTemplate.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/SF6_Bracket.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
   <script src="{{ url_for('static', filename='JavaScript/player.js') }}"> defer</script>
@@ -22,75 +23,77 @@
   <!-- NAVBAR -->
   {%include 'Navbar_All/UserNavbar.html' %}
 
+   <!-- MODALS -->
+  {% include 'users_template.html' %}
+  {% include 'players_template.html' %}
+
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
 
-    <h1>The Competitions You Created</h1>
+  <h1>The Competitions You Created</h1>
 
-    {% for comp in competitions %}
-      <div class="competition-result-item">
-        <div class="d-flex align-items-start">
-          <div class="date">
-            <p class="month">{{ comp.month[:3] }}.</p>
-            <p class="day">{{ comp.day }}</p>
+  {% for comp in competitions %}
+    <div class="competition-result-item">
+      <div class="d-flex align-items-start">
+        <div class="date">
+          <p class="month">{{ comp.month[:3] }}.</p>
+          <p class="day">{{ comp.day }}</p>
+        </div>
+
+        <div class="ms-auto">
+          <img class="logo" src="{{ comp.logo_url }}" alt="Match Logo">
+        </div>
+
+        <div class="competition-info flex-grow-1">
+          <h3 class="mb-1 title">{{ comp.name }}</h3>
+
+          <div class="competition-btn d-flex gap-2 mt-2">
+            <a class="btn btn-sm btn-light btn-result"
+              role="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcan_result_{{ loop.index0 }}">
+              Result
+            </a>
+            <a class="btn btn-sm btn-light btn-details"
+              role="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcan_detail_{{ loop.index0 }}">
+              Details
+            </a>
+            <a class="btn btn-sm btn-light btn-comp"
+              href="{{ comp.comp_link }}"
+              target="_blank"
+              rel="noopener noreferrer">
+              COMP
+            </a>
+
+            <form action="{{ url_for('user.delete_competition', comp_id= comp.id) }}" method="post"
+                  style="display:inline" onsubmit="return confirm('Are you sure you want to delete this competition?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
+            </form>
           </div>
 
-          <div class="ms-auto">
-            <img class="logo" src="{{ comp.logo_url }}" alt="Match Logo">
+        </div>
+
+        <div class="card-actions">
+          {% if comp.visibility=='shared' %}
+              <span>🤝</span>
+          {% endif %}
+
+          <div class="action like">
+            <span class="heart">❤️</span>
+            <span class="count">0</span>
           </div>
 
-          <div class="competition-info flex-grow-1">
-            <h3 class="mb-1 title">{{ comp.name }}</h3>
-
-            <div class="competition-btn d-flex gap-2 mt-2">
-              <a class="btn btn-sm btn-light btn-result"
-                role="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcan_result_{{ loop.index0 }}">
-                Result
-              </a>
-              <a class="btn btn-sm btn-light btn-details"
-                role="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcan_detail_{{ loop.index0 }}">
-                Details
-              </a>
-              <a class="btn btn-sm btn-light btn-comp"
-                href="{{ comp.comp_link }}"
-                target="_blank"
-                rel="noopener noreferrer">
-                COMP
-              </a>
-
-              <form action="{{ url_for('user.delete_competition', comp_id= comp.id) }}" method="post"
-                    style="display:inline" onsubmit="return confirm('Are you sure you want to delete this competition?');">
-              <button type="submit" class="btn btn-sm btn-outline-danger">
-                Delete
-              </button>
-              </form>
-            </div>
-
+          <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
+            <span class="bubble">💬</span>
+            <span class="count">0</span>
           </div>
 
-          <div class="card-actions">
-            {% if comp.visibility=='shared' %}
-                <span>🤝</span>
-            {% endif %}
-
-            <div class="action like">
-              <span class="heart">❤️</span>
-              <span class="count">0</span>
-            </div>
-
-            <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
-              <span class="bubble">💬</span>
-              <span class="count">0</span>
-            </div>
-          </div>
-
-            {% if pl.visibility=='shared' %}
-              <span style="font-size:0.8rem; color:#fffbfb;">👥</span>
-            {% endif %}
-          </div>
+          {% if comp.visibility=='shared' %}
+            <span style="font-size:0.8rem; color:#fffbfb;">👥</span>
+          {% endif %}
         </div>
 
         <!-- Offcanvas for "Details" -->
@@ -129,124 +132,105 @@
             </div>
           </div>
         </div>
-
-
-      </div>
-    {% endfor %}
+        
+      </div> 
+    </div>
+  {% endfor %}
 
 
   <!-- PLAYERS SECTION -->
 
-  <h1>The Player Card You Created</h1>
+<h1>The Player Card You Created</h1>
 
 
-  <div id="playerContainer"
-      class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
-    
-    {% for pl in players %}
-      <div class="col" data-owner-id="{{ pl.owner_id }}">
-        <div class="card player-card"
-            data-player-id="{{ pl.name }}"
-            data-bs-toggle="modal"
-            data-bs-target="#playerModal_{{ loop.index0 }}"
-            style="cursor:pointer">
+<div id="playerContainer"
+    class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+  
+  {% for pl in players %}
+    <div class="col" data-owner-id="{{ pl.owner_id }}">
+      <div class="card player-card"
+          data-player-id="{{ pl.name }}"
+          data-bs-toggle="modal"
+          data-bs-target="#playerModal_{{ loop.index0 }}"
+          style="cursor:pointer">
 
-          <div class="card-header">
-            <img class="card-img-top player-img"
-                src="{{ pl.photo_url }}"
-                alt="{{ pl.name }}">
-          </div>
+        <div class="card-header">
+          <img class="card-img-top player-img"
+              src="{{ pl.photo_url }}"
+              alt="{{ pl.name }}">
+        </div>
 
-          <div class="card-body text-center">
-            <span class="badge bg-secondary mb-2 player-badge">
-              {{ pl.league }}
-            </span>
-            <h5 class="card-title fw-bold player-name">
+        <div class="card-body text-center">
+          <span class="badge bg-secondary mb-2 player-badge">
+            {{ pl.league }}
+          </span>
+          <h5 class="card-title fw-bold player-name">
+            {{ pl.name }}
+          </h5>
+          <p class="card-text">
+            <span class="event-line1"></span><br>
+            <span class="event-line2"></span>
+          </p>
+        </div>
+
+        <div class="card-footer d-flex justify-content-evenly text-center social-links">
+          {% if pl.twitter %}
+            <a href="{{ pl.twitter }}" target="_blank">
+              <span class="bi bi-twitter"></span>
+            </a>
+          {% endif %}
+
+          {% if pl.visibility == 'shared' %}
+            <span>🤝</span>
+          {% endif %}
+
+          {% if pl.twitch %}
+            <a href="{{ pl.twitch }}" target="_blank">
+              <span class="bi bi-twitch"></span>
+            </a>
+          {% endif %}
+        </div>
+
+        <form action="{{ url_for('user.delete_player', player_id=pl.id) }}"
+              method="post"
+              style="display:inline"
+              onsubmit="return confirm('Do you really want to delete “{{ pl.name }}”?');">
+          <button type="submit" class="btn btn-sm btn-outline-danger">
+            Delete
+          </button>
+        </form>
+
+      </div> 
+    </div> 
+
+    <div class="modal fade flex-center"
+        id="playerModal_{{ loop.index0 }}"
+        tabindex="-1"
+        aria-labelledby="playerLabel_{{ loop.index0 }}"
+        aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"
+                id="playerLabel_{{ loop.index0 }}">
               {{ pl.name }}
             </h5>
-            <p class="card-text">
-              <span class="event-line1"></span><br>
-              <span class="event-line2"></span>
-            </p>
-          </div>
-
-          <div class="card-footer d-flex justify-content-evenly text-center social-links">
-            {% if pl.twitter %}
-              <a href="{{ pl.twitter }}" target="_blank">
-                <span class="bi bi-twitter"></span>
-              </a>
-            {% endif %}
-
-            {% if pl.visibility == 'shared' %}
-              <span>🤝</span>
-            {% endif %}
-
-            {% if pl.twitch %}
-              <a href="{{ pl.twitch }}" target="_blank">
-                <span class="bi bi-twitch"></span>
-              </a>
-            {% endif %}
-          </div>
-
-          <form action="{{ url_for('user.delete_player', player_id=pl.id) }}"
-                method="post"
-                style="display:inline"
-                onsubmit="return confirm('Do you really want to delete “{{ pl.name }}”?');">
-            <button type="submit" class="btn btn-sm btn-outline-danger">
-              Delete
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
             </button>
-          </form>
-
-        </div> 
-      </div> 
-
-      <div class="modal fade flex-center"
-          id="playerModal_{{ loop.index0 }}"
-          tabindex="-1"
-          aria-labelledby="playerLabel_{{ loop.index0 }}"
-          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title"
-                  id="playerLabel_{{ loop.index0 }}">
-                {{ pl.name }}
-              </h5>
-              <button type="button"
-                      class="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close">
-              </button>
-            </div>
-            <div class="modal-body text-center">
-              <p>Matches Played: N/A</p>
-              <p>Matches Won:    N/A</p>
-              <p>Win Rate:       N/A</p>
-            </div>
+          </div>
+          <div class="modal-body text-center">
+            <p>Matches Played: N/A</p>
+            <p>Matches Won:    N/A</p>
+            <p>Win Rate:       N/A</p>
           </div>
         </div>
       </div>
-    {% endfor %}
-
-    </div> <!-- /#playerContainer -->
-
-    
-
-
-  <!-- MODALS -->
-  {% include 'users_template.html' %}
-  {% include 'players_template.html' %}
-
-  
-
-  <!-- BRACKET MODAL -->
-  <div id="bracketModal" class="modal flex-center" style="display:none;">
-    <div class="modal-content">
-      <span class="close-bracket">&times;</span>
-      <div class="bracket-content"></div>
     </div>
-  </div>
- 
-
+  {% endfor %}
+</div> <!-- /#playerContainer -->
+  
 </body>
 </html>
