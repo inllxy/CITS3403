@@ -17,6 +17,8 @@
   <link rel="stylesheet"
         href="{{ url_for('static', filename='CSS/SF6_Competition_Main_Page.css') }}">
   <link rel="stylesheet"
+        href="{{url_for('static', filename='CSS/SF6_Bracket.css')}}">
+  <link rel="stylesheet"
         href="{{ url_for('static', filename='CSS/alert.css') }}">
   <!-- Bootstrap JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -30,9 +32,6 @@
     {% else %}
       {% include 'Navbar_All/NavBar.html' %}
     {% endif %}
-
-  
-
 
   <!-- Video background with text overlay -->
   <div class="video-bg">
@@ -52,9 +51,101 @@
 
   <!-- Competition results section -->
   <div class="container py-5 competition-result-section">
-    <div id="template-container" style="display:none">
-      {% include 'Template/CompetitionTemplate.html' %}
-    </div>
+    {% for comp in competitions %}
+        <div class="competition-result-item">
+          <div class="d-flex align-items-start">
+            <div class="date">
+              <p class="month">{{ comp.month[:3] }}.</p>
+              <p class="day">{{ comp.day }}</p>
+            </div>
+
+            <div class="ms-auto">
+              <img class="logo" src="{{ comp.logo_url }}" alt="Match Logo">
+            </div>
+
+            <div class="competition-info flex-grow-1">
+              <h3 class="mb-1 title">{{ comp.name }}</h3>
+
+              <div class="competition-btn d-flex gap-2 mt-2">
+                <a class="btn btn-sm btn-light btn-result"
+                  role="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcan_result_{{ loop.index0 }}">
+                  Result
+                </a>
+                <a class="btn btn-sm btn-light btn-details"
+                  role="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcan_detail_{{ loop.index0 }}">
+                  Details
+                </a>
+                <a class="btn btn-sm btn-light btn-comp"
+                  href="{{ comp.comp_link }}"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  COMP
+                </a>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <div class="action like">
+              <span class="heart">❤️</span>
+              <span class="count">0</span>
+            </div>
+
+            <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
+              <span class="bubble">💬</span>
+              <span class="count">0</span>
+            </div>
+
+          </div>
+
+          <!-- Offcanvas for "Details" -->
+          <div class="offcanvas offcanvas-bottom offcanvas-detail" tabindex="-1"
+              id="offcan_detail_{{ loop.index0 }}" aria-labelledby="offcanvasLabelDetail">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasLabelDetail"></h5>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body detail-body">
+              {% include 'bracket_display.html' %}
+            </div>
+          </div>
+
+          <!-- Offcanvas for "Result" -->
+          <div class="offcanvas offcanvas-bottom offcanvas-result" tabindex="-1"
+              id="offcan_result_{{ loop.index0 }}" aria-labelledby="offcanvasLabelResult">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasLabelResult"></h5>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body result-body">
+              <img src="{{ comp.poster_url }}" class="img-fluid rounded" alt="{{ comp.name }} Poster">
+            </div>
+          </div>
+
+          <!-- COMMENT MODAL -->
+          <div class="modal fade" id="commentModal_{{ loop.index0 }}" tabindex="-1" aria-labelledby="commentModalLabel_{{ loop.index0 }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="commentModalLabel_{{ loop.index0 }}">Comments</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <textarea class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Post</button>
+              </div>
+            </div>
+          </div>
+          
+          </div> 
+        </div>
+        {% endfor %}
 
     <div class="row">
       <div class="col-md-3 d-flex">
@@ -63,6 +154,7 @@
         </h2>
       </div>
 
+        
       <div class="col-md-9" id="competition-list-2025">
       </div>
 
@@ -87,6 +179,10 @@
       </div>
 
    </div>
+
+
+
+
 
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}

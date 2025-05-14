@@ -2,13 +2,18 @@
 import os
 import uuid
 import calendar
+import re
 from flask import (
     Blueprint, current_app, request,
     redirect, url_for, flash,
-    render_template, jsonify
+    render_template, jsonify,
+    abort
 )
 from werkzeug.utils import secure_filename
-from app.models import db, Competition, Player
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
+from flask_login import login_required, current_user
+from app.forms import CompetitionForm
 
 user_bp = Blueprint(
     'user', __name__,
@@ -33,13 +38,54 @@ def save_file(file_storage):
     file_storage.save(dest)
     return url_for('static', filename=f'uploads/{unique_name}')
 
+
 @user_bp.route('/')
+@login_required
 def user_page():
-    competitions = Competition.query.order_by(Competition.created_at.desc()).all()
-    players = Player.query.order_by(Player.created_at.desc()).all()
-    return render_template('user_page.html', competitions=competitions, players=players)
+    own_comps = Competition.query.filter_by(user_id=current_user.id)
+
+    shared_comps = Competition.query \
+        .join(shared_competitions) \
+        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+
+    competitions = own_comps.union(shared_comps) \
+        .order_by(Competition.created_at.desc()) \
+        .all()
+
+    own_players = Player.query.filter_by(user_id=current_user.id)
+
+    shared_players_query = Player.query \
+        .join(shared_players) \
+        .filter(shared_players.c.shared_with_user_id == current_user.id)
+
+    players = own_players.union(shared_players_query) \
+        .order_by(Player.created_at.desc()) \
+        .all()
+
+    own_comps = Competition.query.filter_by(user_id=current_user.id)
+
+    shared_comps = Competition.query \
+        .join(shared_competitions) \
+        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+
+    competitions = own_comps.union(shared_comps) \
+        .order_by(Competition.created_at.desc()) \
+        .all()
+
+    own_players = Player.query.filter_by(user_id=current_user.id)
+
+    shared_players_query = Player.query \
+        .join(shared_players) \
+        .filter(shared_players.c.shared_with_user_id == current_user.id)
+
+    players = own_players.union(shared_players_query) \
+        .order_by(Player.created_at.desc()) \
+        .all()
+    form = CompetitionForm()
+    return render_template('user_page.html', competitions=competitions, players=players, form=form)
 
 @user_bp.route('/submit-player', methods=['POST'])
+@login_required
 def submit_player():
     photo = request.files.get('photo_file')
     if photo and allowed_file(photo.filename):
@@ -47,27 +93,60 @@ def submit_player():
     else:
         photo_url = request.form.get('photo_link', '')
 
+    
+
+    action = request.form.get('action', 'public')  
+    if action == 'private':
+        visibility = 'private'
+    elif action == 'share':
+        visibility = 'shared'
+    else:
+        visibility = 'public'
+
     player = Player(
         name=request.form.get('player_name', '').strip(),
         league=request.form.get('league', '').strip(),
         twitter=request.form.get('twitter_link', '').strip(),
         twitch=request.form.get('twitch_link', '').strip(),
-        visibility=request.form.get('visibility', 'public'),
-        photo_url=photo_url
+        visibility=visibility,
+        photo_url=photo_url,
+        user_id=current_user.id
     )
+    if action == 'share':
+        usernames = request.form.get('share_with', '')
+        username_list = [u.strip() for u in usernames.split(',') if u.strip()]
+        for uname in username_list:
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                player.shared_with.append(user)
+
+    
+
     db.session.add(player)
     db.session.commit()
     flash('Player added successfully.', 'success')
     return redirect(url_for('user.user_page'))
 
+
+
 @user_bp.route('/submit-competition', methods=['POST'])
+@login_required
 def submit_competition():
     name = request.form.get('name', '').strip()
     year = int(request.form.get('year', 0))
     month_idx = int(request.form.get('month', 0))
     date = int(request.form.get('date', 1))
     comp_link = request.form.get('comp_link', '').strip()
-    visibility = request.form.get('visibility', 'public')
+    action = request.form.get('action', 'public')
+    action = request.form.get('action', 'public')
+
+    
+    if action == 'private':
+        visibility = 'private'
+    elif action == 'share':
+        visibility = 'shared'
+    else:
+        visibility = 'public'
 
     poster = request.files.get('poster_file')
     if poster and allowed_file(poster.filename):
@@ -81,20 +160,52 @@ def submit_competition():
     else:
         logo_url = request.form.get('logo_link', '')
 
-    raw = {k: v for k, v in request.form.items() if k.startswith('round')}
-    bracket = {}
-    for key, val in raw.items():
-        r, m, p = map(int, [
-            key.replace('round','').split('_')[0],
-            key.split('_')[1].replace('match',''),
-            key.split('_')[2].replace('player',''),
-        ])
-        bracket.setdefault(r, {}).setdefault(m, {})[p] = val
+    # 1) Collect all input fields related to Rounds/Matches from request.form
+    raw = {
+        k: v
+        for k, v in request.form.items()
+        if re.match(r'^round\d+_match\d+_(team|player|score)\d+$', k)
+}
 
-    bracket_data = {
-        r: [(pair[1], pair[2]) for m, pair in sorted(matches.items())]
-        for r, matches in bracket.items()
-    }
+
+    # 2) Temporary storage: bracket_tmp['winner'/'loser'][round_num][match_num][field+idx] = value
+    bracket_tmp = {'winner': {}, 'loser': {}}
+    for key, val in raw.items():
+        # Example key: round1_match3_team2
+        m = re.match(
+            r'^round(\d+)_match(\d+)_(team|player|score)(\d+)$',
+            key
+        )
+        r, match_no, field, idx = m.groups()
+        r, match_no, idx = map(int, (r, match_no, idx))
+
+        # Determine if it belongs to 'winner' or 'loser' based on round number
+        # Assume rounds 1~4 are Winner, rounds 5~10 are Loser (based on your HTML)
+        bracket_type = 'winner' if r in (1, 2, 3, 4) else 'loser'
+
+        wb = bracket_tmp[bracket_type]
+        wb.setdefault(r, {}).setdefault(match_no, {})[f"{field}{idx}"] = val
+
+    # 3) Convert each sub-dictionary into a "list of match dicts", sorted by round and match number
+    bracket_data = {}
+    for bracket_type, rounds in bracket_tmp.items():
+        bracket_data[bracket_type] = {}
+        for r_num, matches in sorted(rounds.items()):
+            # matches: { match_no: {'team1':..,'player1':..,'score1':.., …}, … }
+            bracket_data[bracket_type][r_num] = []
+            for m_no, info in sorted(matches.items()):
+                # Ensure score strings are converted to integers
+                bracket_data[bracket_type][r_num].append({
+                    'match': m_no,
+                    'team1':   info.get('team1'),
+                    'player1': info.get('player1'),
+                    'flag1_url': info.get('flag1_url', ''),
+                    'score1':  int(info.get('score1') or 0),
+                    'team2':   info.get('team2'),
+                    'player2': info.get('player2'),
+                    'score2':  int(info.get('score2') or 0),
+                    'flag2_url': info.get('flag2_url', '')
+                })
 
     new_comp = Competition(
         name=name,
@@ -105,14 +216,43 @@ def submit_competition():
         logo_url=logo_url,
         comp_link=comp_link,
         visibility=visibility,
-        bracket=bracket_data
+        bracket=bracket_data,
+        user_id=current_user.id
     )
     db.session.add(new_comp)
+
+    if action == 'share':
+        usernames = request.form.get("share_with", "")
+        username_list = [u.strip() for u in usernames.split(",") if u.strip()]
+        for uname in username_list:
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                new_comp.shared_with.append(user)
+
+
     db.session.commit()
     flash('Competition added successfully.', 'success')
     return redirect(url_for('user.user_page'))
 
+@user_bp.route('/competition/delete/<int:comp_id>', methods=['POST'])
+@login_required
+def delete_competition(comp_id):
+    comp = Competition.query.get_or_404(comp_id)
+    db.session.delete(comp)
+    db.session.commit()
+    flash('The competition has been successfully delected', 'success')
+    return redirect(url_for('user_dashboard'))
 @user_bp.route('/api/comment', methods=['POST'])
+
+@user_bp.route('/player/delete/<int:player_id>', methods=['POST'])
+@login_required
+def delete_player(player_id):
+    player = Player.query.get_or_404(player_id)
+    db.session.delete(player)
+    db.session.commit()
+    flash(f'Player "{player.name}" deleted', 'success')
+    return redirect(url_for('user.user_page'))
+
 def add_comment():
     data = request.get_json() or {}
     try:
@@ -137,3 +277,58 @@ def like():
 
     likes_by_competition[comp_id] = likes_by_competition.get(comp_id, 0) + 1
     return jsonify(likes=likes_by_competition[comp_id])
+
+@user_bp.route('/share-player/<int:player_id>', methods=['POST'])
+@login_required
+def share_player(player_id):
+    usernames = request.form.get("share_with", "")  # e.g. "alice,bob"
+    username_list = [u.strip() for u in usernames.split(",") if u.strip()]
+
+    player = Player.query.get_or_404(player_id)
+
+    if player.user_id != current_user.id:
+        abort(403)
+
+
+    for uname in username_list:
+        user = User.query.filter_by(username=uname).first()
+        if user:
+            player.shared_with.append(user)
+    player.visibility = 'shared'
+    db.session.commit()
+    flash("Player shared successfully.", "success")
+    return redirect(url_for("user.user_page"))
+
+@user_bp.route('/competition/<int:comp_id>/share', methods=['POST'])
+@login_required
+def share_competition(comp_id):
+    usernames = request.form.get('share_with', '')
+    names = [n.strip() for n in usernames.split(',') if n.strip()]
+    if not names:
+        flash('Please enter at least one username.', 'warning')
+        return redirect(url_for('user_dashboard'))
+
+    for uname in names:
+        user = User.query.filter_by(username=uname).first()
+        if not user:
+            flash(f'User "{uname}" does not exist, skipped.', 'warning')
+            continue
+
+        stmt = db.select(shared_competitions).where(
+            shared_competitions.c.competition_id      == comp_id,
+            shared_competitions.c.shared_with_user_id == user.id
+        )
+        exists = db.session.execute(stmt).first()
+        if exists:
+            flash(f'Already shared with "{uname}", skipped.', 'info')
+            continue
+
+        ins = shared_competitions.insert().values(
+            competition_id=comp_id,
+            shared_with_user_id=user.id
+        )
+        db.session.execute(ins)
+
+    db.session.commit()
+    flash('Share invitation sent successfully!', 'success')
+    return redirect(url_for('user_dashboard'))

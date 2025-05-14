@@ -1,95 +1,46 @@
-{# templates/bracket_display.html #}
 <div class="bracket-wrap">
-  {# Loop over each round in this competition's bracket #}
-  {% for round_idx, matches in comp.bracket.items() %}
-    <div class="round round-{{ round_idx }}">
-      <div class="sub-header">
-        <div class="TournaType">Round {{ round_idx }}</div>
-      </div>
+  {% if comp and comp.bracket %}
+    {% for bracket_type, rounds in comp.bracket.items() %}
+      <div class="bracket-type">{{ bracket_type | capitalize }} Bracket</div>
 
-      {# Loop over each match dict in that round #}
-      {% for match in matches %}
-      <div class="match">
-        <div class="player match{{ loop.index }}-player1">
-          <span class="score">{{ match.score1 }}</span>
-          <span class="player_team">{{ match.team1 }}</span>
-          <span>|</span>
-          <span class="player_name">{{ match.player1 }}</span>
-          {% if match.flag1_url %}
-            <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
-          {% endif %}
-        </div>
-        <div class="player match{{ loop.index }}-player2">
-          <span class="score">{{ match.score2 }}</span>
-          <span class="player_team">{{ match.team2 }}</span>
-          <span>|</span>
-          <span class="player_name">{{ match.player2 }}</span>
-          {% if match.flag2_url %}
-            <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
-          {% endif %}
-        </div>
-      </div>
-      {% endfor %}
+      {% for round_num, matches in rounds.items() %}
+        <div class="round round-{{ round_num }}">
+          <div class="sub-header">
+            <div class="TournaType">Round {{ round_num }}</div>
+          </div>
 
-    </div>
+        {% for match in matches %}
+          <div class="match">
+            <div class="player match{{ loop.index }}-player1">
+              <span class="score">{{ match.score1 or 0 }}</span>
+              <span class="player_team">{{ match.team1 or 'Unknown' }}</span>
+              <span>|</span>
+              <span class="player_name">
+                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player1 or 'Player 1' }}</a>
+              </span>
+              {% if match.flag1_url %}
+                <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
+              {% endif %}
+            </div>
+
+            <div class="player match{{ loop.index }}-player2">
+              <span class="score">{{ match.score2 or 0 }}</span>
+              <span class="player_team">{{ match.team2 or 'Unknown' }}</span>
+              <span>|</span>
+              <span class="player_name">
+                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player2 or 'Player 2' }}</a>
+              </span>
+              {% if match.flag2_url %}
+                <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
   {% endfor %}
+  {% else %}
+    <p class="text-muted">No bracket data available.</p>
+  {% endif %}
 </div>
-
-
-{# templates/bracket_display.html #}
-<div class="bracket-wrap">
-
-  <!-- Winner side -->
-  <div class="bracket bracket-left">
-    {% for r in [1,2,3,4] %}
-      {% set matches = comp.bracket[r] %}
-      <div class="round round-{{r}}">
-        <div class="round-title">
-          {% if r==1 %}Quarterfinal
-          {% elif r==2 %}Top 8
-          {% elif r==3 %}Semifinal
-          {% else %}Grand Final{% endif %}
-        </div>
-        <div class="matches">
-          {% for m in matches %}
-          <div class="match">
-            <div class="player-box">{{m.score1}} {{m.team1}} | {{m.player1}}</div>
-            <div class="player-box">{{m.score2}} {{m.team2}} | {{m.player2}}</div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-
-  <!-- Loser side -->
-  <div class="bracket bracket-right">
-    {% for r in [10,9,8,7,6,5] %}
-      {% set matches = comp.bracket[r] %}
-      <div class="round round-{{r}}">
-        <div class="round-title">
-          {% if r==10 %}Loser Final
-          {% elif r==9 %}Loser Semifinal
-          {% elif r==8 %}Loser Quarterfinal
-          {% else %}Loser Round {{11 - r}}{% endif %}
-        </div>
-        <div class="matches">
-          {% for m in matches %}
-          <div class="match">
-            <div class="player-box">{{m.score1}} {{m.team1}} | {{m.player1}}</div>
-            <div class="player-box">{{m.score2}} {{m.team2}} | {{m.player2}}</div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-
-</div>
-
-
-
-
-
-
 
