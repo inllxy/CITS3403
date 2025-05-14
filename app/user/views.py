@@ -84,9 +84,6 @@ def user_page():
     form = CompetitionForm()
     return render_template('user_page.html', competitions=competitions, players=players, form=form)
 
-
-
-
 @user_bp.route('/submit-player', methods=['POST'])
 @login_required
 def submit_player():
@@ -320,23 +317,33 @@ def share_player(player_id):
 @user_bp.route('/competition/<int:comp_id>/share', methods=['POST'])
 @login_required
 def share_competition(comp_id):
-    # 1) 拿到用户名列表
-    raw = request.form.get('share_with','')
-    names = [n.strip() for n in raw.split(',') if n.strip()]
+    usernames = request.form.get('share_with', '')
+    names = [n.strip() for n in usernames.split(',') if n.strip()]
     if not names:
-        flash('请输入至少一个用户名','warning')
-        return redirect(url_for('user.user_dashboard'))
+        flash('Please enter at least one username.', 'warning')
+        return redirect(url_for('user_dashboard'))
 
-    # 2) 循环查用户，插入 shared_competitions
-    for name in names:
-        user = User.query.filter_by(username=name).first()
+    for uname in names:
+        user = User.query.filter_by(username=uname).first()
+        if not user:
+            flash(f'User "{uname}" does not exist, skipped.', 'warning')
+            continue
 
-        share = shared_competitions(
+        stmt = db.select(shared_competitions).where(
+            shared_competitions.c.competition_id      == comp_id,
+            shared_competitions.c.shared_with_user_id == user.id
+        )
+        exists = db.session.execute(stmt).first()
+        if exists:
+            flash(f'Already shared with "{uname}", skipped.', 'info')
+            continue
+
+        ins = shared_competitions.insert().values(
             competition_id=comp_id,
             shared_with_user_id=user.id
         )
-        db.session.add(share)
+        db.session.execute(ins)
 
     db.session.commit()
-    flash('分享邀请已发送！','success')
-    return redirect(url_for('user.user_dashboard'))
+    flash('Share invitation sent successfully!', 'success')
+    return redirect(url_for('user_dashboard'))
