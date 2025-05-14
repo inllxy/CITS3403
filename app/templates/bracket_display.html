@@ -1,86 +1,45 @@
 <div class="bracket-wrap">
-  {# ===== Winner Bracket ===== #}
-  {% if comp.bracket.winner %}
-    <div class="bracket WinnerBracket">
-      <div class="sub-header">
-        <div class="TournaType">Winner Bracket</div>
-      </div>
-
-      {# 循环 winner 对阵，每个 round_idx 对应一个小组 #}
-      {% for round_idx, matches in comp.bracket.winner.items() %}
-        <div class="round round-{{ round_idx }}-winner">
-          <div class="sub-header">
-            <div class="TournaType">Round {{ round_idx }}</div>
-          </div>
-
-          {# 循环这一轮里的每一场 match #}
-          {% for match in matches %}
-            <div class="match">
-              <div class="player match{{ loop.index }}-player1">
-                <span class="score">{{ match.score1 }}</span>
-                <span class="player_team">{{ match.team1 }}</span>
-                <span>|</span>
-                <span class="player_name">{{ match.player1 }}</span>
-                {% if match.flag1_url %}
-                  <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
-                {% endif %}
-              </div>
-              <div class="player match{{ loop.index }}-player2">
-                <span class="score">{{ match.score2 }}</span>
-                <span class="player_team">{{ match.team2 }}</span>
-                <span>|</span>
-                <span class="player_name">{{ match.player2 }}</span>
-                {% if match.flag2_url %}
-                  <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
-                {% endif %}
-              </div>
-            </div>
-          {% endfor %}
+  {# 检查 comp 和 comp.bracket 是否存在 #}
+  {% if comp and comp.bracket %}
+    {% for round_idx, matches in comp.bracket.items() %}
+      <div class="round round-{{ loop.index }}">
+        <div class="sub-header">
+          <div class="TournaType">Round {{ round_idx }}</div>
         </div>
-      {% endfor %}
-    </div>
-  {% endif %}
 
-  {# ===== Loser Bracket ===== #}
-  {% if comp.bracket.loser %}
-    <div class="bracket LoserBracket">
-      <div class="sub-header">
-        <div class="TournaType">Loser Bracket</div>
-      </div>
-
-      {# 循环 loser 对阵，每个 round_idx 对应一个小组 #}
-      {% for round_idx, matches in comp.bracket.loser.items() %}
-        <div class="round round-{{ round_idx }}-loser">
-          <div class="sub-header">
-            <div class="TournaType">Round {{ round_idx }}</div>
-          </div>
-
-          {% for match in matches %}
-            <div class="match">
-              <div class="player match{{ loop.index }}-player1">
-                <span class="score">{{ match.score1 }}</span>
-                <span class="player_team">{{ match.team1 }}</span>
-                <span>|</span>
-                <span class="player_name">{{ match.player1 }}</span>
-                {% if match.flag1_url %}
-                  <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
-                {% endif %}
-              </div>
-              <div class="player match{{ loop.index }}-player2">
-                <span class="score">{{ match.score2 }}</span>
-                <span class="player_team">{{ match.team2 }}</span>
-                <span>|</span>
-                <span class="player_name">{{ match.player2 }}</span>
-                {% if match.flag2_url %}
-                  <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
-                {% endif %}
-              </div>
+        {# Loop over each match in this round #}
+        {% for match in matches %}
+          <div class="match">
+            <div class="player match{{ loop.index }}-player1">
+              <span class="score">{{ match.score1 or 0 }}</span>
+              <span class="player_team">{{ match.team1 or 'Unknown' }}</span>
+              <span>|</span>
+              <span class="player_name">
+                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player1 or 'Player 1' }}</a>
+              </span>
+              {% if match.flag1_url %}
+                <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
+              {% endif %}
             </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
-  {% endif %}
 
+            <div class="player match{{ loop.index }}-player2">
+              <span class="score">{{ match.score2 or 0 }}</span>
+              <span class="player_team">{{ match.team2 or 'Unknown' }}</span>
+              <span>|</span>
+              <span class="player_name">
+                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player2 or 'Player 2' }}</a>
+              </span>
+              {% if match.flag2_url %}
+                <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No bracket data available.</p>
+  {% endif %}
 </div>
 
