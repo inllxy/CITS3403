@@ -15,7 +15,6 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 migrate = None  # Used by flask-migrate
 
-
 def create_app():
     app = Flask(
         __name__,
