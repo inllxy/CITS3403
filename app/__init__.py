@@ -53,9 +53,14 @@ def create_app():
     def player_page():
         return render_template("SF6_Competition_Player_Page.html")
 
-    @app.route("/bracket/<name>")
-    def bracket(name):
-        return render_template(f"{name}.html")
+    @app.route("/bracket/Bracket")
+    def bracket():
+    # 假设你想从数据库里取一个 competition 对象
+        from app.models import Competition
+        comp = Competition.query.first()  # 或者根据某个 ID 获取
+
+        return render_template("Bracket.html", comp=comp)
+
     
     # --- ALIAS for auth.py’s redirect(url_for("user_dashboard")) ---
     @app.route("/dashboard", endpoint="user_dashboard")
