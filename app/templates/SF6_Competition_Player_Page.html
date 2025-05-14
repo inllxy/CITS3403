@@ -89,25 +89,12 @@
               </a>
             {% endif %}
 
-            {% if pl.visibility == 'shared' %}
-              <span>🤝</span>
-            {% endif %}
-
             {% if pl.twitch %}
               <a href="{{ pl.twitch }}" target="_blank">
                 <span class="bi bi-twitch"></span>
               </a>
             {% endif %}
           </div>
-
-          <form action="{{ url_for('user.delete_player', player_id=pl.id) }}"
-                method="post"
-                style="display:inline"
-                onsubmit="return confirm('Do you really want to delete “{{ pl.name }}”?');">
-            <button type="submit" class="btn btn-sm btn-outline-danger">
-              Delete
-            </button>
-          </form>
 
         </div> 
       </div> 
