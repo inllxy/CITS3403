@@ -92,43 +92,55 @@ for (const level of ['winner', 'loser']) {
 // Push the constructed bracket into the array
 brackets.push(bracket);
 
+// load the parameter for competition -- need to put each comp data with specific parameter
+// document.addEventListener('DOMContentLoaded', () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const competitionId = urlParams.get('competition');
+
+//   if (competitionId) {
+//     console.log(`Loading bracket for competition: ${competitionId}`);
+//     // Fetch or load competition-specific data here
+//   }
+// });
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Directly retrieve the <template> element from the DOM
+  const tpl = document.getElementById('bracket-template').content;
+  const clone = tpl.cloneNode(true);
+  clone.id = `${competition}-bracket`;
+  Object.keys(brackets[competition]).forEach((level) => {
     const tpl = document.getElementById('bracket-template').content;
     const clone = tpl.cloneNode(true);
+    clone.id = `${competition}-bracket`;
+    Object.keys(brackets[competition][level]).forEach((round, rNum) => {
+      Object.keys(brackets[competition][level][round]).forEach((matchKey, i) => {
+        const match = brackets[competition][level][round][matchKey];
 
-    // 5. Fill main content
-    Object.keys(brackets).forEach((competition) => {
-        Object.keys(brackets[competition]).forEach((level) => {
-            Object.keys(brackets[competition][level]).forEach((round, rNum) => {
-                Object.keys(brackets[competition][level][round]).forEach((matchKey, i) => {
-                    const match = brackets[competition][level][round][matchKey];
+        // Hides optional extra match of the grand final if the winner of the first match is from the winner bracket
+        if (level === 'winner' && round === 'round4' && matchKey === 'match1' && match.winner() === match.player1) {
+            clone.querySelector(`.GrandFinal .optional`).style.display = 'none';
+            clone.querySelector(`.GrandFinal`).style.marginTop = '170px';
+            clone.querySelector(`.GrandFinal .match`).style.marginBottom = '0px';
+        };
 
-                    // Hides optional extra match of the grand final if the winner of the first match is from the winner bracket
-                    if (level === 'winner' && round === 'round4' && matchKey === 'match1' && match.winner() === match.player1) {
-                        clone.querySelector(`.GrandFinal .optional`).style.display = 'none';
-                        clone.querySelector(`.GrandFinal`).style.marginTop = '170px';
-                        clone.querySelector(`.GrandFinal .match`).style.marginBottom = '0px';
-                    };
+        const p1MatchElement = clone.querySelector(`.round-${rNum + 1}-${level} .match${i + 1}-player1`);
+        p1MatchElement.querySelector('.player_name').id = `${match.player1}`;
+        p1MatchElement.querySelector('.player_name').innerHTML = `
+        <a href="../players" target="_parent">${match.player1}</a>`;
+        p1MatchElement.querySelector('.player_team').textContent = match.team1;
+        p1MatchElement.querySelector('.score').textContent = match.score1;
 
-                    const p1MatchElement = clone.querySelector(`.round-${rNum + 1}-${level} .match${i + 1}-player1`);
-                    p1MatchElement.querySelector('.player_name').id = `${match.player1}`;
-                    p1MatchElement.querySelector('.player_name').innerHTML = `
-                    <a href="../players" target="_parent">${match.player1}</a>`;
-                    p1MatchElement.querySelector('.player_team').textContent = match.team1;
-                    p1MatchElement.querySelector('.score').textContent = match.score1;
-
-                    const p2MatchElement = clone.querySelector(`.round-${rNum + 1}-${level} .match${i + 1}-player2`);
-                    p2MatchElement.querySelector('.player_name').id = `${match.player2}`;
-                    p2MatchElement.querySelector('.player_name').innerHTML = `
-                    <a href="../players" target="_parent">${match.player2}</a>`;
-                    p2MatchElement.querySelector('.player_team').textContent = match.team2;
-                    p2MatchElement.querySelector('.score').textContent = match.score2;
-                });
-            });
-        });
-
-        document.getElementById('bracket-container').appendChild(clone);
-
+        const p2MatchElement = clone.querySelector(`.round-${rNum + 1}-${level} .match${i + 1}-player2`);
+        p2MatchElement.querySelector('.player_name').id = `${match.player2}`;
+        p2MatchElement.querySelector('.player_name').innerHTML = `
+        <a href="../players" target="_parent">${match.player2}</a>`;
+        p2MatchElement.querySelector('.player_team').textContent = match.team2;
+        p2MatchElement.querySelector('.score').textContent = match.score2;
+      });
     });
+    clone.querySelector('.bracket-wrap').id = `${competition}-bracket`;
+    document.getElementById('bracket-container').appendChild(clone);
+    // document.getElementById(`${competition}-bracket`).style.display = 'none';
+
+  });
 });

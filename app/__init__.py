@@ -41,7 +41,7 @@ def create_app():
     from .user.views import user_bp
     app.register_blueprint(user_bp, url_prefix='/dashboard')
 
-    from .main.views import main_bp   # 🔁 移动到这里
+    from .main.views import main_bp 
     app.register_blueprint(main_bp)
 
     from .playercard.views import player_bp
@@ -74,9 +74,8 @@ def create_app():
 
     @app.route("/bracket/Bracket")
     def bracket():
-    # 假设你想从数据库里取一个 competition 对象
         from app.models import Competition
-        comp = Competition.query.first()  # 或者根据某个 ID 获取
+        comp = Competition.query.first() 
 
         return render_template("Bracket.html", comp=comp)
 
