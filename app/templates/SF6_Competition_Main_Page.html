@@ -20,7 +20,6 @@
         href="{{url_for('static', filename='CSS/SF6_Bracket.css')}}">
   <link rel="stylesheet"
         href="{{ url_for('static', filename='CSS/alert.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/user.css') }}">
   <!-- Bootstrap JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='JavaScript/CompetitionTemplate.js') }}" defer></script>
@@ -33,9 +32,6 @@
     {% else %}
       {% include 'Navbar_All/NavBar.html' %}
     {% endif %}
-
-  
-
 
   <!-- Video background with text overlay -->
   <div class="video-bg">
@@ -55,7 +51,7 @@
 
   <!-- Competition results section -->
   <div class="container py-5 competition-result-section">
-    {% for comp in competitions if comp.year == 2025 %}
+    {% for comp in competitions %}
         <div class="competition-result-item">
           <div class="d-flex align-items-start">
             <div class="date">
@@ -145,7 +141,8 @@
         </div> 
         </div>
         {% endfor %}
-    <!-- <div class="row">
+
+    <div class="row">
       <div class="col-md-3 d-flex">
         <h2 class="competition-result-title text-uppercase" id="Result_2025">
           Competition Result<br>2025
@@ -174,7 +171,7 @@
       </div>
 
       <div class="col-md-9" id="competition-list-2024">
-      </div> -->
+      </div>
 
    </div>
 
