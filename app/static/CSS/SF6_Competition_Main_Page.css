@@ -61,7 +61,18 @@ body,
   z-index: 2; /* Between video and text */
 }
 
-/* Competition result section wrapper: spacing around results */
+.competition-result-title,
+.competition-result-item h3,
+.competition-result-item .btn,
+.date .month,
+.date .day {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.h1 {
+  text-align: center;
+}
+
 .competition-result-section {
   margin: 2.5vw;
   padding: 1.25vw;
@@ -79,8 +90,8 @@ body,
   letter-spacing: 0.125vw;
 }
 .competition-result-item {
-  width: 70vw;
-  margin: 0 0 8vh 2vw;
+  width: 80vw;
+  margin: 2vw auto;
   padding: 1vw;
   border-top: 1px solid #08e41b;
   border-bottom: 1px solid #08e41b;
@@ -137,3 +148,4 @@ body,
   height: auto;           
   object-fit: contain;   
 }
+

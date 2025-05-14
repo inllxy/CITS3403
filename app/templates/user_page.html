@@ -28,6 +28,18 @@
   {% include 'players_template.html' %}
 
   <!-- FLASH MESSAGES & COMPETITION CARDS -->
+  <div class="container mt-3">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% if msgs %}
+      {% for category, message in msgs %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  </div>
 
   <h1>The Competitions You Created</h1>
 
@@ -112,13 +124,11 @@
             <span class="count">0</span>
           </div>
 
-            <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
-              <span class="bubble">💬</span>
-              <span class="count">0</span>
-            </div>
+          <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
+            <span class="bubble">💬</span>
+            <span class="count">0</span>
           </div>
 
-          </div>
         </div>
 
         <!-- Offcanvas for "Details" -->
@@ -168,15 +178,19 @@
 
   {% endfor %}
 
+  {% for sharecomp in shared_competitions %}
+    <h1>{sharecomp.competition_id} {sharecomp.shared_with_user_id}</h1>
+  {% endfor %}
+
+
 
   <!-- PLAYERS SECTION -->
 
-<h1>The Player Card You Created</h1>
+  <h1>The Player Card You Created</h1>
 
-
-<div id="playerContainer"
+  <div id="playerContainer"
     class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
-  
+
   {% for pl in players %}
     <div class="col" data-owner-id="{{ pl.owner_id }}">
       <div class="card player-card"
@@ -261,8 +275,10 @@
       </div>
     </div>
   {% endfor %}
-</div> <!-- /#playerContainer -->
+  </div> <!-- /#playerContainer -->
  
+
+  
 <script>
 document.querySelectorAll('[id^=toggle-share-]').forEach(btn => {
   btn.addEventListener('click', e => {
