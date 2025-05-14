@@ -57,23 +57,28 @@
         <!-- Tab Content -->
         <div class="tab-content">
           <!-- Login Form -->
-          <div id="loginTab" class="tab-pane fade show active">
-            <form method="POST" action="/login">
-              <input type="text" class="form-control mb-3" name="username" placeholder="Username or Email" required>
-              <input type="password" class="form-control mb-3" name="password" placeholder="Password" required>
-              <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-          </div>
+          <!-- Login Form -->
+        <div id="loginTab" class="tab-pane fade show active">
+          <form method="POST" action="{{ url_for('auth.login') }}">
+            {{ login_form.hidden_tag() }}
+            {{ login_form.username(class_="form-control mb-3", placeholder="Username or Email") }}
+            {{ login_form.password(class_="form-control mb-3", placeholder="Password") }}
+            {{ login_form.submit(class_="btn btn-primary w-100") }}
+          </form>
+        </div>
 
           <!-- Register Form -->
-          <div id="registerTab" class="tab-pane fade">
-            <form method="POST" action="/register">
-              <input type="text" class="form-control mb-3" name="username" placeholder="Username" required>
-              <input type="email" class="form-control mb-3" name="email" placeholder="Email" required>
-              <input type="password" class="form-control mb-3" name="password" placeholder="Password" required>
-              <button type="submit" class="btn btn-success w-100">Register</button>
-            </form>
-          </div>
+        <div id="registerTab" class="tab-pane fade">
+          <form method="POST" action="{{ url_for('auth.register') }}">
+            {{ register_form.hidden_tag() }}
+            {{ register_form.username(class_="form-control mb-3", placeholder="Username") }}
+            {{ register_form.email(class_="form-control mb-3", placeholder="Email") }}
+            {{ register_form.password(class_="form-control mb-3", placeholder="Password") }}
+            {{ register_form.confirm(class_="form-control mb-3", placeholder="Confirm Password") }}
+            {{ register_form.submit(class_="btn btn-success w-100") }}
+          </form>
+        </div>
+
         </div>
       </div>
 
