@@ -1,0 +1,75 @@
+/* 1) Modal sizing (95% width, horizontal scroll) */
+#bracketModal .bracket-content {
+  max-width: 95vw;
+  height: 90vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 2) Row of two bracket‐columns */
+#bracketModal .bracket-content .bracket-wrap {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+
+/* 3) Left and right bracket as rows of rounds */
+.bracket-left,
+.bracket-right {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
+/* 4) Round container */
+.round {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 5) Round title */
+.round-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* 6) Match‐stack wrapper (no spine) */
+.matches {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 7) Each match (just boxes, no horizontal line) */
+.match {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 0;
+}
+
+/* 8) Player‐box styling */
+.player-box {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  margin: 2px 0;
+}
+
+/* 9) Responsive fallback (stack vertically) */
+@media (max-width: 800px) {
+  #bracketModal .bracket-content .bracket-wrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+}
+
+
+
+
