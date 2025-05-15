@@ -92,6 +92,15 @@ class Comment(db.Model):
     user = db.relationship('User', backref='comments')
     competition = db.relationship('Competition', backref='comments')
 
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    comp_id = db.Column(db.Integer, db.ForeignKey('competitions.id'), nullable=False)
+    count = db.Column(db.Integer, default=0)
+
+    competition = db.relationship('Competition', backref=db.backref('like', uselist=False))
+
+    def increment(self):
+        self.count += 1
 
 # models.py
 
