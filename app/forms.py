@@ -47,3 +47,16 @@ class PlayerForm(FlaskForm):
 
     action = HiddenField()  # “public” or “private”
     submit = SubmitField("Submit")
+
+class DeleteCompetitionForm(FlaskForm):
+    comp_id = HiddenField("Competition ID")
+    submit = SubmitField("Delete")
+
+class ShareCompetitionForm(FlaskForm):
+    comp_id = HiddenField("Competition ID")
+    share_with = StringField("Share With", validators=[DataRequired()])
+    submit = SubmitField("Send Share")
+
+class DeletePlayerForm(FlaskForm):
+    player_id = HiddenField()
+    submit = SubmitField("Delete")
