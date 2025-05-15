@@ -49,7 +49,6 @@ from app.forms import PlayerForm, CompetitionForm, DeleteCompetitionForm, ShareC
 @user_bp.route('/')
 @login_required
 def user_page():
-    # 获取当前用户拥有和被分享的比赛
     own_comps = Competition.query.filter_by(user_id=current_user.id)
     shared_comps = Competition.query \
         .join(shared_competitions) \
@@ -59,7 +58,6 @@ def user_page():
         .order_by(Competition.created_at.desc()) \
         .all()
 
-    # 获取当前用户拥有和被分享的选手
     own_players = Player.query.filter_by(user_id=current_user.id)
     shared_players_query = Player.query \
         .join(shared_players) \
@@ -69,7 +67,6 @@ def user_page():
         .order_by(Player.created_at.desc()) \
         .all()
 
-    # 为每个比赛生成一个删除表单和分享表单
     delete_forms = {comp.id: DeleteCompetitionForm(comp_id=comp.id) for comp in competitions}
     share_forms = {comp.id: ShareCompetitionForm(comp_id=comp.id) for comp in competitions}
     delete_player_forms = {p.id: DeletePlayerForm(player_id=p.id) for p in players}
@@ -252,7 +249,6 @@ def delete_player(player_id):
     form = DeletePlayerForm()
 
     if form.validate_on_submit():
-        # 二次验证：确保表单提交的 player_id 与 URL 中一致（防篡改）
         if int(form.player_id.data) != player_id:
             flash("Player ID mismatch – possible tampering detected", "danger")
             return redirect(url_for('user.user_page'))
@@ -267,21 +263,21 @@ def delete_player(player_id):
     return redirect(url_for('user.user_page'))
 
 
-def add_comment():
-    data = request.get_json() or {}
-    try:
-        comp_id = int(data['comp_id'])
-        text = data['text'].strip()
-        if not text:
-            raise ValueError
-    except (KeyError, ValueError):
-        return jsonify(error='Invalid comp_id or empty text'), 400
-    # Store in database
-    comment = Comment(comp_id=comp_id, text=text)
-    db.session.add(comment)
-    db.session.commit()
+# def add_comment():
+#     data = request.get_json() or {}
+#     try:
+#         comp_id = int(data['comp_id'])
+#         text = data['text'].strip()
+#         if not text:
+#             raise ValueError
+#     except (KeyError, ValueError):
+#         return jsonify(error='Invalid comp_id or empty text'), 400
+#     # Store in database
+#     comment = Comment(comp_id=comp_id, text=text)
+#     db.session.add(comment)
+#     db.session.commit()
 
-    return jsonify(status='ok', message='Comment received (store to DB if needed)')
+#     return jsonify(status='ok', message='Comment received (store to DB if needed)')
 
 likes_by_competition = {}
 

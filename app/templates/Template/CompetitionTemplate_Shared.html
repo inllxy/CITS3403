@@ -16,13 +16,13 @@
             <a class="btn btn-sm btn-light btn-result"
               role="button"
               data-bs-toggle="offcanvas"
-              data-bs-target="#offcan_result_own_{{ loop.index0 }}">
+              data-bs-target="#offcan_result_shared_{{ loop.index0 }}">
               Result
             </a>
             <a class="btn btn-sm btn-light btn-details"
               role="button"
               data-bs-toggle="offcanvas"
-              data-bs-target="#offcan_detail_own_{{ loop.index0 }}">
+              data-bs-target="#offcan_detail_shared_{{ loop.index0 }}">
               Details
             </a>
             <a class="btn btn-sm btn-light btn-comp"
@@ -92,7 +92,7 @@
 
         <!-- Offcanvas for "Details" -->
         <div class="offcanvas offcanvas-bottom offcanvas-detail" tabindex="-1"
-            id="offcan_detail_own_{{ loop.index0 }}" aria-labelledby="offcanvasLabelDetail">
+            id="offcan_detail_shared_{{ loop.index0 }}" aria-labelledby="offcanvasLabelDetail">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasLabelDetail"></h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -104,7 +104,7 @@
 
         <!-- Offcanvas for "Result" -->
         <div class="offcanvas offcanvas-bottom offcanvas-result" tabindex="-1"
-            id="offcan_result_own_{{ loop.index0 }}" aria-labelledby="offcanvasLabelResult">
+            id="offcan_result_shared_{{ loop.index0 }}" aria-labelledby="offcanvasLabelResult">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasLabelResult"></h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -115,7 +115,7 @@
         </div>
 
         <!-- COMMENT MODAL -->
-        <div class="modal fade" id="commentModal_own_{{ loop.index0 }}" tabindex="-1" aria-labelledby="commentModalLabel_{{ loop.index0 }}" aria-hidden="true">
+        <div class="modal fade" id="commentModal_shared_{{ loop.index0 }}" tabindex="-1" aria-labelledby="commentModalLabel_{{ loop.index0 }}" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
