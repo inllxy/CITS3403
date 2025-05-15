@@ -262,6 +262,10 @@ def add_comment():
             raise ValueError
     except (KeyError, ValueError):
         return jsonify(error='Invalid comp_id or empty text'), 400
+    # Store in database
+    comment = Comment(comp_id=comp_id, text=text)
+    db.session.add(comment)
+    db.session.commit()
 
     return jsonify(status='ok', message='Comment received (store to DB if needed)')
 
