@@ -29,9 +29,9 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash("Registration successful. Please log in", "success")
-        return redirect(url_for("index"))
+        return redirect(url_for("main.index"))
 
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -48,7 +48,7 @@ def login():
         else:
             flash("Incorrect account or password", "error")
 
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))
 
 
 @auth_bp.route("/logout")
@@ -56,4 +56,4 @@ def login():
 def logout():
     logout_user()
     flash("Logged out of the system", "success")
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))

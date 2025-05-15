@@ -47,38 +47,6 @@ def create_app():
     from .playercard.views import player_bp
     app.register_blueprint(player_bp)
     # ========== Application Routes ==========
-
-    @app.route("/")
-    def index():
-        from app.models import Competition
-        competitions = Competition.query.all()
-        login_form = LoginForm()
-        register_form = RegisterForm()
-        return render_template(
-            "SF6_Competition_Main_Page.html",
-            login_form=login_form,
-            register_form=register_form,
-            competitions=competitions,
-            
-        )
-
-
-    @app.route("/players")
-    def player_page():
-        from app.models import Player
-        players = Player.query.all()
-        login_form = LoginForm()
-        register_form = RegisterForm()
-        return render_template("SF6_Competition_Player_Page.html", players=players, login_form=login_form,
-        register_form=register_form)
-
-    @app.route("/bracket/Bracket")
-    def bracket():
-        from app.models import Competition
-        comp = Competition.query.first() 
-
-        return render_template("Bracket.html", comp=comp)
-
     
     # --- ALIAS for auth.py’s redirect(url_for("user_dashboard")) ---
     @app.route("/dashboard", endpoint="user_dashboard")

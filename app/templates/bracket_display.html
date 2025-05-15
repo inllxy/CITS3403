@@ -15,7 +15,7 @@
               <span class="player_team">{{ match.team1 or 'Unknown' }}</span>
               <span>|</span>
               <span class="player_name">
-                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player1 or 'Player 1' }}</a>
+                <a href="{{ url_for('main.player_page') }}" target="_parent">{{ match.player1 or 'Player 1' }}</a>
               </span>
               {% if match.flag1_url %}
                 <img class="flag" src="{{ match.flag1_url }}" alt="Flag for {{ match.team1 }}">
@@ -27,7 +27,7 @@
               <span class="player_team">{{ match.team2 or 'Unknown' }}</span>
               <span>|</span>
               <span class="player_name">
-                <a href="{{ url_for('player_page') }}" target="_parent">{{ match.player2 or 'Player 2' }}</a>
+                <a href="{{ url_for('main.player_page') }}" target="_parent">{{ match.player2 or 'Player 2' }}</a>
               </span>
               {% if match.flag2_url %}
                 <img class="flag" src="{{ match.flag2_url }}" alt="Flag for {{ match.team2 }}">
