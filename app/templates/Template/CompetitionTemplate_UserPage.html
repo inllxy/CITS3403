@@ -1,0 +1,136 @@
+<div class="competition-result-item">
+      <div class="d-flex align-items-start">
+        <div class="date">
+          <p class="month">{{ comp.month[:3] }}.</p>
+          <p class="day">{{ comp.day }}</p>
+        </div>
+
+        <div class="ms-auto">
+          <img class="logo" src="{{ comp.logo_url }}" alt="Match Logo">
+        </div>
+
+        <div class="competition-info flex-grow-1">
+          <h3 class="mb-1 title">{{ comp.name }}</h3>
+
+          <div class="competition-btn d-flex gap-2 mt-2">
+            <a class="btn btn-sm btn-light btn-result"
+              role="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcan_result_{{ loop.index0 }}">
+              Result
+            </a>
+            <a class="btn btn-sm btn-light btn-details"
+              role="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcan_detail_{{ loop.index0 }}">
+              Details
+            </a>
+            <a class="btn btn-sm btn-light btn-comp"
+              href="{{ comp.comp_link }}"
+              target="_blank"
+              rel="noopener noreferrer">
+              COMP
+            </a>
+            
+            {% if current_user.id == comp.user_id %}
+            <form method="post"
+                  action="{{ url_for('user.delete_competition', comp_id=comp.id) }}"
+                  style="display:inline"
+                  onsubmit="return confirm('Are you sure you want to delete this competition?');">
+              {{ delete_forms[comp.id].hidden_tag() }}
+              {{ delete_forms[comp.id].submit(class="btn btn-sm btn-outline-danger") }}
+            </form>
+
+
+            <button id="toggle-share-{{ comp.id }}" class="btn btn-sm btn-outline-primary">
+              Share
+            </button>
+
+            <!-- Hidden input area, will only display when the above button is clicked -->
+            <form id="share-form-{{ comp.id }}"
+                method="post"
+                action="{{ url_for('user.share_competition', comp_id=comp.id) }}"
+                style="display: none; margin-top: .5rem;"
+                onsubmit="return confirm('Send share invitation?');">
+
+            {{ share_forms[comp.id].hidden_tag() }}
+
+            {{ share_forms[comp.id].share_with(
+                class="form-control form-control-sm d-inline-block",
+                placeholder="Enter usernames, separated by commas",
+                style="width: 200px;"
+            ) }}
+
+            {{ share_forms[comp.id].submit(
+                class="btn btn-sm btn-primary",
+                value="share"
+            ) }}
+          </form>
+
+
+
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-actions">
+          {% if comp.visibility=='shared' %}
+              <span>🤝</span>
+          {% endif %}
+
+          <div class="action like">
+            <span class="heart">❤️</span>
+            <span class="count">0</span>
+          </div>
+
+          <div class="action comment" data-bs-toggle="modal" data-bs-target="#commentModal_{{ loop.index0 }}">
+            <span class="bubble">💬</span>
+            <span class="count">0</span>
+          </div>
+
+        </div>
+
+        <!-- Offcanvas for "Details" -->
+        <div class="offcanvas offcanvas-bottom offcanvas-detail" tabindex="-1"
+            id="offcan_detail_{{ loop.index0 }}" aria-labelledby="offcanvasLabelDetail">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabelDetail"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body detail-body">
+            {% include 'bracket_display.html' %}
+          </div>
+        </div>
+
+        <!-- Offcanvas for "Result" -->
+        <div class="offcanvas offcanvas-bottom offcanvas-result" tabindex="-1"
+            id="offcan_result_{{ loop.index0 }}" aria-labelledby="offcanvasLabelResult">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasLabelResult"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body result-body">
+            <img src="{{ comp.poster_url }}" class="img-fluid rounded" alt="{{ comp.name }} Poster">
+          </div>
+        </div>
+
+        <!-- COMMENT MODAL -->
+        <div class="modal fade" id="commentModal_{{ loop.index0 }}" tabindex="-1" aria-labelledby="commentModalLabel_{{ loop.index0 }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="commentModalLabel_{{ loop.index0 }}">Comments</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <textarea class="form-control" rows="3" placeholder="Write a comment..."></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

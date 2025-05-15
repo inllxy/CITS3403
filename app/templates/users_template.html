@@ -253,13 +253,17 @@
         </div>
 
   
-        <label for="comp">Competition Link</label>
-        <input type="url" id="comp" name="comp_link" placeholder="https://..." required />
-  
+        {{ form.comp_link.label }}
+        {{ form.comp_link(class_="form-control", placeholder="https://...") }}
+
         <div class="button-group">
-          <button type="submit" name="action" value="public">Publish Publicly</button>
-          <button type="submit" name="action" value="private">Save Privately</button>
+          <button type="submit" name="action" value="public" class="btn btn-success">Publish Publicly</button>
+          <button type="submit" name="action" value="private" class="btn btn-secondary">Save Privately</button>
         </div>
+        
+
+        {{ form.action(id="action") }}
+
         
       </form>
     </div>

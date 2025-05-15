@@ -16,18 +16,18 @@
           Competition
         </a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="{{ url_for('index') }}#Result_2023">2023</a></li>
-          <li><a class="dropdown-item" href="{{ url_for('index') }}#Result_2024">2024</a></li>
-          <li><a class="dropdown-item" href="{{ url_for('index') }}#Result_2025">2025</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('main.index') }}#Result_2023">2023</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('main.index') }}#Result_2024">2024</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('main.index') }}#Result_2025">2025</a></li>
         </ul>
       </li>
       <!-- Other nav items -->
-      <li class="navbar-text"><a class="nav-link fs-2" href="{{ url_for('player_page') }}">Player</a></li>
+      <li class="navbar-text"><a class="nav-link fs-2" href="{{ url_for('main.player_page') }}">Player</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="https://www.streetfighter.com/6/news/all/1">News</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="#">Schedule</a></li>
       <li class="navbar-text"><a class="nav-link fs-2" href="#">Quiz</a></li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle fs-2" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+        <a class="nav-link dropdown-toggle fs-1" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
             {{ current_user.username }}
         </a>
 

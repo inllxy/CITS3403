@@ -14,6 +14,8 @@ from app.models import db, Competition, Player, User, shared_players, shared_com
 from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
 from app.forms import CompetitionForm
+from app.forms import PlayerForm
+from app.forms import DeleteCompetitionForm, DeletePlayerForm, ShareCompetitionForm, CompetitionForm, PlayerForm
 
 user_bp = Blueprint(
     'user', __name__,
@@ -39,11 +41,16 @@ def save_file(file_storage):
     return url_for('static', filename=f'uploads/{unique_name}')
 
 
+from flask_login import login_required, current_user
+from flask import render_template
+from app.models import Competition, Player, shared_competitions, shared_players
+from app.forms import PlayerForm, CompetitionForm, DeleteCompetitionForm, ShareCompetitionForm
+
 @user_bp.route('/')
 @login_required
 def user_page():
+    # 获取当前用户拥有和被分享的比赛
     own_comps = Competition.query.filter_by(user_id=current_user.id)
-
     shared_comps = Competition.query \
         .join(shared_competitions) \
         .filter(shared_competitions.c.shared_with_user_id == current_user.id)
@@ -52,8 +59,8 @@ def user_page():
         .order_by(Competition.created_at.desc()) \
         .all()
 
+    # 获取当前用户拥有和被分享的选手
     own_players = Player.query.filter_by(user_id=current_user.id)
-
     shared_players_query = Player.query \
         .join(shared_players) \
         .filter(shared_players.c.shared_with_user_id == current_user.id)
@@ -62,70 +69,66 @@ def user_page():
         .order_by(Player.created_at.desc()) \
         .all()
 
-    own_comps = Competition.query.filter_by(user_id=current_user.id)
+    # 为每个比赛生成一个删除表单和分享表单
+    delete_forms = {comp.id: DeleteCompetitionForm(comp_id=comp.id) for comp in competitions}
+    share_forms = {comp.id: ShareCompetitionForm(comp_id=comp.id) for comp in competitions}
+    delete_player_forms = {p.id: DeletePlayerForm(player_id=p.id) for p in players}
 
-    shared_comps = Competition.query \
-        .join(shared_competitions) \
-        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+    return render_template(
+        'user_page.html',
+        competitions=competitions,
+        players=players,
+        form=CompetitionForm(),
+        player_form=PlayerForm(),
+        delete_forms=delete_forms,
+        share_forms=share_forms,
+        delete_player_forms=delete_player_forms
+    )
 
-    competitions = own_comps.union(shared_comps) \
-        .order_by(Competition.created_at.desc()) \
-        .all()
-
-    own_players = Player.query.filter_by(user_id=current_user.id)
-
-    shared_players_query = Player.query \
-        .join(shared_players) \
-        .filter(shared_players.c.shared_with_user_id == current_user.id)
-
-    players = own_players.union(shared_players_query) \
-        .order_by(Player.created_at.desc()) \
-        .all()
-    form = CompetitionForm()
-    return render_template('user_page.html', competitions=competitions, players=players, form=form)
 
 @user_bp.route('/submit-player', methods=['POST'])
 @login_required
 def submit_player():
-    photo = request.files.get('photo_file')
-    if photo and allowed_file(photo.filename):
-        photo_url = save_file(photo)
+    form = PlayerForm()
+
+    if form.validate_on_submit():
+        if form.photo_file.data and allowed_file(form.photo_file.data.filename):
+            photo_url = save_file(form.photo_file.data)
+        else:
+            photo_url = form.photo_link.data.strip()
+
+        action = form.action.data or "public"
+        visibility = {
+            "private": "private",
+            "share": "shared"
+        }.get(action, "public")
+
+        player = Player(
+            name=form.player_name.data.strip(),
+            league=form.league.data.strip(),
+            twitter=form.twitter_link.data.strip(),
+            twitch=form.twitch_link.data.strip(),
+            visibility=visibility,
+            photo_url=photo_url,
+            user_id=current_user.id
+        )
+
+        if action == 'share':
+            usernames = request.form.get('share_with', '')
+            username_list = [u.strip() for u in usernames.split(',') if u.strip()]
+            for uname in username_list:
+                user = User.query.filter_by(username=uname).first()
+                if user:
+                    player.shared_with.append(user)
+
+        db.session.add(player)
+        db.session.commit()
+        flash('Player added successfully.', 'success')
     else:
-        photo_url = request.form.get('photo_link', '')
+        flash('Player submission failed. Please check the form fields.', 'danger')
 
-    
-
-    action = request.form.get('action', 'public')  
-    if action == 'private':
-        visibility = 'private'
-    elif action == 'share':
-        visibility = 'shared'
-    else:
-        visibility = 'public'
-
-    player = Player(
-        name=request.form.get('player_name', '').strip(),
-        league=request.form.get('league', '').strip(),
-        twitter=request.form.get('twitter_link', '').strip(),
-        twitch=request.form.get('twitch_link', '').strip(),
-        visibility=visibility,
-        photo_url=photo_url,
-        user_id=current_user.id
-    )
-    if action == 'share':
-        usernames = request.form.get('share_with', '')
-        username_list = [u.strip() for u in usernames.split(',') if u.strip()]
-        for uname in username_list:
-            user = User.query.filter_by(username=uname).first()
-            if user:
-                player.shared_with.append(user)
-
-    
-
-    db.session.add(player)
-    db.session.commit()
-    flash('Player added successfully.', 'success')
     return redirect(url_for('user.user_page'))
+
 
 
 
@@ -135,9 +138,8 @@ def submit_competition():
     name = request.form.get('name', '').strip()
     year = int(request.form.get('year', 0))
     month_idx = int(request.form.get('month', 0))
-    date = int(request.form.get('date', 1))
+    day = int(request.form.get('day', 1))
     comp_link = request.form.get('comp_link', '').strip()
-    action = request.form.get('action', 'public')
     action = request.form.get('action', 'public')
 
     
@@ -211,7 +213,7 @@ def submit_competition():
         name=name,
         year=year,
         month=calendar.month_abbr[month_idx].upper() + '.',
-        day=date,
+        day=day,
         poster_url=poster_url,
         logo_url=logo_url,
         comp_link=comp_link,
@@ -247,11 +249,23 @@ def delete_competition(comp_id):
 @user_bp.route('/player/delete/<int:player_id>', methods=['POST'])
 @login_required
 def delete_player(player_id):
-    player = Player.query.get_or_404(player_id)
-    db.session.delete(player)
-    db.session.commit()
-    flash(f'Player "{player.name}" deleted', 'success')
+    form = DeletePlayerForm()
+
+    if form.validate_on_submit():
+        # 二次验证：确保表单提交的 player_id 与 URL 中一致（防篡改）
+        if int(form.player_id.data) != player_id:
+            flash("Player ID mismatch – possible tampering detected", "danger")
+            return redirect(url_for('user.user_page'))
+
+        player = Player.query.get_or_404(player_id)
+        db.session.delete(player)
+        db.session.commit()
+        flash(f'Player \"{player.name}\" deleted', 'success')
+    else:
+        flash("Invalid deletion request", "danger")
+
     return redirect(url_for('user.user_page'))
+
 
 def add_comment():
     data = request.get_json() or {}
@@ -282,49 +296,41 @@ def like():
     likes_by_competition[comp_id] = likes_by_competition.get(comp_id, 0) + 1
     return jsonify(likes=likes_by_competition[comp_id])
 
-@user_bp.route('/share-player/<int:player_id>', methods=['POST'])
-@login_required
-def share_player(player_id):
-    usernames = request.form.get("share_with", "")  # e.g. "alice,bob"
-    username_list = [u.strip() for u in usernames.split(",") if u.strip()]
-
-    player = Player.query.get_or_404(player_id)
-
-    if player.user_id != current_user.id:
-        abort(403)
-
-
-    for uname in username_list:
-        user = User.query.filter_by(username=uname).first()
-        if user:
-            player.shared_with.append(user)
-    player.visibility = 'shared'
-    db.session.commit()
-    flash("Player shared successfully.", "success")
-    return redirect(url_for("user.user_page"))
 
 @user_bp.route('/competition/<int:comp_id>/share', methods=['POST'])
 @login_required
 def share_competition(comp_id):
-    usernames = request.form.get('share_with', '')
+    form = ShareCompetitionForm()
+
+    if not form.validate_on_submit():
+        flash("Invalid form submission.", "danger")
+        return redirect(url_for('user_dashboard'))
+
+    usernames = form.share_with.data
     names = [n.strip() for n in usernames.split(',') if n.strip()]
+
     if not names:
         flash('Please enter at least one username.', 'warning')
         return redirect(url_for('user_dashboard'))
 
+    shared_count = 0
+    skipped_count = 0
+
     for uname in names:
         user = User.query.filter_by(username=uname).first()
         if not user:
-            flash(f'User "{uname}" does not exist, skipped.', 'warning')
+            flash(f'User \"{uname}\" does not exist, skipped.', 'warning')
+            skipped_count += 1
             continue
 
         stmt = db.select(shared_competitions).where(
-            shared_competitions.c.competition_id      == comp_id,
+            shared_competitions.c.competition_id == comp_id,
             shared_competitions.c.shared_with_user_id == user.id
         )
         exists = db.session.execute(stmt).first()
         if exists:
-            flash(f'Already shared with "{uname}", skipped.', 'info')
+            flash(f'Already shared with \"{uname}\", skipped.', 'info')
+            skipped_count += 1
             continue
 
         ins = shared_competitions.insert().values(
@@ -332,7 +338,15 @@ def share_competition(comp_id):
             shared_with_user_id=user.id
         )
         db.session.execute(ins)
+        shared_count += 1
 
     db.session.commit()
-    flash('Share invitation sent successfully!', 'success')
+
+    if shared_count > 0:
+        flash(f'Successfully shared with {shared_count} user(s).', 'success')
+    elif skipped_count > 0:
+        flash('No new users were shared with. All usernames were invalid or already shared.', 'warning')
+    else:
+        flash('No action taken.', 'info')
+
     return redirect(url_for('user_dashboard'))

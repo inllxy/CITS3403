@@ -1,55 +1,49 @@
+<!-- Add Player Modal -->
 <div id="addPlayerModal" class="modal flex-center" style="display: none;">
   <div class="modal-content">
     <span class="close-player">&times;</span>
     <h2>Add a New Player</h2>
 
-    <form action="{{ url_for('user.submit_player') }}" method="post" enctype="multipart/form-data">
+    <form method="POST" action="{{ url_for('user.submit_player') }}" enctype="multipart/form-data">
+      {{ player_form.hidden_tag() }}
 
       <!-- Profile Photo -->
-      <!-- Profile Photo -->
-      <label>Profile Photo</label>
+      <label for="photo_file">{{ player_form.photo_file.label.text }}</label>
       <div class="note">Upload an image or paste a link (one only)</div>
-      <input type="file" name="photo_file" accept="image/*" onchange="previewImage(event)" />
-      <input type="url" name="photo_link" placeholder="Or enter image URL" />
+      {{ player_form.photo_file(id="photo_file") }}
+      {{ player_form.photo_link(placeholder="Or enter image URL") }}
+
       <img id="previewImage" style="display:none; width: 100px; height: 100px; margin-top: 10px; object-fit: cover; border-radius: 0.5rem;" />
 
-
       <!-- Name -->
-      <label>Name</label>
-      <input type="text" name="player_name" placeholder="Player Name" required />
+      <label for="player_name">{{ player_form.player_name.label.text }}</label>
+      {{ player_form.player_name(id="player_name", placeholder="Player Name", required=True) }}
 
       <!-- League -->
-      <label>League</label>
-      <input type="text" name="league" placeholder="League Name" required />
+      <label for="league">{{ player_form.league.label.text }}</label>
+      {{ player_form.league(id="league", placeholder="League Name", required=True) }}
 
       <!-- Social Links -->
-      <label>Twitter</label>
+      <label for="twitter_link">{{ player_form.twitter_link.label.text }}</label>
       <div class="social-input">
-        <input type="url" name="twitter_link" placeholder="https://twitter.com/username" />
+        {{ player_form.twitter_link(id="twitter_link", placeholder="https://twitter.com/username") }}
         <span class="bi bi-twitter"></span>
       </div>
 
-      <label>Twitch</label>
+      <label for="twitch_link">{{ player_form.twitch_link.label.text }}</label>
       <div class="social-input">
-        <input type="url" name="twitch_link" placeholder="https://twitch.tv/username" />
+        {{ player_form.twitch_link(id="twitch_link", placeholder="https://twitch.tv/username") }}
         <span class="bi bi-twitch"></span>
       </div>
 
+      {{ player_form.action(id="action") }}
+
       <!-- Visibility Buttons -->
-      <div class="button-group" style="justify-content:flex-end;">
-        <button type="submit" name="action" value="public" class="btn">
-          Publish Publicly
-        </button>
-        <button type="submit" name="action" value="private" class="btn">
-          Save Privately
-        </button>
+      <div class="button-group">
+        <button type="submit" name="action" value="public" class="btn btn-success">Publish Publicly</button>
+        <button type="submit" name="action" value="private" class="btn btn-secondary">Save Privately</button>
       </div>
+      
     </form>
   </div>
 </div>
-
-
-
-
-  
-  

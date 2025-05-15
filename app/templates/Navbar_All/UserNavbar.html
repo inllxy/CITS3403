@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-  <a class="navbar-brand" href="{{ url_for('index') }}">
+  <a class="navbar-brand" href="{{ url_for('main.index') }}">
     <img src="https://www.streetfighter.com/6/assets/images/common/logo.png" alt="SF6Logo" class="SF6Logo" title="Cilck back to home page" />
   </a>
   <!-- Collapse button for mobile -->
@@ -24,7 +24,7 @@
           {% if current_user.is_authenticated %}
            <li><a class="dropdown-item" href="/logout">log out</a></li>
           {% else %}
-           <li><a class="dropdown-item" href="{{ url_for('index') }}">Back to Main Page</a></li>
+           <li><a class="dropdown-item" href="{{ url_for('main.index') }}">Back to Main Page</a></li>
           {% endif %}
         </ul>
       </li>
