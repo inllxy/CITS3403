@@ -350,3 +350,24 @@ def share_competition(comp_id):
         flash('No action taken.', 'info')
 
     return redirect(url_for('user_dashboard'))
+
+    from flask import jsonify
+
+@user_bp.route('/api/competitions', methods=['GET'])
+@login_required
+def get_competitions():
+    own_comps = Competition.query.filter_by(user_id=current_user.id)
+
+    shared_comps = Competition.query \
+        .join(shared_competitions) \
+        .filter(shared_competitions.c.shared_with_user_id == current_user.id)
+
+    competitions = own_comps.union(shared_comps) \
+        .order_by(Competition.created_at.desc()) \
+        .all()
+
+    return jsonify([{
+        'id': comp.id,
+        'name': comp.name,
+        'bracket': comp.bracket
+    } for comp in competitions])

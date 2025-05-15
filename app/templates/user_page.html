@@ -16,7 +16,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/SF6_Bracket.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
-  <script src="{{ url_for('static', filename='JavaScript/player.js') }}"> defer</script>
+  <script src="{{ url_for('static', filename='JavaScript/player.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='JavaScript/Player_Page_Reuse.js') }}" defer></script>
 
 </head>
 <body>
@@ -139,9 +140,9 @@
             </button>
           </div>
           <div class="modal-body text-center">
-            <p>Matches Played: N/A</p>
-            <p>Matches Won:    N/A</p>
-            <p>Win Rate:       N/A</p>
+            <p>Matches Played: <span class="matchesPlayed">N/A</span></p>
+            <p>Matches Won: <span class="matchesWon">N/A</span></p>
+            <p>Win Rate: <span class="winRate">N/A</span></p>
           </div>
         </div>
       </div>

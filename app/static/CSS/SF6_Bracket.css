@@ -46,14 +46,13 @@
 /* Extra top margin for certain winner/loser rounds */
 .round-2-winner,
 .round-3-loser,
-.round-4-loser,
-.GrandFinal {
+.round-4-loser {
   margin-top: 70px;
 }
 
 .round-2-winner,
 .round-3-winner,
-.GrandFinal{
+.GrandFinal {
   margin-left: 240px;
 }
 
@@ -69,7 +68,8 @@
 /* Additional top margin for specified rounds */
 .round-3-winner,
 .round-5-loser,
-.round-6-loser {
+.round-6-loser,
+.GrandFinal {
   margin-top: 170px;
 }
 
