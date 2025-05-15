@@ -3,6 +3,9 @@ body {
   background-color: #1e1f29;  
 }
 
+.nav-link {
+  font-family: 'Bebas Neue', sans-serif;     
+}
 
 .card {
   background-color: #34374c;  
