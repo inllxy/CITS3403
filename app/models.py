@@ -82,17 +82,8 @@ class Comment(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    # Foreign keys
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'), nullable=False)
-
-    # Relationships
-    user = db.relationship('User', backref='comments')
-    competition = db.relationship('Competition', backref='comments')
-
-
-# models.py
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'))
 

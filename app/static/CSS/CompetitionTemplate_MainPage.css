@@ -1,0 +1,137 @@
+/* Competition result section wrapper: spacing around results */
+.competition-result-title,
+.competition-result-item h3,
+.competition-result-item .btn,
+.date .month,
+.date .day {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.h1 {
+  text-align: center;
+}
+
+.competition-result-section {
+  margin: 2.5vw;
+  padding: 1.25vw;
+}
+.ms-auto img {
+  width: 12.5vw;
+  height: auto;
+  margin-left: 1vw;
+}
+.competition-result-title {
+  font-size: 4vw;
+  width: 8vw;
+  height: auto;
+  color: #010101;
+  letter-spacing: 0.125vw;
+}
+.competition-result-item {
+  width: 70vw;
+  margin: 2vw auto;
+  padding: 1vw;
+  border-top: 1px solid #08e41b;
+  border-bottom: 1px solid #08e41b;
+  /* Consider reducing fixed width for small screens */
+}
+.competition-result-item h3 {
+  font-size: 4.5vw;
+  height: 11.5vw;
+  color: #100808;
+}
+.competition-result-item .btn {
+  margin-right: 1.5vw;
+  font-size: 2vw;
+  padding: 0.05vw 2.5vw;
+  background-color: gold;
+}
+.competition-info {
+  margin-left: 4vw;
+  margin-left: 4vw;
+}
+
+/* Date block styling within competition results */
+.competition-result-item .date {
+  border-right: 1px solid #08e41b;
+  width: 12.5vw;
+  height: 15vw;
+}
+.date .month,
+.date .day {
+  display: inline-block;
+  padding: 0;
+  color: #030cb4;
+}
+.date .month {
+  font-size: 3vw;
+  font-size: 3vw;
+}
+.date .day {
+  font-size: 8vw;
+}
+
+/* Offcanvas panel styling: bottom drawer for additional details */
+.offcanvas.offcanvas-bottom {
+  height: 85vh; /* Occupy most of viewport height */
+}
+.offcanvas-bottom .offcanvas-body {
+  text-align: center;
+}
+.offcanvas-result .result-body img {
+  display: block;         
+  margin: 0 auto;      
+  max-width: 60%;       
+  width: 60%;             
+  height: auto;           
+  object-fit: contain;   
+}
+
+
+/* Player Card Section */
+#playerContainer {
+  max-width: 80vw;
+  margin: 2vw auto;        
+}
+
+.card {
+  background-color: #34374c;  
+  border: none;              
+  border-radius: 0.5vw;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  color: #e0e0e0;           
+}
+
+.card .card-title {
+  color: #ffffff;             
+  font-weight: 600;
+}
+
+.card .card-text {
+  color: #c0c0c0;            
+}
+
+.card .card-footer a,.card-footer span {
+  color: #4dabf7;            
+  transition: color 0.2s;
+}
+.card .card-footer a:hover {
+  color: #1e88e5;
+}
+
+/* Lift card slightly on hover and enhance shadow */
+.player-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+/* Allow the card body to expand and fill available space */
+.player-card .card-body {
+  flex-grow: 1;
+}
+
+/* Apply uniform adjustments to card images if needed */
+.card-img-top {
+  height: 12rem;
+  object-fit: cover;
+}

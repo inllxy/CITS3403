@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 from app.forms import LoginForm, RegisterForm
 from app.models import Competition
+from app.models import Player
 
 main_bp = Blueprint("main", __name__)
 
