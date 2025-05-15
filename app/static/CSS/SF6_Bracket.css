@@ -11,6 +11,7 @@
 
 /* Wrapper for the entire bracket, using flex layout */
 .bracket-wrap {
+  max-height: 80vh;
   padding: 30px;
   margin: 30px auto;
   border: 1px solid #000;
@@ -32,7 +33,6 @@
   justify-content: center;
   align-items: flex-start;
   gap: 3vw;  /* Gap between rounds using viewport width units */
-  overflow-x: auto;
 }
 
 /* Individual round container with fixed width */
