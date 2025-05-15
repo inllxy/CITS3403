@@ -417,6 +417,27 @@ document.querySelectorAll('[id^=toggle-share-]').forEach(btn => {
   });
 });
 </script>
+<!-- 你的 HTML 最后部分 -->
+<script>
+  // 打开 modal
+  document.getElementById("openPlayerModalBtn").addEventListener("click", function () {
+    document.getElementById("addPlayerModal").style.display = "block";
+  });
+
+  // 关闭 modal
+  document.querySelector(".close-player").addEventListener("click", function () {
+    document.getElementById("addPlayerModal").style.display = "none";
+  });
+
+  // 点击 modal 背景关闭
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("addPlayerModal");
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+</script>
+</html>
 
 </body>
 </html>

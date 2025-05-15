@@ -30,7 +30,20 @@ class CompetitionForm(FlaskForm):
     logo_link = URLField("Logo URL", validators=[Optional(), URL()])
 
     comp_link = URLField("Competition Link", validators=[DataRequired(), URL()])
-    share_with = StringField("Share With", validators=[Optional()])  # 逗号分隔的用户名字符串
 
     action = HiddenField()  # “public”、“private”或“share”，由 JS 设置
+    bracket_data = HiddenField()
+    submit = SubmitField("Submit")
+
+class PlayerForm(FlaskForm):
+    player_name = StringField("Name", validators=[DataRequired()])
+    league = StringField("League", validators=[DataRequired()])
+
+    photo_file = FileField("Upload Image", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'gif'])])
+    photo_link = URLField("Image URL", validators=[Optional(), URL()])
+
+    twitter_link = URLField("Twitter Link", validators=[Optional(), URL()])
+    twitch_link = URLField("Twitch Link", validators=[Optional(), URL()])
+
+    action = HiddenField()  # “public” or “private”
     submit = SubmitField("Submit")

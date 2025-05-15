@@ -14,6 +14,7 @@ from app.models import db, Competition, Player, User, shared_players, shared_com
 from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
 from app.forms import CompetitionForm
+from app.forms import PlayerForm
 
 user_bp = Blueprint(
     'user', __name__,
@@ -82,50 +83,56 @@ def user_page():
         .order_by(Player.created_at.desc()) \
         .all()
     form = CompetitionForm()
-    return render_template('user_page.html', competitions=competitions, players=players, form=form)
+    return render_template('user_page.html', competitions=competitions, players=players, form=form, player_form=PlayerForm())
+
+from app.forms import PlayerForm
 
 @user_bp.route('/submit-player', methods=['POST'])
 @login_required
 def submit_player():
-    photo = request.files.get('photo_file')
-    if photo and allowed_file(photo.filename):
-        photo_url = save_file(photo)
+    form = PlayerForm()
+
+    if form.validate_on_submit():
+        # 获取图片链接（优先使用上传文件）
+        if form.photo_file.data and allowed_file(form.photo_file.data.filename):
+            photo_url = save_file(form.photo_file.data)
+        else:
+            photo_url = form.photo_link.data.strip()
+
+        # 获取表单字段
+        action = form.action.data or "public"
+        visibility = {
+            "private": "private",
+            "share": "shared"
+        }.get(action, "public")
+
+        player = Player(
+            name=form.player_name.data.strip(),
+            league=form.league.data.strip(),
+            twitter=form.twitter_link.data.strip(),
+            twitch=form.twitch_link.data.strip(),
+            visibility=visibility,
+            photo_url=photo_url,
+            user_id=current_user.id
+        )
+
+        # 可选分享功能
+        if action == 'share':
+            usernames = request.form.get('share_with', '')
+            username_list = [u.strip() for u in usernames.split(',') if u.strip()]
+            for uname in username_list:
+                user = User.query.filter_by(username=uname).first()
+                if user:
+                    player.shared_with.append(user)
+
+        db.session.add(player)
+        db.session.commit()
+        flash('Player added successfully.', 'success')
     else:
-        photo_url = request.form.get('photo_link', '')
+        flash('Player submission failed. Please check the form fields.', 'danger')
 
-    
-
-    action = request.form.get('action', 'public')  
-    if action == 'private':
-        visibility = 'private'
-    elif action == 'share':
-        visibility = 'shared'
-    else:
-        visibility = 'public'
-
-    player = Player(
-        name=request.form.get('player_name', '').strip(),
-        league=request.form.get('league', '').strip(),
-        twitter=request.form.get('twitter_link', '').strip(),
-        twitch=request.form.get('twitch_link', '').strip(),
-        visibility=visibility,
-        photo_url=photo_url,
-        user_id=current_user.id
-    )
-    if action == 'share':
-        usernames = request.form.get('share_with', '')
-        username_list = [u.strip() for u in usernames.split(',') if u.strip()]
-        for uname in username_list:
-            user = User.query.filter_by(username=uname).first()
-            if user:
-                player.shared_with.append(user)
-
-    
-
-    db.session.add(player)
-    db.session.commit()
-    flash('Player added successfully.', 'success')
     return redirect(url_for('user.user_page'))
+
 
 
 
@@ -135,9 +142,8 @@ def submit_competition():
     name = request.form.get('name', '').strip()
     year = int(request.form.get('year', 0))
     month_idx = int(request.form.get('month', 0))
-    date = int(request.form.get('date', 1))
+    day = int(request.form.get('day', 1))
     comp_link = request.form.get('comp_link', '').strip()
-    action = request.form.get('action', 'public')
     action = request.form.get('action', 'public')
 
     
@@ -211,7 +217,7 @@ def submit_competition():
         name=name,
         year=year,
         month=calendar.month_abbr[month_idx].upper() + '.',
-        day=date,
+        day=day,
         poster_url=poster_url,
         logo_url=logo_url,
         comp_link=comp_link,

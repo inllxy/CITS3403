@@ -161,3 +161,26 @@
 .hidden {
   display: none !important;
 }
+.bracket-wrap {
+  max-height: 50vh;
+  overflow-y: auto;
+  background-color: #1f1fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+#addPlayerModal {
+  display: none;  /* 默认隐藏，避免页面初始就露出 */
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明黑背景 */
+}
