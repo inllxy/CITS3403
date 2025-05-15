@@ -81,12 +81,14 @@
             </a>
             
             {% if current_user.id == comp.user_id %}
-            <form action="{{ url_for('user.delete_competition', comp_id= comp.id) }}" method="post"
-                  style="display:inline" onsubmit="return confirm('Are you sure you want to delete this competition?');">
-            <button type="submit" class="btn btn-sm btn-outline-danger">
-              Delete
-            </button>
+            <form method="post"
+                  action="{{ url_for('user.delete_competition', comp_id=comp.id) }}"
+                  style="display:inline"
+                  onsubmit="return confirm('Are you sure you want to delete this competition?');">
+              {{ delete_forms[comp.id].hidden_tag() }}
+              {{ delete_forms[comp.id].submit(class="btn btn-sm btn-outline-danger") }}
             </form>
+
 
             <button id="toggle-share-{{ comp.id }}" class="btn btn-sm btn-outline-primary">
               Share
@@ -94,23 +96,26 @@
 
             <!-- Hidden input area, will only display when the above button is clicked -->
             <form id="share-form-{{ comp.id }}"
-                  action="{{ url_for('user.share_competition', comp_id=comp.id) }}"
-                  method="post"
-                  style="display: none; margin-top: .5rem;"
-                  onsubmit="return confirm('Send share invitation?');">
-              <input type="text"
-                      name="share_with"
-                        placeholder="Enter usernames, separated by commas"
-                      class="form-control form-control-sm d-inline-block"
-                      style="width: 200px;"
-                      required>
-              <button type="submit"
-                      name="action"
-                      value="share"
-                      class="btn btn-sm btn-primary">
-                Send Share
-              </button>
-            </form>
+                method="post"
+                action="{{ url_for('user.share_competition', comp_id=comp.id) }}"
+                style="display: none; margin-top: .5rem;"
+                onsubmit="return confirm('Send share invitation?');">
+
+            {{ share_forms[comp.id].hidden_tag() }}
+
+            {{ share_forms[comp.id].share_with(
+                class="form-control form-control-sm d-inline-block",
+                placeholder="Enter usernames, separated by commas",
+                style="width: 200px;"
+            ) }}
+
+            {{ share_forms[comp.id].submit(
+                class="btn btn-sm btn-primary",
+                value="share"
+            ) }}
+          </form>
+
+
 
             {% endif %}
           </div>
@@ -217,12 +222,11 @@
             </a>
             
             {% if current_user.id == comp.user_id %}
-            <form action="{{ url_for('user.delete_competition', comp_id= comp.id) }}" method="post"
-                  style="display:inline" onsubmit="return confirm('Are you sure you want to delete this competition?');">
-            <button type="submit" class="btn btn-sm btn-outline-danger">
-              Delete
-            </button>
+            <form method="post" action="{{ url_for('user.delete_competition', comp_id=comp.id) }}">
+              {{ delete_forms[comp.id].hidden_tag() }}
+              {{ delete_forms[comp.id].submit(class="btn btn-sm btn-outline-danger") }}
             </form>
+            
 
             <button id="toggle-share-{{ comp.id }}" class="btn btn-sm btn-outline-primary">
               Share
@@ -367,14 +371,16 @@
           {% endif %}
         </div>
 
-        <form action="{{ url_for('user.delete_player', player_id=pl.id) }}"
-              method="post"
+        <form method="post"
+              action="{{ url_for('user.delete_player', player_id=pl.id) }}"
               style="display:inline"
               onsubmit="return confirm('Do you really want to delete “{{ pl.name }}”?');">
-          <button type="submit" class="btn btn-sm btn-outline-danger">
-            Delete
-          </button>
+          
+          {{ delete_player_forms[pl.id].hidden_tag() }}
+
+          {{ delete_player_forms[pl.id].submit(class="btn btn-sm btn-outline-danger") }}
         </form>
+
 
       </div> 
     </div> 
