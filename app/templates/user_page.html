@@ -54,7 +54,7 @@
 
   {% for comp in competitions if current_user in comp.shared_with %}
     {% set idx = loop.index0 %}
-    {% include "Template/CompetitionTemplate_UserPage.html" %}
+    {% include "Template/CompetitionTemplate_Shared.html" %}
   {% endfor %}
 
   <!-- PLAYERS SECTION -->
