@@ -5,7 +5,7 @@ from app.models import Competition
 main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
-def home():
+def index():
     competitions = Competition.query.all()
     login_form = LoginForm()
     register_form = RegisterForm()
@@ -15,3 +15,17 @@ def home():
         login_form=login_form,
         register_form=register_form
     )
+@main_bp.route("/players")
+def player_page():
+    players = Player.query.all()
+    return render_template(
+        "SF6_Competition_Player_Page.html",
+        players=players,
+        login_form=LoginForm(),
+        register_form=RegisterForm()
+    )
+
+@main_bp.route("/bracket/Bracket")
+def bracket():
+    comp = Competition.query.first()
+    return render_template("Bracket.html", comp=comp)
