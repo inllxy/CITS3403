@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, jsonify
 from app.forms import LoginForm, RegisterForm
 from app.models import Competition
 from app.models import Player
@@ -30,3 +30,12 @@ def player_page():
 def bracket():
     comp = Competition.query.first()
     return render_template("Bracket.html", comp=comp)
+
+@main_bp.route('/api/competitions', methods=['GET'])
+def get_competitions():
+    competitions = Competition.query.all()
+    return jsonify([{
+        'id': comp.id,
+        'name': comp.name,
+        'bracket': comp.bracket
+    } for comp in competitions])

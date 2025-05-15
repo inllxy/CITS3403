@@ -2,7 +2,6 @@
   {% if comp and comp.bracket %}
     {% for bracket_type, rounds in comp.bracket.items() %}
       <div class="bracket bracket-type">
-
         {% for round_num, matches in rounds.items() %}
         {% if bracket_type == 'loser' %}
           <div class="round round-{{ round_num | int  - 4}}-{{ bracket_type }}">

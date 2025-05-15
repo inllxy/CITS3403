@@ -1,4 +1,4 @@
-// Fetch competition data (replace '/api/competitions' with your actual API endpoint)
+// Fetch competition data
 async function fetchCompetitions() {
   const response = await fetch('/api/competitions'); // Ensure this endpoint returns competition data with the bracket field
   return await response.json();
@@ -45,10 +45,9 @@ function calculateMatchesWon(playerName, competitions) {
               matchesWon++;
             }
             else if ((match.player1 == playerName || match.player2 == playerName) && match.score1 == match.score2) { //need to decide who gets the win in the case of a tie
-              if (match.player1 == playerName) {
+              if (match.player1 == playerName) { //tie handling logic
                 matchesWon++;
               }
-              // ALTER THIS TO BE THE PLAYER WHO WON THE TIE
             }
           });
         });
@@ -63,7 +62,6 @@ function calculateMatchesWon(playerName, competitions) {
 document.addEventListener('DOMContentLoaded', async () => {
   const playerCards = document.querySelectorAll('.player-card'); // Select all player cards
   const competitions = await fetchCompetitions(); // Fetch competition data once
-  console.log(competitions); 
 
   playerCards.forEach(card => {
     card.addEventListener('click', () => {
