@@ -1,14 +1,13 @@
 <div class="bracket-wrap">
+  {# 检查 comp 和 comp.bracket 是否存在 #}
   {% if comp and comp.bracket %}
-    {% for bracket_type, rounds in comp.bracket.items() %}
-      <div class="bracket-type">{{ bracket_type | capitalize }} Bracket</div>
+    {% for round_idx, matches in comp.bracket.items() %}
+      <div class="round round-{{ loop.index }}">
+        <div class="sub-header">
+          <div class="TournaType">Round {{ round_idx }}</div>
+        </div>
 
-      {% for round_num, matches in rounds.items() %}
-        <div class="round round-{{ round_num }}">
-          <div class="sub-header">
-            <div class="TournaType">Round {{ round_num }}</div>
-          </div>
-
+        {# Loop over each match in this round #}
         {% for match in matches %}
           <div class="match">
             <div class="player match{{ loop.index }}-player1">
@@ -36,9 +35,9 @@
             </div>
           </div>
         {% endfor %}
+
       </div>
     {% endfor %}
-  {% endfor %}
   {% else %}
     <p class="text-muted">No bracket data available.</p>
   {% endif %}

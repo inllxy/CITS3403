@@ -10,8 +10,8 @@ from flask import (
     abort
 )
 from werkzeug.utils import secure_filename
-from app.models import db, Competition, Player, User, shared_players, shared_competitions, Like
-from app.models import Comment
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
+from app.models import db, Competition, Player, User, shared_players, shared_competitions
 from flask_login import login_required, current_user
 from app.forms import CompetitionForm
 
@@ -242,8 +242,7 @@ def delete_competition(comp_id):
     db.session.commit()
     flash('The competition has been successfully delected', 'success')
     return redirect(url_for('user_dashboard'))
-
-
+@user_bp.route('/api/comment', methods=['POST'])
 
 @user_bp.route('/player/delete/<int:player_id>', methods=['POST'])
 @login_required
@@ -254,7 +253,6 @@ def delete_player(player_id):
     flash(f'Player "{player.name}" deleted', 'success')
     return redirect(url_for('user.user_page'))
 
-@user_bp.route('/api/comment', methods=['POST'])
 def add_comment():
     data = request.get_json() or {}
     try:
@@ -281,20 +279,8 @@ def like():
     except (KeyError, ValueError):
         return jsonify(error='Invalid comp_id'), 400
 
-    # Look up Like record in DB
-    like = Like.query.filter_by(comp_id=comp_id).first()
-
-    if not like:
-        # If no Like record yet, create it
-        like = Like(comp_id=comp_id, count=1)
-        db.session.add(like)
-    else:
-        # Increment the existing count
-        like.count += 1
-
-    db.session.commit()
-
-    return jsonify(likes=like.count)
+    likes_by_competition[comp_id] = likes_by_competition.get(comp_id, 0) + 1
+    return jsonify(likes=likes_by_competition[comp_id])
 
 @user_bp.route('/share-player/<int:player_id>', methods=['POST'])
 @login_required
