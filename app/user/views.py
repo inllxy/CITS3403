@@ -93,13 +93,11 @@ def submit_player():
     form = PlayerForm()
 
     if form.validate_on_submit():
-        # 获取图片链接（优先使用上传文件）
         if form.photo_file.data and allowed_file(form.photo_file.data.filename):
             photo_url = save_file(form.photo_file.data)
         else:
             photo_url = form.photo_link.data.strip()
 
-        # 获取表单字段
         action = form.action.data or "public"
         visibility = {
             "private": "private",
@@ -116,7 +114,6 @@ def submit_player():
             user_id=current_user.id
         )
 
-        # 可选分享功能
         if action == 'share':
             usernames = request.form.get('share_with', '')
             username_list = [u.strip() for u in usernames.split(',') if u.strip()]

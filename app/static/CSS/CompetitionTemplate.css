@@ -73,7 +73,7 @@
 
 /* Offcanvas panel styling: bottom drawer for additional details */
 .offcanvas.offcanvas-bottom {
-  height: 85vh; /* Occupy most of viewport height */
+  height: 95vh; /* Occupy most of viewport height */
 }
 .offcanvas-bottom .offcanvas-body {
   text-align: center;

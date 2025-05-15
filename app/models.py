@@ -8,6 +8,7 @@ from sqlalchemy.orm import relationship
 from . import db
 
 
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
