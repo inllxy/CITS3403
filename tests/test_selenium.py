@@ -9,46 +9,56 @@ from app.models import User
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from config import Config
+import tempfile
+import os
 
-# Flask server thread
-def run_app():
-    app = create_app()
-    app.config.from_object("config.TestConfig")
+db_fd, db_path = tempfile.mkstemp()
+
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{db_path}"
+    WTF_CSRF_ENABLED = False
+def run_app(app):
     app.run(port=5001)
+
 
 class SeleniumTests(unittest.TestCase):
 
     @classmethod
+    @classmethod
     def setUpClass(cls):
-        cls.server_thread = threading.Thread(target=run_app)
-        cls.server_thread.daemon = True
-        cls.server_thread.start()
-        time.sleep(2)
+        # 创建应用
+        cls.app = create_app(TestConfig)
 
-        chrome_options = Options()
-        # chrome_options.add_argument("--headless") 
-        cls.driver = webdriver.Chrome(options=chrome_options)
-        cls.driver.implicitly_wait(3)
-
-        app = create_app()
-        app.config.from_object("config.TestConfig")
-        with app.app_context():
+        with cls.app.app_context():
             db.drop_all()
             db.create_all()
             test_user = User(username='testuser', email='test@example.com')
             test_user.set_password('password123')
-            db.session.add(test_user)
-            # Add recipient user
             recipient_user = User(username='testuser2', email='test2@example.com')
             recipient_user.set_password('password456')
-            db.session.add(recipient_user)
-
+            db.session.add_all([test_user, recipient_user])
             db.session.commit()
+
+        # 启动 Flask 服务器（使用同一个 app）
+        cls.server_thread = threading.Thread(target=run_app, args=(cls.app,))
+        cls.server_thread.daemon = True
+        cls.server_thread.start()
+        time.sleep(2)
+
+        # 启动 selenium
+        chrome_options = Options()
+        cls.driver = webdriver.Chrome(options=chrome_options)
+        cls.driver.implicitly_wait(3)
+
 
     @classmethod
     def tearDownClass(cls):
-        time.sleep(10)
+        time.sleep(3)
         cls.driver.quit()
+        os.close(db_fd)
+        os.unlink(db_path)
 
      # TEST 1&2: login and submit player
     def test_1_login_and_submit_player(self):
