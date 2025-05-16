@@ -247,16 +247,17 @@ class LikesTestCase(unittest.TestCase):
         with self.app.app_context():
             db.create_all()
 
-    def tearDown(self):
-        with self.app.app_context():
-            db.session.remove()
-            db.drop_all()
-
     def test_like_api(self):
         # Pretend comp_id is 1
         response = self.client.post('/dashboard/api/like', json={'comp_id': 1})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'likes', response.data)
+    
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+            
  
 if __name__ == '__main__':
     unittest.main()
