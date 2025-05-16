@@ -50,7 +50,7 @@ class SeleniumTests(unittest.TestCase):
         time.sleep(10)
         cls.driver.quit()
 
-     # TEST 1: login and submit player
+     # TEST 1&2: login and submit player
     def test_1_login_and_submit_player(self):
         driver = self.driver
         driver.get("http://127.0.0.1:5001/logout")
@@ -128,7 +128,7 @@ class SeleniumTests(unittest.TestCase):
         driver.save_screenshot("after_submit.png")
         self.assertIn("Player added successfully", driver.page_source)
 
-    # TEST 2: submit full competition
+    # TEST 3: submit full competition
     def test_2_submit_full_competition(self):
         driver = self.driver
         driver.get("http://127.0.0.1:5001/logout")
@@ -220,7 +220,7 @@ class SeleniumTests(unittest.TestCase):
         driver.save_screenshot("competition_submitted.png")
         self.assertIn("Dashboard", driver.title)
         
-        # TEST 3: delete a player card that was already submitted
+        # TEST 4: delete a player card that was already submitted
     def test_3_delete_player_card(self):
         driver = self.driver
 
@@ -273,7 +273,7 @@ class SeleniumTests(unittest.TestCase):
             self.assertNotEqual(name, "Selenium Bot", "Player card was not deleted")
 
 
-        # TEST 4: share competition and verify with recipient
+        # TEST 5: share competition and verify with recipient
     def test_4_share_competition(self):
         # Restart browser to simulate a fresh session
         self.driver.quit()
@@ -322,8 +322,23 @@ class SeleniumTests(unittest.TestCase):
 
         comp_id = share_btn.get_attribute("id").replace("toggle-share-", "")
         form_id = f"share-form-{comp_id}"
-        submit_share = driver.find_element(By.CSS_SELECTOR, f"form#{form_id} button[type='submit']")
+        driver.execute_script(
+            "document.getElementById(arguments[0]).style.display = 'block';",
+            form_id
+        )
+        submit_share = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, f"form#{form_id} input[type='submit']"))
+        )
         driver.execute_script("arguments[0].click();", submit_share)
+        try:
+            WebDriverWait(driver, 5).until(EC.alert_is_present())
+            alert = driver.switch_to.alert
+            alert.accept()
+            print("Alert accepted.")
+        except:
+            print("No alert appeared.")
+        driver.save_screenshot("form_not_found.png")
+
 
         WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
         driver.get("http://127.0.0.1:5001/logout")
@@ -348,3 +363,5 @@ class SeleniumTests(unittest.TestCase):
         self.assertIn("Selenium Bracket", driver.page_source)
         driver.save_screenshot("shared_competition.png")
 
+if __name__ == '__main__':
+    unittest.main()
