@@ -39,7 +39,7 @@ The system is built using Flask (Python) with SQLite for lightweight database st
 
 3.  **Run the application**
     ```bash
-    python3 run.py
+    python3 app.py
     ```
     The app will be available at http://127.0.0.1:5000 by default.
 
