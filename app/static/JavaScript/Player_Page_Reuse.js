@@ -5,7 +5,7 @@ async function fetchCompetitions() {
 }
 
 // Calculate the number of matches a player has played
-function calculateMatchesPlayed(playerName, competitions) {
+function calculateMatchesPlayed(pName, competitions) {
   let matchCount = 0;
 
   competitions.forEach(competition => {
@@ -16,7 +16,9 @@ function calculateMatchesPlayed(playerName, competitions) {
       if (bracket[bracketType]) {
         Object.values(bracket[bracketType]).forEach(roundMatches => {
           roundMatches.forEach(match => {
-            if (match.player1 === playerName || match.player2 === playerName) {
+            const player1 = match.player1.toLowerCase(); // Ensure player names are in lowercase
+            const player2 = match.player2.toLowerCase(); // Ensure player names are in lowercase
+            if (player1 === pName || player2 === pName) {
               matchCount++;
             }
           });
@@ -28,7 +30,8 @@ function calculateMatchesPlayed(playerName, competitions) {
   return matchCount;
 }
 
-function calculateMatchesWon(playerName, competitions) {
+function calculateMatchesWon(pName, competitions) {
+  // Initialize matches won counter
   let matchesWon = 0;
 
   competitions.forEach(competition => {
@@ -39,13 +42,15 @@ function calculateMatchesWon(playerName, competitions) {
       if (bracket[bracketType]) {
         Object.values(bracket[bracketType]).forEach(roundMatches => {
           roundMatches.forEach(match => {
-            if (match.player1 === playerName && match.score1 > match.score2) {
+            const player1 = match.player1.toLowerCase(); // Ensure player names are in lowercase
+            const player2 = match.player2.toLowerCase(); // Ensure player names are in lowercase
+            if (player1 === pName && match.score1 > match.score2) {
               matchesWon++;
-            } else if (match.player2 === playerName && match.score2 > match.score1) {
+            } else if (player2 === pName && match.score2 > match.score1) {
               matchesWon++;
             }
-            else if ((match.player1 == playerName || match.player2 == playerName) && match.score1 == match.score2) { //need to decide who gets the win in the case of a tie
-              if (match.player1 == playerName) { //tie handling logic
+            else if ((player1 == pName || player2 == pName) && match.score1 == match.score2) { //need to decide who gets the win in the case of a tie
+              if (player1 == pName) { //tie handling logic
                 matchesWon++;
               }
             }
@@ -66,12 +71,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   playerCards.forEach(card => {
     card.addEventListener('click', () => {
       const playerName = card.getAttribute('data-player-id'); // Get the player's name from the card
+      const pName = playerName.toLowerCase(); // Ensure playerName is in lowercase
       const modalId = card.getAttribute('data-bs-target'); // Get the modal ID
       const modal = document.querySelector(modalId); // Select the corresponding modal
 
       if (modal) {
-        const matchesPlayed = calculateMatchesPlayed(playerName, competitions);
-        const matchesWon = calculateMatchesWon(playerName, competitions);
+        const matchesPlayed = calculateMatchesPlayed(pName, competitions);
+        const matchesWon = calculateMatchesWon(pName, competitions);
 
         // Update modal content
         modal.querySelector('.matchesPlayed').textContent = matchesPlayed;
