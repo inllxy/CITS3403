@@ -1,3 +1,5 @@
+// Old code for competition generation - maintained for reference and future use, jinja templates used instead
+
 const competitions = [
     {
       year: 2025,

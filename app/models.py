@@ -29,7 +29,7 @@ shared_competitions = db.Table(
     db.Column('competition_id', db.Integer, db.ForeignKey('competitions.id'), primary_key=True),
     db.Column('shared_with_user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
 )
-    
+
 class Competition(db.Model):
     __tablename__ = 'competitions'
 
@@ -86,4 +86,3 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'))
-

@@ -1,4 +1,5 @@
 <div class="bracket-wrap">
+  <!-- Bracket Display Template - attached to each competition -->
   {% if comp and comp.bracket %}
     {% for bracket_type, rounds in comp.bracket.items() %}
       <div class="bracket bracket-type">
