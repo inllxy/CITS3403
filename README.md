@@ -27,22 +27,29 @@ The system is built using Flask (Python) with SQLite for lightweight database st
 ## 🚀 How to Launch the Application
 
 1.Create and activate a virtual environment
+```bash
 python3 -m venv venv     
 source venv/bin/activate
 2.Install dependencies
+```bash
 python3 -m pip install -r requirements.txt
 3.Run the application
+```bash
 python3 run.py
 
 The app will be available at http://127.0.0.1:5000 by default.
 ## 🚀 How to run the tests for the the Application
 1.Create and activate a virtual environment
+```bash
 python3 -m venv venv     
 source venv/bin/activate
 2.Install dependencies
+```bash
 python3 -m pip install -r requirements.txt
 pip install selenium
 3.Run Selenium tests
+```bash
 python3 -m tests.test_selenium
 4.Run basic unit tests
+```bash
 python3 -m tests.test_basic
