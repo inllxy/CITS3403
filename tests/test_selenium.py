@@ -41,7 +41,6 @@ class SeleniumTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        print("📸 测试已完成，浏览器将在 10 秒后关闭")
         time.sleep(10)
         cls.driver.quit()
 
@@ -121,5 +120,6 @@ class SeleniumTests(unittest.TestCase):
         time.sleep(1)
         driver.save_screenshot("after_submit.png")
         self.assertIn("Player added successfully", driver.page_source)
+
 
 
