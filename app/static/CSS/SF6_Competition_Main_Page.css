@@ -11,6 +11,9 @@ body,
   font-family: 'Bebas Neue', sans-serif;
 }
 
+body {
+  background:#f0f2f5
+}
 /* Main text container: positions overlay heading/text above background video */
 #MainTextContainer {
   margin: 16vw 0 0 7.1825vw; /* Adjust top/left based on video dimensions */
@@ -93,9 +96,9 @@ body,
   width: 70vw;
   margin: 2vw auto;
   padding: 1vw;
-  border-top: 5px solid #2d089d;
-  border-bottom: 5px solid #2d089d;
+  border: 5px solid #2d089d;
   background: white;
+  border-radius: 50px;
   /* Consider reducing fixed width for small screens */
 }
 .competition-result-item h3 {

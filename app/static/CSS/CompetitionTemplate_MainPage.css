@@ -31,8 +31,9 @@
   width: 70vw;
   margin: 2vw auto;
   padding: 1vw;
-  border-top: 5px solid #2d089d;
-  border-bottom: 5px solid #2d089d;
+  border: 5px solid #2d089d;
+  background: white;
+  border-radius: 50px;
   /* Consider reducing fixed width for small screens */
 }
 .competition-result-item h3 {
