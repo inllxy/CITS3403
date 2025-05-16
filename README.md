@@ -1,5 +1,7 @@
 # SF6 Spotlight – Tournament Web Application
 
+(running by macos)
+
 ## 📝 Purpose & Design
 
 This application is designed to support the management and visualization of competitive brackets for Street Fighter 6 (SF6) tournaments. It allows authenticated users to:
