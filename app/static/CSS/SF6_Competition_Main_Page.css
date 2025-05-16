@@ -93,8 +93,9 @@ body,
   width: 70vw;
   margin: 2vw auto;
   padding: 1vw;
-  border-top: 1px solid #08e41b;
-  border-bottom: 1px solid #08e41b;
+  border-top: 5px solid #2d089d;
+  border-bottom: 5px solid #2d089d;
+  background: white;
   /* Consider reducing fixed width for small screens */
 }
 .competition-result-item h3 {
@@ -115,9 +116,10 @@ body,
 
 /* Date block styling within competition results */
 .competition-result-item .date {
-  border-right: 1px solid #08e41b;
+  border-right: 5px solid #2d089d;
   width: 12.5vw;
   height: 15vw;
+  
 }
 .date .month,
 .date .day {
@@ -149,3 +151,17 @@ body,
   object-fit: contain;   
 }
 
+.offcanvas-result {
+  border: 3px solid black
+}
+
+.offcanvas-title {
+  font-size: 3vw;
+  color: #100808;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.offcanvas-header {
+  border-bottom: 3px solid black;
+  justify-content: center;
+}

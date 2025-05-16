@@ -1,12 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-  
-  // COMPETITION modal
+  // competition modal
   const compModal = document.getElementById('addCompetitionModal');
   document.getElementById('openModal').addEventListener('click', () => {
     compModal.style.display = 'flex';
   });
+
   compModal.querySelector('.close').addEventListener('click', () => {
     compModal.style.display = 'none';
+  });
+
+  compModal.addEventListener('click', (e) => {
+    if (e.target === compModal) {
+      compModal.style.display = 'none';
+    }
   });
 
   // PLAYER modal
