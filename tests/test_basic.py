@@ -65,6 +65,66 @@ class PlayerSubmitTestCase(unittest.TestCase):
             db.drop_all()
 
 
+class CompetitionSubmitTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.app = create_app()
+        self.app.config.from_object(TestConfig)
+        self.client = self.app.test_client()
+
+        with self.app.app_context():
+            db.create_all()
+
+    def login_test_user(self):
+        with self.app.app_context():
+            user = User(username='testuser', email='test@example.com')
+            user.set_password('testpassword')
+            db.session.add(user)
+            db.session.commit()
+    
+            with self.client.session_transaction() as sess:
+                sess['_user_id'] = str(user.id)  # Flask-Login uses _user_id to track login
+
+    def test_submit_competition(self):
+        self.login_test_user()
+        data = {
+            'name': 'Test Competition',
+            'year': '2025',
+            'month' : '3',
+            'day' : '12',
+            'poster_link' : 'https://example.com/poster.png',
+            'logo_link': 'https://example.com/logo.png',
+            'comp_link': 'https://competition-site.com/',
+            'visibility': 'private',
+        }
+        response = self.client.post('/dashboard/submit-competition', data=data, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Competition added successfully', response.data)
+
+        with self.app.app_context():
+            competition = Competition.query.first()
+            self.assertEqual(competition.name, 'Test Competition')
+    
+    def test_submit_competition_not_allowed(self):
+        data = {
+            'name': 'Test Competition',
+            'year': '2025',
+            'month' : '3',
+            'day' : '12',
+            'poster_link' : 'https://example.com/poster.png',
+            'logo_link': 'https://example.com/logo.png',
+            'comp_link': 'https://competition-site.com/',
+            'visibility': 'private',
+        }
+        response = self.client.post('/dashboard/submit-competition', data=data, follow_redirects=True)
+        self.assertIn(b'Please log in to access this page.', response.data)
+    
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+
 class PagesLoadingTestCase(unittest.TestCase):
 
     def setUp(self):
