@@ -20,9 +20,9 @@ The system is built using Flask (Python) with SQLite for lightweight database st
 | UWA ID       | Name        | GitHub Username |
 |--------------|-------------|------------------|
 |23915299      |Harper Chen  |inllxy            |
-|              |             |                  |
-|              |             |                  |
-|              |             |                  |
+|23751927      |Jenna Milford|jmil47            |
+|24322728      |Weichen Wang |GlazeStar         |
+|23867057      |Namgay Choden|Nchoden           |
 
 ## 🚀 How to Launch the Application
 
