@@ -2,7 +2,7 @@ import unittest
 from app import create_app, db
 from app.models import Player, Competition, User
 from flask import url_for
-from config import Config
+from config import Config, TestConfig
 
 class TestConfig(Config):
     TESTING = True
@@ -13,12 +13,17 @@ class TestConfig(Config):
 class PlayerSubmitTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object(TestConfig)
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():
+            db.drop_all()
             db.create_all()
+
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
 
     # ensure user is logged in to allow access to dashboard
     def login_test_user(self):
@@ -62,17 +67,12 @@ class PlayerSubmitTestCase(unittest.TestCase):
         response = self.client.post('/dashboard/submit-player', data=data, follow_redirects=True)
         self.assertIn(b'Please log in to access this page.', response.data)
 
-    def tearDown(self):
-        with self.app.app_context():
-            db.session.remove()
-            db.drop_all()
 
 # unit test for adding competition
 class CompetitionSubmitTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object(TestConfig)
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():
@@ -133,8 +133,7 @@ class CompetitionSubmitTestCase(unittest.TestCase):
 class PagesLoadingTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object(TestConfig)
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():
@@ -166,8 +165,7 @@ class PagesLoadingTestCase(unittest.TestCase):
 class RegisterTestCase(unittest.TestCase):
      
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object(TestConfig)
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():
@@ -209,8 +207,7 @@ class RegisterTestCase(unittest.TestCase):
 class LoginTestCase(unittest.TestCase):
      
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object("config.TestConfig")
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
@@ -247,8 +244,7 @@ class LoginTestCase(unittest.TestCase):
 # unit test for likes functionality
 class LikesTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
-        self.app.config.from_object(TestConfig)
+        self.app = create_app(TestConfig)
         self.client = self.app.test_client()
 
         with self.app.app_context():

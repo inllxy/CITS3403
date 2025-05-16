@@ -15,13 +15,13 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 migrate = None  # Used by flask-migrate
 
-def create_app():
+def create_app(config_class=Config):
     app = Flask(
         __name__,
         template_folder="templates",   # Folder for HTML templates
         static_folder="static"         # Folder for static files like CSS, JS, images
     )
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
 
     # Initialize extensions
     db.init_app(app)

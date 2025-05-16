@@ -9,11 +9,11 @@ from app.models import User
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from config import Config, TestConfig
 
 # Flask server thread
 def run_app():
-    app = create_app()
-    app.config.from_object("config.TestConfig")
+    app = create_app(TestConfig)
     app.run(port=5001)
 
 class SeleniumTests(unittest.TestCase):
@@ -30,8 +30,7 @@ class SeleniumTests(unittest.TestCase):
         cls.driver = webdriver.Chrome(options=chrome_options)
         cls.driver.implicitly_wait(3)
 
-        app = create_app()
-        app.config.from_object("config.TestConfig")
+        app = create_app(TestConfig)
         with app.app_context():
             db.drop_all()
             db.create_all()
