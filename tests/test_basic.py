@@ -97,7 +97,7 @@ class PagesLoadingTestCase(unittest.TestCase):
             db.drop_all()
 
 
-class RegisterAndLoginTestCase(unittest.TestCase):
+class RegisterTestCase(unittest.TestCase):
      
     def setUp(self):
         self.app = create_app()
@@ -109,14 +109,51 @@ class RegisterAndLoginTestCase(unittest.TestCase):
 
     def test_register_user(self):
         data = {
-            'username' : 'test',
-            'email' : 'test@email.com',
+            'username' : 'test_new',
+            'email' : 'test_new@email.com',
             'password' : 'password1',
             'confirm' : 'password1'
         }
         response = self.client.post('/register', data=data, follow_redirects = True)
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Registration successful', response.data)
+
+    def test_register_user_duplicate(self):
+        data = {
+            'username' : 'test',
+            'email' : 'test@email.com',
+            'password' : 'password1',
+            'confirm' : 'password1'
+        }
+        user = User(username='test', email='test@email.com')
+        user.set_password('password1')
+        db.session.add(user)
+        db.session.commit()
+        response = self.client.post('/register', data=data, follow_redirects = True)
+    
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'The username or email already exists', response.data)
+    
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+    
+class LoginTestCase(unittest.TestCase):
+     
+    def setUp(self):
+        self.app = create_app()
+        self.app.config.from_object("config.TestConfig")
+        self.client = self.app.test_client()
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+ 
+        db.create_all()
+        user = User(username="test", email="test@email.com")
+        user.set_password("password1")
+        db.session.add(user)
+        db.session.commit()
 
     def test_login(self):
         data = {
@@ -141,7 +178,6 @@ class RegisterAndLoginTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-
 class LikesTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()
@@ -161,4 +197,7 @@ class LikesTestCase(unittest.TestCase):
         response = self.client.post('/dashboard/api/like', json={'comp_id': 1})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'likes', response.data)
+ 
+if __name__ == '__main__':
+    unittest.main()
  
