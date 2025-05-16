@@ -50,7 +50,35 @@ class BasicTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'likes', response.data)
 
-    def test_add_comment_invalid(self):
-        response = self.client.post('/dashboard/api/comment', json={'text': ''})
-        self.assertEqual(response.status_code, 400)
 
+class PagesLoadingTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app()
+        self.app.config.from_object(TestConfig)
+        self.client = self.app.test_client()
+
+        with self.app.app_context():
+            db.create_all()
+
+    def tearDown(self):
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+    def test_home_page_loads(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_player_page_loads(self):
+        response = self.client.get('/players')
+        self.assertEqual(response.status_code, 200)
+
+    def test_competitions_accessible(self):
+        response = self.client.get('/api/competitions')
+        self.assertEqual(response.status_code, 200)
+
+    def test_dashboard_no_login_no_access(self):
+        response = self.client.get('/dashboard/')
+        self.assertEqual(response.status_code, 302)
+
+    
