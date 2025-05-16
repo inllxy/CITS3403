@@ -11,6 +11,9 @@ body,
   font-family: 'Bebas Neue', sans-serif;
 }
 
+body {
+  background:#f0f2f5
+}
 /* Main text container: positions overlay heading/text above background video */
 #MainTextContainer {
   margin: 16vw 0 0 7.1825vw; /* Adjust top/left based on video dimensions */
@@ -93,8 +96,9 @@ body,
   width: 70vw;
   margin: 2vw auto;
   padding: 1vw;
-  border-top: 1px solid #08e41b;
-  border-bottom: 1px solid #08e41b;
+  border: 5px solid #2d089d;
+  background: white;
+  border-radius: 50px;
   /* Consider reducing fixed width for small screens */
 }
 .competition-result-item h3 {
@@ -115,9 +119,10 @@ body,
 
 /* Date block styling within competition results */
 .competition-result-item .date {
-  border-right: 1px solid #08e41b;
+  border-right: 5px solid #2d089d;
   width: 12.5vw;
   height: 15vw;
+  
 }
 .date .month,
 .date .day {
@@ -149,3 +154,17 @@ body,
   object-fit: contain;   
 }
 
+.offcanvas-result {
+  border: 3px solid black
+}
+
+.offcanvas-title {
+  font-size: 3vw;
+  color: #100808;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.offcanvas-header {
+  border-bottom: 3px solid black;
+  justify-content: center;
+}
