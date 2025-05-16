@@ -220,22 +220,86 @@ class SeleniumTests(unittest.TestCase):
         driver.save_screenshot("competition_submitted.png")
         self.assertIn("Dashboard", driver.title)
         
-    # TEST 3: share competition and verify with recipient
-    def test_3_share_competition(self):
+        # TEST 3: delete a player card that was already submitted
+    def test_3_delete_player_card(self):
+        driver = self.driver
+
+        # Log in as testuser
+        driver.get("http://127.0.0.1:5001/logout")
+        driver.get("http://127.0.0.1:5001/")
+        login_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-bs-target='#authModal']"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView(true);", login_btn)
+        time.sleep(0.5)
+        driver.execute_script("arguments[0].click();", login_btn)
+
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "username"))).send_keys("testuser")
+        driver.find_element(By.NAME, "password").send_keys("password123")
+        driver.find_element(By.CSS_SELECTOR, "#loginTab form input[type='submit']").click()
+
+        WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
+
+        # Locate the player card by name
+        player_cards = driver.find_elements(By.CLASS_NAME, "player-card")
+        target_card = None
+        for card in player_cards:
+            name = card.find_element(By.CLASS_NAME, "player-name").text.strip()
+            if name == "Selenium Bot":
+                target_card = card
+                break
+
+        self.assertIsNotNone(target_card, "Player card not found")
+
+        # Find and click delete button in the form
+        delete_form = target_card.find_element(By.TAG_NAME, "form")
+        delete_button = delete_form.find_element(By.CSS_SELECTOR, "input[type='submit']")
+        driver.execute_script("arguments[0].click();", delete_button)
+
+        # Confirm deletion if browser alert appears
+        try:
+            WebDriverWait(driver, 3).until(EC.alert_is_present())
+            driver.switch_to.alert.accept()
+        except:
+            pass  # continue even if no JS alert appears
+
+        # Wait for redirect and verify deletion
+        WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
+        time.sleep(1)
+        # Make sure no player card contains "Selenium Bot"
+        player_cards = driver.find_elements(By.CLASS_NAME, "player-card")
+        for card in player_cards:
+            name = card.find_element(By.CLASS_NAME, "player-name").text.strip()
+            self.assertNotEqual(name, "Selenium Bot", "Player card was not deleted")
+
+
+        # TEST 4: share competition and verify with recipient
+    def test_4_share_competition(self):
+        # Restart browser to simulate a fresh session
         self.driver.quit()
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.implicitly_wait(3)
         driver = self.driver
+
+        # Login as testuser
         driver.get("http://127.0.0.1:5001/logout")
         driver.get("http://127.0.0.1:5001/")
-        driver.find_element(By.CSS_SELECTOR, "button[data-bs-target='#authModal']").click()
+
+        login_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-bs-target='#authModal']"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView(true);", login_btn)
+        time.sleep(0.5)
+        driver.execute_script("arguments[0].click();", login_btn)
+
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "username"))).send_keys("testuser")
         driver.find_element(By.NAME, "password").send_keys("password123")
         driver.find_element(By.CSS_SELECTOR, "#loginTab form input[type='submit']").click()
         WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
 
+        # Find the competition card titled "Selenium Bracket"
         cards = driver.find_elements(By.CLASS_NAME, "competition-result-item")
         share_card = None
         for card in cards:
@@ -248,22 +312,39 @@ class SeleniumTests(unittest.TestCase):
                 continue
 
         self.assertIsNotNone(share_card, "Competition card not found")
+
+        # Click share button and submit username
         share_btn = share_card.find_element(By.CSS_SELECTOR, "button.btn-outline-primary")
         driver.execute_script("arguments[0].click();", share_btn)
+
         share_input = share_card.find_element(By.NAME, "share_with")
         share_input.send_keys("testuser2")
-        share_card.find_element(By.CSS_SELECTOR, "form[id^='share-form-'] button[type='submit']").click()
-        WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
 
+        comp_id = share_btn.get_attribute("id").replace("toggle-share-", "")
+        form_id = f"share-form-{comp_id}"
+        submit_share = driver.find_element(By.CSS_SELECTOR, f"form#{form_id} button[type='submit']")
+        driver.execute_script("arguments[0].click();", submit_share)
+
+        WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
         driver.get("http://127.0.0.1:5001/logout")
+
+        # Login as recipient (testuser2)
         driver.get("http://127.0.0.1:5001/")
-        driver.find_element(By.CSS_SELECTOR, "button[data-bs-target='#authModal']").click()
+        login_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-bs-target='#authModal']"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView(true);", login_btn)
+        time.sleep(0.5)
+        driver.execute_script("arguments[0].click();", login_btn)
+
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "username"))).send_keys("testuser2")
         driver.find_element(By.NAME, "password").send_keys("password456")
         driver.find_element(By.CSS_SELECTOR, "#loginTab form input[type='submit']").click()
+
         WebDriverWait(driver, 10).until(EC.url_contains("/dashboard"))
         time.sleep(1)
+
+        # Final check: shared comp visible to testuser2
         self.assertIn("Selenium Bracket", driver.page_source)
-
-
+        driver.save_screenshot("shared_competition.png")
 
