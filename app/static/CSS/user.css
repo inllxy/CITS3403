@@ -9,6 +9,12 @@ body {
   background:#f0f2f5
 }
 
+h1 {
+  font-size: 2.5rem !important;
+  text-align: center !important;
+  margin: 4vw !important;
+}
+
 .modal-content {
   overflow-y: auto;
   background: #fff;

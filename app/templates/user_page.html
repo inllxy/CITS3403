@@ -44,14 +44,14 @@
   {% endwith %}
   </div>
 
-  <h1>The Competitions You Created</h1>
+  <h1 id="Competition_Created">The Competitions You Created</h1>
 
   {% for comp in competitions if comp.user_id == current_user.id %}
     {% set idx = loop.index0 %}
     {% include "Template/CompetitionTemplate_UserPage.html" %}
   {% endfor %}
   
-  <h1>The Competitions Shared to You</h1>
+  <h1 id="Competition_Shared">The Competitions Shared to You</h1>
 
   {% for comp in competitions if current_user in comp.shared_with %}
     {% set idx = loop.index0 %}
@@ -61,7 +61,7 @@
   <!-- PLAYERS SECTION -->
 
 
-  <h1>The Player Card You Created</h1>
+  <h1 id="Card_Created">The Player Card You Created</h1>
 
   <div id="playerContainer"
     class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">

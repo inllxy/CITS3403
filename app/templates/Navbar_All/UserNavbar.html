@@ -19,8 +19,9 @@
           {% endif %}
         </a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" >{{ current_user.username }}</a></li>
-          <li><a class="dropdown-item" >{{ current_user.email }}</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('user.user_page') }}#Competition_Created">Created Comp</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('user.user_page') }}#Competition_Shared">Shared Comp</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('user.user_page') }}#Card_Created">Created Player Card</a></li>
           {% if current_user.is_authenticated %}
            <li><a class="dropdown-item" href="/logout">log out</a></li>
           {% else %}
