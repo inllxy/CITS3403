@@ -9,6 +9,7 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     WTF_CSRF_ENABLED = False  # disable CSRF for testing
 
+# unit test for adding player
 class PlayerSubmitTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -19,6 +20,7 @@ class PlayerSubmitTestCase(unittest.TestCase):
         with self.app.app_context():
             db.create_all()
 
+    # ensure user is logged in to allow access to dashboard
     def login_test_user(self):
         with self.app.app_context():
             user = User(username='testuser', email='test@example.com')
@@ -47,6 +49,7 @@ class PlayerSubmitTestCase(unittest.TestCase):
             player = Player.query.first()
             self.assertEqual(player.name, 'Test Player')
     
+    # user not logged in, fails to add player
     def test_submit_player_not_allowed(self):
         data = {
             'player_name': 'Test Player',
@@ -64,7 +67,7 @@ class PlayerSubmitTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-
+# unit test for adding competition
 class CompetitionSubmitTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -75,6 +78,7 @@ class CompetitionSubmitTestCase(unittest.TestCase):
         with self.app.app_context():
             db.create_all()
 
+    # ensure user is logged in to allow access to dashboard
     def login_test_user(self):
         with self.app.app_context():
             user = User(username='testuser', email='test@example.com')
@@ -105,6 +109,7 @@ class CompetitionSubmitTestCase(unittest.TestCase):
             competition = Competition.query.first()
             self.assertEqual(competition.name, 'Test Competition')
     
+    # user not logged in, fails to add player
     def test_submit_competition_not_allowed(self):
         data = {
             'name': 'Test Competition',
@@ -124,7 +129,7 @@ class CompetitionSubmitTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-
+# unit test for loading all pages correctly
 class PagesLoadingTestCase(unittest.TestCase):
 
     def setUp(self):
@@ -147,6 +152,7 @@ class PagesLoadingTestCase(unittest.TestCase):
         response = self.client.get('/api/competitions')
         self.assertEqual(response.status_code, 200)
 
+    # dashboard not accessible unless logged in
     def test_dashboard_no_login_no_access(self):
         response = self.client.get('/dashboard/')
         self.assertEqual(response.status_code, 302)
@@ -156,7 +162,7 @@ class PagesLoadingTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-
+# unit test for user registering
 class RegisterTestCase(unittest.TestCase):
      
     def setUp(self):
@@ -199,7 +205,7 @@ class RegisterTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
-    
+# unit test for user login
 class LoginTestCase(unittest.TestCase):
      
     def setUp(self):
@@ -238,6 +244,7 @@ class LoginTestCase(unittest.TestCase):
             db.session.remove()
             db.drop_all()
 
+# unit test for likes functionality
 class LikesTestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app()

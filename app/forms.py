@@ -13,10 +13,13 @@ class RegisterForm(FlaskForm):
     confirm = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
     submit = SubmitField("Register")
 
+
 class LoginForm(FlaskForm):
     username = StringField("Username or Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Login")
+
+
 class CompetitionForm(FlaskForm):
     name = StringField("Competition Name", validators=[DataRequired()])
     year = IntegerField("Year", validators=[DataRequired(), NumberRange(min=2000, max=2100)])
@@ -35,6 +38,7 @@ class CompetitionForm(FlaskForm):
     bracket_data = HiddenField()
     submit = SubmitField("Submit")
 
+
 class PlayerForm(FlaskForm):
     player_name = StringField("Name", validators=[DataRequired()])
     league = StringField("League", validators=[DataRequired()])
@@ -48,14 +52,17 @@ class PlayerForm(FlaskForm):
     action = HiddenField()  # “public” or “private”
     submit = SubmitField("Submit")
 
+
 class DeleteCompetitionForm(FlaskForm):
     comp_id = HiddenField("Competition ID")
     submit = SubmitField("Delete")
+
 
 class ShareCompetitionForm(FlaskForm):
     comp_id = HiddenField("Competition ID")
     share_with = StringField("Share With", validators=[DataRequired()])
     submit = SubmitField("Send Share")
+
 
 class DeletePlayerForm(FlaskForm):
     player_id = HiddenField()

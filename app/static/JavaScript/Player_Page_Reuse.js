@@ -1,3 +1,5 @@
+// This script dynamically populates player modals with match data
+
 // Fetch competition data
 async function fetchCompetitions() {
   const response = await fetch('/api/competitions'); // Ensure this endpoint returns competition data with the bracket field

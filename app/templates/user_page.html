@@ -18,9 +18,10 @@
   <script src="{{ url_for('static', filename='JavaScript/user.js') }}" defer></script>
   <script src="{{ url_for('static', filename='JavaScript/player.js') }}" defer></script>
   <script src="{{ url_for('static', filename='JavaScript/Player_Page_Reuse.js') }}" defer></script>
-
 </head>
 <body>
+  <!--User Dashboard Page-->
+
   <!-- NAVBAR -->
   {%include 'Navbar_All/UserNavbar.html' %}
 
@@ -151,7 +152,7 @@
   </div> 
  
 
-  
+<!--JS to toggle the share button to allow usernames to be entered-->
 <script>
 document.querySelectorAll('[id^=toggle-share-]').forEach(btn => {
   btn.addEventListener('click', e => {

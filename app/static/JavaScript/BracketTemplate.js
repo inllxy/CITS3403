@@ -1,3 +1,5 @@
+// Old code for bracket generation - maintained for reference and future use of template with Bracket.html
+
 // 1. Define player matchups for each side and each round
 const players = {
     winner: {

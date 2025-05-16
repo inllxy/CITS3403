@@ -46,6 +46,7 @@ from flask import render_template
 from app.models import Competition, Player, shared_competitions, shared_players
 from app.forms import PlayerForm, CompetitionForm, DeleteCompetitionForm, ShareCompetitionForm
 
+# user dashboard route
 @user_bp.route('/')
 @login_required
 def user_page():
@@ -82,7 +83,7 @@ def user_page():
         delete_player_forms=delete_player_forms
     )
 
-
+# submit player from player form and add to database
 @user_bp.route('/submit-player', methods=['POST'])
 @login_required
 def submit_player():
@@ -128,7 +129,7 @@ def submit_player():
 
 
 
-
+# submit competition from player form and add to database
 @user_bp.route('/submit-competition', methods=['POST'])
 @login_required
 def submit_competition():
@@ -233,6 +234,7 @@ def submit_competition():
     flash('Competition added successfully.', 'success')
     return redirect(url_for('user.user_page'))
 
+# delete competition from database
 @user_bp.route('/competition/delete/<int:comp_id>', methods=['POST'])
 @login_required
 def delete_competition(comp_id):
@@ -243,6 +245,7 @@ def delete_competition(comp_id):
     return redirect(url_for('user_dashboard'))
 @user_bp.route('/api/comment', methods=['POST'])
 
+# delete player from database
 @user_bp.route('/player/delete/<int:player_id>', methods=['POST'])
 @login_required
 def delete_player(player_id):
@@ -262,7 +265,7 @@ def delete_player(player_id):
 
     return redirect(url_for('user.user_page'))
 
-
+# Comment Functionality to be fixed and readded in future
 # def add_comment():
 #     data = request.get_json() or {}
 #     try:
@@ -279,6 +282,7 @@ def delete_player(player_id):
 
 #     return jsonify(status='ok', message='Comment received (store to DB if needed)')
 
+# like a competition  - user interaction to be further developed in future
 likes_by_competition = {}
 
 @user_bp.route('/api/like', methods=['POST'])
@@ -292,7 +296,7 @@ def like():
     likes_by_competition[comp_id] = likes_by_competition.get(comp_id, 0) + 1
     return jsonify(likes=likes_by_competition[comp_id])
 
-
+# share competition with other users - visible on their dashboard
 @user_bp.route('/competition/<int:comp_id>/share', methods=['POST'])
 @login_required
 def share_competition(comp_id):
@@ -347,8 +351,7 @@ def share_competition(comp_id):
 
     return redirect(url_for('user_dashboard'))
 
-    from flask import jsonify
-
+# get competition data to populate player modals
 @user_bp.route('/api/competitions', methods=['GET'])
 @login_required
 def get_competitions():
