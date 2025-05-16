@@ -51,7 +51,7 @@ class SeleniumTests(unittest.TestCase):
 
         driver.get("http://127.0.0.1:5001/")
 
-        # Step 1: click Login / Register 按钮
+        # Step 1: click Login / Register 
         login_btn = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "button[data-bs-target='#authModal']"))
         )
