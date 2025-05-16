@@ -46,6 +46,9 @@ class SeleniumTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        with create_app(TestConfig).app_context():
+            db.session.remove()
+            db.drop_all()
         time.sleep(10)
         cls.driver.quit()
 
